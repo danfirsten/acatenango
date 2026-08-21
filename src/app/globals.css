@@ -1,26 +1,296 @@
-@import "tailwindcss";
+/* Ridgeline: the Acatenango–Fuego monitor.
+   Ember on alpine night — a single accent against a blue-biased dark, so the
+   only warm thing on the page is the volcano. */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ground: #0B1016;
+  --surface: #121A22;
+  --line: #1E2A34;
+  --ink: #E7EEF4;
+  --muted: #7F909E;
+  --ember: #E8622C;
+  --ash: #93A7B8;
+
+  --label: var(--font-barlow-condensed), "Barlow Condensed", system-ui, sans-serif;
+  --body: var(--font-barlow), "Barlow", system-ui, -apple-system, sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
+* { box-sizing: border-box; }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+html, body { margin: 0; padding: 0; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+
+:where(button, a):focus-visible {
+  outline: 2px solid var(--ember);
+  outline-offset: 2px;
+}
+
+.eyebrow, .badge, .summit i, .readout-k, .tempo-tick, .figures dt, .massif-views button {
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+}
+
+/* ── hero ─────────────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  height: 100svh;
+  min-height: 560px;
+  overflow: hidden;
+}
+
+.massif, .massif-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.massif-canvas { display: block; }
+
+.topbar {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 26px;
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 12px;
+  color: var(--muted);
+  /* Keeps the type legible over a bright sky without a hard band. */
+  background: linear-gradient(#0B1016CC, #0B101600);
+  pointer-events: none;
+}
+
+.brand { color: var(--ink); letter-spacing: 0.3em; font-size: 14px; font-weight: 500; }
+.observed { display: flex; align-items: center; gap: 14px; }
+
+.badge {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  color: var(--ember);
+  border: 1px solid #4A2A1C;
+  background: #1B1009;
+  padding: 3px 8px;
+  border-radius: 2px;
+}
+
+/* Summit labels are DOM, positioned from the 3D projection each frame. */
+.summit {
+  position: absolute;
+  top: 0; left: 0;
+  display: flex;
+  align-items: center;
+  /* transform positions the dot; the text hangs off it. */
+  margin-left: -3px;
+  gap: 9px;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+  will-change: transform;
+}
+.summit-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--ash);
+  box-shadow: 0 0 0 4px #93A7B822;
+  flex: none;
+}
+.summit[data-active="true"] .summit-dot {
+  background: var(--ember);
+  box-shadow: 0 0 0 4px #E8622C33, 0 0 16px #E8622C88;
+}
+.summit-text { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
+.summit-text b {
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 13px;
+  font-weight: 500;
+  text-shadow: 0 1px 8px #0B1016;
+}
+.summit-text i {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--ash);
+  letter-spacing: 0.1em;
+  text-shadow: 0 1px 8px #0B1016;
+}
+.summit[data-active="true"] .summit-text i { color: var(--ember); }
+
+.readout {
+  position: absolute;
+  top: 50%;
+  right: 26px;
+  transform: translateY(-50%);
+  width: 208px;
+  background: #0B1016D9;
+  border: 1px solid var(--line);
+  backdrop-filter: blur(8px);
+}
+.readout-row { padding: 13px 16px; border-bottom: 1px solid var(--line); }
+.readout-row:last-child { border-bottom: 0; }
+.readout-k { display: block; font-size: 10.5px; color: var(--muted); margin-bottom: 5px; }
+.readout-v {
+  font-size: 23px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.readout-row[data-lead="true"] .readout-v { font-size: 29px; color: var(--ember); }
+.readout-v small {
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 10.5px;
+  color: var(--muted);
+  margin-left: 6px;
+  font-weight: 400;
+}
+
+.massif-views {
+  position: absolute;
+  left: 26px;
+  bottom: 26px;
+  display: flex;
+  border: 1px solid var(--line);
+  background: #0B1016D9;
+  backdrop-filter: blur(8px);
+}
+.massif-views button {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 11px;
+  padding: 9px 15px;
+  cursor: pointer;
+  transition: color 0.2s ease, background 0.2s ease;
+}
+.massif-views button + button { border-left: 1px solid var(--line); }
+.massif-views button:hover { color: var(--ink); }
+.massif-views button[aria-pressed="true"] { color: var(--ember); background: #E8622C14; }
+
+.massif-state {
+  position: absolute;
+  inset: auto 0 46%;
+  text-align: center;
+  color: var(--muted);
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  font-size: 12px;
+}
+
+.scrollcue {
+  position: absolute;
+  bottom: 26px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  font-size: 10.5px;
+  color: var(--muted);
+  pointer-events: none;
+}
+.scrollcue span { animation: breathe 3.4s ease-in-out infinite; display: block; }
+@keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.95; } }
+
+/* ── record ───────────────────────────────────────────────────────────── */
+
+.record {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 78px 26px 96px;
+}
+.record-head {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 44px;
+  align-items: end;
+  margin-bottom: 30px;
+}
+.record-head h2 {
+  margin: 0 0 10px;
+  font-size: clamp(26px, 3.6vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+}
+.record-head p { margin: 0; color: var(--muted); max-width: 54ch; }
+
+.figures { display: flex; gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); }
+.figures > div { background: var(--ground); padding: 12px 18px; }
+.figures dt { font-size: 10.5px; color: var(--muted); }
+.figures dd {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* Headroom for the hover tooltip, which sits above the plotted point. */
+.tempo { position: relative; margin: 74px 0 0; }
+.tempo svg { display: block; width: 100%; height: auto; touch-action: none; }
+.tempo-tick {
+  font-family: var(--label);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  fill: var(--muted);
+}
+.tempo-tip {
+  position: absolute;
+  top: -6px;
+  transform: translate(-50%, -100%);
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: 9px 12px;
+  background: #17212B;
+  border: 1px solid #2B3945;
+  font-size: 12px;
+  line-height: 1.45;
+  white-space: nowrap;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease;
+  font-variant-numeric: tabular-nums;
+}
+.tempo-tip[data-on="true"] { opacity: 1; }
+.tempo-tip b { font-weight: 600; }
+.tempo-tip span { color: var(--muted); }
+
+.colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
+.colophon p { margin: 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
+
+@media (max-width: 860px) {
+  .readout {
+    top: auto;
+    bottom: 78px;
+    right: 16px;
+    left: 16px;
+    width: auto;
+    transform: none;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .readout-row { border-bottom: 0; border-right: 1px solid var(--line); }
+  .readout-row:nth-child(n + 4) { display: none; }
+  .massif-views { left: 16px; bottom: 20px; }
+  .scrollcue { display: none; }
+  .record-head { grid-template-columns: 1fr; gap: 22px; }
+  .figures { flex-wrap: wrap; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
 }

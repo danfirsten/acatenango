@@ -1,0 +1,35 @@
+{
+  "source": "AWS Terrain Tiles (terrarium) — SRTM/NED derived, public domain",
+  "zoom": 13,
+  "grid": 512,
+  "tileOrigin": {
+    "x": 2027,
+    "y": 3761,
+    "tiles": 3,
+    "tileSize": 256
+  },
+  "minElevation": 1049,
+  "maxElevation": 3967,
+  "bounds": {
+    "north": 14.562317701914848,
+    "west": -90.9228515625,
+    "south": 14.434680215297275,
+    "east": -90.791015625
+  },
+  "metresPerPixel": 27.752388238988623,
+  "spanMetres": 14209.222778362175,
+  "summits": {
+    "fuego": {
+      "lat": 14.4747,
+      "lon": -90.8806,
+      "elevation": 3763,
+      "name": "Fuego"
+    },
+    "acatenango": {
+      "lat": 14.5011,
+      "lon": -90.8759,
+      "elevation": 3976,
+      "name": "Acatenango"
+    }
+  }
+}

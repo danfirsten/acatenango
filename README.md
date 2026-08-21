@@ -24,10 +24,37 @@ phrasing drifts, so each field is extracted independently: a field that can't
 be found yields `null` and a warning. Partial data is useful; a crashed
 collector that gets muted is a permanent outage.
 
+## The mountain is real
+
+The 3D view is not a sculpted or procedural mountain. `scripts/fetch-terrain.ts`
+pulls [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/) — public
+domain, SRTM-derived, no API key — decodes the terrarium RGB elevation encoding,
+and bakes a 512×512 heightmap covering 14.2 km of the Acatenango–Fuego massif at
+about 28 m per pixel.
+
+The fetch verifies itself against published summit elevations and refuses to
+write a heightmap that does not match:
+
+```
+Fuego:      DEM 3771 m vs published 3763 m  (+8 m)
+Acatenango: DEM 3967 m vs published 3976 m  (−9 m)
+```
+
+Every vertex, the contour lines, and the height the ash column is drawn to all
+derive from those numbers. The one liberty is vertical exaggeration (×1.55),
+disclosed on the page — 2.9 km of relief across 14 km reads as a gentle mound at
+true scale.
+
+The heightmap ships as a PNG rather than JSON: elevation is packed 16-bit across
+the red and green channels, which is ~420 KB instead of about a megabyte of
+text, and the browser decodes it for free.
+
 ## Architecture
 
 ```
-scripts/collect.ts        Discovers and archives the day's bulletin
+scripts/fetch-terrain.ts  Bakes the real elevation heightmap (run once)
+src/lib/scene/massif.ts   Three.js terrain, ash plume, ember and camera rig
+scripts/collect.ts        Fetches and archives the day's bulletin
 scripts/build-index.ts    Rolls the archive into a compact time series
 src/lib/parse-bulletin.ts The parser — pure, tested, versioned
 src/lib/fetch-text.ts     HTML and PDF text extraction

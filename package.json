@@ -9,21 +9,27 @@
     "lint": "eslint",
     "test": "node --import tsx --test 'src/**/*.test.ts'",
     "collect": "tsx scripts/collect.ts",
-    "build:index": "tsx scripts/build-index.ts"
+    "build:index": "tsx scripts/build-index.ts",
+    "fetch:terrain": "tsx scripts/fetch-terrain.ts"
   },
   "dependencies": {
     "next": "16.3.2",
     "pdfjs-dist": "^6.2.108",
+    "pngjs": "^7.0.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "three": "^0.185.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
+    "@types/pngjs": "^6.0.5",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/three": "^0.185.4",
     "eslint": "^9",
     "eslint-config-next": "16.3.2",
+    "playwright": "^1.62.1",
     "tailwindcss": "^4",
     "tsx": "^4.23.12",
     "typescript": "^5"
