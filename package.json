@@ -10,7 +10,8 @@
     "test": "node --import tsx --test 'src/**/*.test.ts'",
     "collect": "tsx scripts/collect.ts",
     "build:index": "tsx scripts/build-index.ts",
-    "fetch:terrain": "tsx scripts/fetch-terrain.ts"
+    "fetch:terrain": "tsx scripts/fetch-terrain.ts",
+    "build:standalone": "tsx scripts/build-standalone.ts"
   },
   "dependencies": {
     "next": "16.3.2",
