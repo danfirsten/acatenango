@@ -1,36 +1,79 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Fuego
 
-## Getting Started
+A live monitor for **Volcán de Fuego**, Guatemala — one of the most
+consistently active volcanoes on Earth, and the one that erupts across the
+valley while you camp on Acatenango.
 
-First, run the development server:
+The site is a static export with no server and no database. A scheduled
+GitHub Action fetches INSIVUMEH's daily volcanic bulletin, parses it, and
+commits the result. **The repository is the database**: every day is a commit,
+so the git history *is* the time series.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Why it's built this way
+
+Fuego's bulletins are published for a short window and then rotate away. Any
+field the parser fails to extract today would be lost permanently — so every
+record stores the **raw bulletin text verbatim** alongside the parsed fields,
+plus the `parserVersion` that produced them. The parser is a pure function of
+that raw text, which means improving it later re-derives the entire archive
+with no re-fetching and no data loss. `build-index` re-parses any record whose
+version is behind automatically.
+
+The parser degrades rather than fails. Bulletins are written by hand and the
+phrasing drifts, so each field is extracted independently: a field that can't
+be found yields `null` and a warning. Partial data is useful; a crashed
+collector that gets muted is a permanent outage.
+
+## Architecture
+
+```
+scripts/collect.ts        Discovers and archives the day's bulletin
+scripts/build-index.ts    Rolls the archive into a compact time series
+src/lib/parse-bulletin.ts The parser — pure, tested, versioned
+src/lib/fetch-text.ts     HTML and PDF text extraction
+data/bulletins/*.json     One record per day, raw text preserved
+data/index.json           Generated; what the site reads at build time
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Parsing notes
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+The bulletins are Spanish, and Spanish prose collides badly with compass
+abbreviations — `se` is a pronoun, `no` is a negation, `o` means "or". So
+spelled-out directions are matched case-insensitively while abbreviations are
+matched **uppercase only**, and both only inside the dispersal clause.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Similarly, `Ceniza` is both a barranca on Fuego's flank and the ordinary word
+for *ash*, so drainage names are only matched inside a clause that actually
+names barrancas.
 
-## Learn More
+Numbers are ambiguous too: `4,500` and `4.500` both mean 4500, while `1.1 km`
+is a decimal. These are disambiguated by shape rather than locale.
 
-To learn more about Next.js, take a look at the following resources:
+Ash columns below Fuego's 3,763 m summit are flagged as misparses, not readings.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Development
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+npm install
+npm test            # parser tests — no network required
+npm run collect     # fetch and archive today's bulletin
+npm run build:index # rebuild data/index.json from the archive
+npm run dev
+```
 
-## Deploy on Vercel
+`BULLETIN_URL=<url> npm run collect` bypasses discovery and fetches a specific
+bulletin — useful for backfilling or for testing against a known document.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Data sources
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [INSIVUMEH](https://insivumeh.gob.gt) — Guatemala's national institute for
+  seismology, volcanology, meteorology and hydrology. Daily bulletins.
+- [Smithsonian Global Volcanism Program](https://volcano.si.edu) — Fuego is
+  volcano `342090`. Weekly reports, used for historical backfill.
+
+## Status
+
+Collector and parser are in place and tested against representative fixtures.
+The fixtures reproduce real bulletin phrasing but are not yet captured
+documents — the first live runs will produce real ones, and the parser should
+be re-validated against them.

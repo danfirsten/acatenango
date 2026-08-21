@@ -1,0 +1,69 @@
+name: Collect Fuego bulletin
+
+# INSIVUMEH publishes the daily bulletin between roughly 06:00 and 08:00 local
+# (UTC-6), so 14:30 UTC gives it a comfortable margin. A second run in the
+# evening catches days when publication slips.
+on:
+  schedule:
+    - cron: '30 14 * * *'
+    - cron: '30 23 * * *'
+  workflow_dispatch:
+    inputs:
+      bulletin_url:
+        description: 'Fetch this exact URL instead of discovering one'
+        required: false
+        type: string
+
+# Only one collector at a time; concurrent runs would race on the commit.
+concurrency:
+  group: collect-bulletin
+  cancel-in-progress: false
+
+jobs:
+  collect:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - run: npm ci
+
+      # The parser guards the archive's integrity — don't write with a broken one.
+      - name: Test parser
+        run: npm test
+
+      - name: Collect today's bulletin
+        run: npm run collect
+        env:
+          BULLETIN_URL: ${{ inputs.bulletin_url }}
+
+      - name: Rebuild index
+        run: npm run build:index
+
+      - name: Commit archive
+        run: |
+          git config user.name  'fuego-collector[bot]'
+          git config user.email 'fuego-collector[bot]@users.noreply.github.com'
+          git add data/
+          if git diff --staged --quiet; then
+            echo 'No new bulletin data today.'
+            exit 0
+          fi
+          git commit -m "data: Fuego bulletin $(date -u -d '-6 hours' +%Y-%m-%d)"
+          # The scheduled run may race with a push to the branch; rebase and retry.
+          for attempt in 1 2 3 4; do
+            if git push; then
+              exit 0
+            fi
+            echo "Push failed (attempt $attempt), rebasing..."
+            sleep $((2 ** attempt))
+            git pull --rebase --autostash || true
+          done
+          echo 'Could not push collected data.'
+          exit 1
