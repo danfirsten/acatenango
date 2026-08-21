@@ -15,97 +15,60 @@ import path from 'node:path';
 
 import type { Bulletin } from '../src/lib/bulletin';
 import { guatemalaDate } from '../src/lib/date';
-import { fetchDocumentText, fetchWithRetry, htmlToText } from '../src/lib/fetch-text';
+import { bvdUrl, recentDates } from '../src/lib/bvd';
+import { fetchDocumentText } from '../src/lib/fetch-text';
 import { parseBulletin } from '../src/lib/parse-bulletin';
 
-const INSIVUMEH_ORIGIN = 'https://insivumeh.gob.gt';
 const DATA_DIR = path.join(process.cwd(), 'data', 'bulletins');
+/** How many days back to look when today's bulletin is not up yet. */
+const LOOKBACK_DAYS = 4;
 
 /**
- * Finds today's Fuego bulletin. INSIVUMEH has reorganised its site before, so
- * try several entry points and score candidate links rather than depending on
- * one fixed URL shape.
+ * Resolves the most recent published bulletin, walking back from `from`.
+ * Returns the date it belongs to as well as its URL — a bulletin fetched on the
+ * 22nd may well be the 21st's, and it must be archived under its own date.
  */
-export function scoreBulletinLink(href: string, text: string): number {
-  const haystack = `${href} ${text}`.toLowerCase();
-  let score = 0;
-  if (/fuego/.test(haystack)) score += 3;
-  if (/bolet[ií]n|boletin|actualizaci[óo]n/.test(haystack)) score += 2;
-  if (/vulcanolog/.test(haystack)) score += 2;
-  if (/\.pdf$/.test(href.toLowerCase())) score += 1;
-  // Bulletins for other volcanoes are near-misses we must not pick up.
-  if (/santiaguito|pacaya|santa\s*mar[ií]a/.test(haystack)) score -= 5;
-  return score;
-}
-
-export function extractLinks(html: string, base: string): Array<{ href: string; text: string }> {
-  const links: Array<{ href: string; text: string }> = [];
-  const re = /<a\b[^>]*href=["']([^"']+)["'][^>]*>([\s\S]*?)<\/a>/gi;
-  let m: RegExpExecArray | null;
-  while ((m = re.exec(html)) !== null) {
+async function resolveBulletin(
+  from: string,
+): Promise<{ date: string; url: string; raw: string } | null> {
+  for (const date of recentDates(from, LOOKBACK_DAYS)) {
+    const url = bvdUrl(date);
     try {
-      const url = new URL(m[1], base);
-      // Ignore mailto:, javascript:, tel: and friends.
-      if (url.protocol !== 'http:' && url.protocol !== 'https:') continue;
-      links.push({ href: url.toString(), text: htmlToText(m[2]) });
+      const raw = await fetchDocumentText(url);
+      return { date, url, raw };
     } catch {
-      // Unparseable href — skip it.
+      // Not published for that date; try the day before.
     }
   }
-  return links;
-}
-
-async function discoverBulletinUrl(): Promise<string | null> {
-  const entryPoints = [
-    `${INSIVUMEH_ORIGIN}/`,
-    `${INSIVUMEH_ORIGIN}/?p=137199`,
-    `${INSIVUMEH_ORIGIN}/category/vulcanologia/`,
-  ];
-
-  const candidates: Array<{ href: string; score: number }> = [];
-  for (const entry of entryPoints) {
-    try {
-      const res = await fetchWithRetry(entry);
-      const html = await res.text();
-      for (const link of extractLinks(html, entry)) {
-        const score = scoreBulletinLink(link.href, link.text);
-        if (score >= 4) candidates.push({ href: link.href, score });
-      }
-    } catch (err) {
-      console.warn(`[collect] entry point failed: ${entry}: ${String(err)}`);
-    }
-    if (candidates.length > 0) break;
-  }
-
-  if (candidates.length === 0) return null;
-  candidates.sort((a, b) => b.score - a.score);
-  return candidates[0].href;
+  return null;
 }
 
 async function main(): Promise<void> {
-  const date = guatemalaDate();
-  const outPath = path.join(DATA_DIR, `${date}.json`);
+  const today = guatemalaDate();
 
-  const url = process.env.BULLETIN_URL ?? (await discoverBulletinUrl());
-  if (!url) {
-    console.warn('[collect] no bulletin link found; nothing archived today');
+  const override = process.env.BULLETIN_URL;
+  const found = override
+    ? { date: today, url: override, raw: await fetchDocumentText(override) }
+    : await resolveBulletin(today);
+
+  if (!found) {
+    console.warn(`[collect] no bulletin published in the last ${LOOKBACK_DAYS} days`);
     return;
   }
+  const { date, url, raw } = found;
   console.log(`[collect] source: ${url}`);
 
-  let raw: string;
-  try {
-    raw = await fetchDocumentText(url);
-  } catch (err) {
-    console.warn(`[collect] fetch failed: ${String(err)}`);
-    return;
-  }
-
+  // The bulletins are scans, so a PDF with no text layer is the normal failure
+  // mode, not a fetch error. Archiving an empty record would let build-index
+  // treat the day as collected when nothing was actually read.
   if (raw.trim().length < 80) {
-    console.warn(`[collect] document too short to be a bulletin (${raw.length} chars)`);
+    console.warn(
+      `[collect] no text layer in ${url} (${raw.length} chars) — needs OCR; nothing archived`,
+    );
     return;
   }
 
+  const outPath = path.join(DATA_DIR, `${date}.json`);
   const { parsed, warnings, parserVersion } = parseBulletin(raw);
 
   // Never replace a record that parsed cleanly with one that did not; a

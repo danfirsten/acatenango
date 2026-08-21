@@ -1,53 +1,42 @@
 import assert from 'node:assert/strict';
 import { describe, it } from 'node:test';
 
-import { extractLinks, scoreBulletinLink } from '../../scripts/collect';
+import { bvdUrl, recentDates } from './bvd';
 import { htmlToText } from './fetch-text';
 
-describe('extractLinks', () => {
-  it('resolves relative hrefs against the page URL', () => {
-    const links = extractLinks(
-      '<a href="/boletin-fuego">Boletín Fuego</a>',
-      'https://insivumeh.gob.gt/',
+describe('bvdUrl', () => {
+  it('builds the date-addressable bulletin URL', () => {
+    assert.equal(
+      bvdUrl('2026-08-21'),
+      'https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-21.pdf',
     );
-    assert.deepEqual(links, [
-      { href: 'https://insivumeh.gob.gt/boletin-fuego', text: 'Boletín Fuego' },
-    ]);
   });
 
-  it('ignores non-http schemes', () => {
-    const links = extractLinks(
-      '<a href="mailto:a@b.gt">mail</a><a href="javascript:x()">js</a>',
-      'https://example.com/',
+  it('keeps the zero padding INSIVUMEH uses in both path and filename', () => {
+    assert.equal(
+      bvdUrl('2026-01-05'),
+      'https://insivumeh.gob.gt/wp-content/uploads/2026/01/BVD-2026-01-05.pdf',
     );
-    assert.deepEqual(links, []);
   });
 });
 
-describe('scoreBulletinLink', () => {
-  it('ranks a Fuego bulletin above a generic page', () => {
-    const bulletin = scoreBulletinLink(
-      'https://insivumeh.gob.gt/actualizacion-de-la-actividad-del-volcan-de-fuego-hoy-04-de-agosto/',
-      'Actualización de la actividad del Volcán de Fuego',
-    );
-    const generic = scoreBulletinLink('https://insivumeh.gob.gt/contacto/', 'Contacto');
-    assert.ok(bulletin > generic);
-    assert.ok(bulletin >= 4, `expected a passing score, got ${bulletin}`);
+describe('recentDates', () => {
+  it('counts back from the given day, most recent first', () => {
+    assert.deepEqual(recentDates('2026-08-21', 3), ['2026-08-21', '2026-08-20', '2026-08-19']);
   });
 
-  it('rejects bulletins for the other monitored volcanoes', () => {
-    const santiaguito = scoreBulletinLink(
-      'https://insivumeh.gob.gt/boletin-vulcanologico-santiaguito/',
-      'Boletín vulcanológico Santiaguito',
-    );
-    assert.ok(santiaguito < 4, `Santiaguito should not qualify, got ${santiaguito}`);
+  it('crosses a month boundary', () => {
+    assert.deepEqual(recentDates('2026-03-02', 3), ['2026-03-02', '2026-03-01', '2026-02-28']);
+  });
+
+  it('handles a leap day', () => {
+    assert.deepEqual(recentDates('2024-03-01', 2), ['2024-03-01', '2024-02-29']);
   });
 });
 
 describe('htmlToText', () => {
   it('drops scripts and styles', () => {
-    const text = htmlToText('<style>a{}</style><script>x()</script><p>Fuego</p>');
-    assert.equal(text, 'Fuego');
+    assert.equal(htmlToText('<style>a{}</style><script>x()</script><p>Fuego</p>'), 'Fuego');
   });
 
   it('decodes entities and preserves block breaks', () => {

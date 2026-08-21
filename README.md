@@ -66,14 +66,48 @@ bulletin — useful for backfilling or for testing against a known document.
 
 ## Data sources
 
-- [INSIVUMEH](https://insivumeh.gob.gt) — Guatemala's national institute for
-  seismology, volcanology, meteorology and hydrology. Daily bulletins.
-- [Smithsonian Global Volcanism Program](https://volcano.si.edu) — Fuego is
-  volcano `342090`. Weekly reports, used for historical backfill.
+INSIVUMEH publishes the daily bulletin at a **deterministic, date-addressable
+URL** — there is nothing to scrape:
+
+```
+https://insivumeh.gob.gt/wp-content/uploads/{YYYY}/{MM}/BVD-{YYYY}-{MM}-{DD}.pdf
+```
+
+Their own page never links bulletins; its JavaScript probes this pattern over
+the last few days. Addressing it directly is more reliable than scraping, and it
+makes historical backfill a matter of iterating dates.
+
+An earlier link-scraping approach is deliberately gone. It resolved to *news
+articles about* bulletins rather than bulletins, and extracted a pyroclastic
+flow runout distance as though it were an ash drift figure — a wrong value
+silently recorded as data, which is worse than a missing one.
+
+Also relevant:
+[Smithsonian Global Volcanism Program](https://volcano.si.edu) — Fuego is
+volcano `342090`; weekly reports are plain HTML and useful for cross-checking.
 
 ## Status
 
-Collector and parser are in place and tested against representative fixtures.
-The fixtures reproduce real bulletin phrasing but are not yet captured
-documents — the first live runs will produce real ones, and the parser should
-be re-validated against them.
+**The daily bulletin PDFs are scans with no text layer.** Each page is a single
+drawn image, so `pdfjs` returns zero text items and the parser never sees
+anything. The collector detects this and archives nothing rather than writing an
+empty record that would look like a collected day.
+
+So the pipeline needs OCR before real data flows:
+
+- `tesseract-ocr` plus the `spa` language pack, installed in the workflow
+- rasterise each page, OCR it, and feed the text to the existing parser
+- expect OCR noise (`4,5OO` for `4,500`), so the parser's number handling and
+  its below-summit sanity check matter more, not less
+
+Everything downstream of the parser is unaffected — raw text is still preserved
+verbatim, so once OCR lands, re-running `build:index` re-derives the archive.
+
+The parser itself is tested against fixtures that reproduce real bulletin
+phrasing, but not yet against captured documents. Re-validate once OCR produces
+real text.
+
+### Local development note
+
+Node's built-in `fetch` ignores `HTTPS_PROXY`. Behind a proxy, run the collector
+as `NODE_USE_ENV_PROXY=1 npm run collect` (Node ≥ 22.21). CI needs no such flag.
