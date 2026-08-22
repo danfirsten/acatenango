@@ -1,0 +1,43 @@
+{
+  "date": "2026-06-19",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-19.pdf",
+  "fetchedAt": "2026-08-22T01:49:28.181Z",
+  "raw": "YSN UM\n» z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n19 de junio de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nAS o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(e) eS Condiciones atmosféricas:\nUY Despejado\nViento:\nOS, Y Del Este\ne NS\nrd o y :\nE AE o o. Precipitación pluvial:\nPa e OS ES ADS es PS 4 q\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA 5 lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á al e\n> volcanica/\nVulcaniana\nActividad\nDurante la noche y madrugada se registró desgasificación de color gris claro a una altura de 4300\nmsnm. Se registran entre 7 a 13 explosiones por hora de características débiles, moderadas y fuertes,\nque elevan columnas de gases y ceniza a alturas de 4300 a 4800 msnm (14107 - 15748 pies) las cuales\nse desplazan hacia el oeste y noroeste a distancias de hasta 30 km.\nAlgunas explosiones generan sonidos, retumbos y ondas de choque débiles. Por la noche se observan\npulsos incandescentes, generando caída de material ardiente alrededor del cráter, encauzándose en\nlas barrancas Seca, Taniluya, Ceniza, Las Lajas, Honda y otras, en ocasiones llegando hasta el límite de\nla vegetación. Así mismo se puede presentar caída de ceniza fina en comunidades al noroeste del\nvolcán como San Pedro Yepocapa y sus alrededores. Si se presentan lluvias durante el día se puede\ngenerar correntadas y/o lahares, se recomienda no permanecer dentro ni en las cercanías de\ndichas barrancas ante la presencia de lluvias en el edificio volcánico.\nse 2, | Ministerio de\nEF y Comunicaciones, Ñ . . ' ' y . '\n3 . (oi Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nSN vien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 7,
+      "max": 13
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Taniluyá",
+      "Las Lajas",
+      "Honda"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": []
+}
