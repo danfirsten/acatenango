@@ -1,0 +1,42 @@
+{
+  "date": "2026-08-07",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-07.pdf",
+  "fetchedAt": "2026-08-22T00:38:52.233Z",
+  "raw": "YSNUM\nBOLETIN VULCANOLOGICO DIARIO (635\nGUATEMALA\n7 de agosto de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nAR ¿EA 90252'54 Longitud W\nmE Altura: 3763 msnm\nA ——— EW id 5 uL, e... e\n(52) ns ¡On Condiciones atmosféricas:\nE > Vr Despejado\nViento:\ne RES e 259\nA o) Del Este\n: ESO NE : 0% Precipitación pluvial:\n— 0.0 mm\nMorfología: dali dinos\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\n- SS https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: \" pu Ñ\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 300 metros sobre el cráter y se dispersaron hacia el oeste. La\nactividad explosiva se mantuvo entre 7 y 11 explosiones débiles y moderadas por hora, generando\ncolumnas de ceniza entre 4,500 y 4,800 msnm (14,764 a 15,748 ft), que se desplazaron hacia el\noeste y noroeste.\nSe observaron pulsos incandescentes de hasta 300 metros sobre el cráter, acompañados de\navalanchas débiles. Además, se registró caída de material incandescente alrededor del cráter, el cual\nse encauza hacia las barrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en\nocasiones descendiendo hasta el límite de la vegetación.\nsE, | Ministerio de\n¿$ y Comunicaciones, . . . ' ' y . y\n- A : (ri Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 7,
+      "max": 11
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 300,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": []
+}

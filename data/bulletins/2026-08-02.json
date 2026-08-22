@@ -1,0 +1,36 @@
+{
+  "date": "2026-08-02",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-02.pdf",
+  "fetchedAt": "2026-08-22T00:40:33.530Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\nOA VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\nE Y 3 Condiciones atmosféricas:\nVr Despejado\nViento:\nDn\ny Del Nor-Noreste\n0% Precipitación pluvial:\n0.0 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego (OVFGO), reporta explosiones en rangos de 6 a 10 por hora caracterizadas\nentre estrombolianas y vulcanianas de intensidad débil, moderadas y algunas fuertes. Acompañadas de columnas de\ngases y ceniza entre 4,200 y 4,700 msnm, dispersándose al oeste y suroeste los vientos superiores mueven finas\npartículas de ceniza aproximadamente a 30 km. La actividad de explosiones produce retumbos con ondas de\nchoque, avalanchas por los flancos sur, oeste y suroeste, así como caída de ceniza en Panimaché, Morelia, Santa\nSofía, El Porvenir, San Pedro Yepocapa, Sangre de Cristo y otras comunidades. En ocasiones también se escuchan\nsonidos similares a locomotora, perceptibles en los alrededores del volcán. Por la noche y madrugada se observó el\ncráter con incandescencia. Debido a la expulsión de material balístico que puede alcanzar más de 700 m alrededor\ndel cráter, se recomienda no permanecer en la meseta ni en sus inmediaciones. Quienes asciendan al volcán deben\nutilizar ropa y equipo adecuados para condiciones de montaña, considerando la probabilidad de lluvias durante la\ntarde y la noche.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivienda\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 700,
+      "max": 700
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate",
+    "no-drift-direction"
+  ]
+}

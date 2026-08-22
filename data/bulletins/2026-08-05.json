@@ -1,0 +1,31 @@
+{
+  "date": "2026-08-05",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-05.pdf",
+  "fetchedAt": "2026-08-22T00:39:31.045Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (637\n=\nGUATEMALA\nÓN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS az 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ne] La US E\nNe) E ¡hs Condiciones atmosféricas:\nVr Despejado\nViento:\nSN Y y Del Este\nE NS\nA ba OS E nit :\nA O AS O Precipitación pluvial:\nE A O\n0 mm\nMorfología: A A\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nEl volcán de Fuego continúa con la fase eruptiva descrita en la última actualización del boletin especial BEFGO-065-\n2026, publicado a las 06:45 de la mañana. La actividad mantiene una emisión constante de material desde el cráter,\ngenerando columnas de ceniza densas que alcanzan alturas de 5000 a 7000 msnm (16,404 a 21,325 ft), con\ndispersión hacia el oeste y noroeste. Asimismo, continúa el descenso de corrientes de densidad piroclástica\nprincipalmente hacia el suroeste. Es indispensable seguir estrictamente las recomendaciones emitidas por la SE-\nCONRED y revisar las actualizaciones del boletin especial BEFGO-065-2026. Adicionalmente, debido a la temporada\nde lluvias y la gran cantidad de material volcánico recientemente depositado, no se descarta el descenso de lahares\nen las barrancas principales.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 5000,
+      "max": 7000
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW",
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "lahars"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

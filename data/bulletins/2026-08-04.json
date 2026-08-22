@@ -1,0 +1,31 @@
+{
+  "date": "2026-08-04",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-04.pdf",
+  "fetchedAt": "2026-08-22T00:39:51.358Z",
+  "raw": "ASSTOZ\nBOLETÍN VULCANOLÓGICO DIARIO (% |\nA:\n==\nGUATEMALA\n4 de agosto de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nAR 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(==) eS Condiciones atmosféricas:\nVr Despejado\ne E Viento:\n. o) Del Sureste\n0% Precipitación pluvial:\n0.0 mm\nMorfología: dali dinos\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\n- SS https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nEl volcán de Fuego continúa con la fase eruptiva descrita en la última actualización del boletín\nespecial BEFGO-062-2026, publicado a las 07:00 del día actual. La actividad mantiene una emisión\nconstante de material desde el cráter, generando columnas de ceniza densas que alcanzan alturas\nde 5000 a 7000 msnm (16,404 a 22,966 ft), con dispersión hacia el oeste y noroeste. Asimismo,\ncontinúa el descenso de corrientes de densidad piroclástica principalmente hacia el suroeste.\nEs indispensable seguir estrictamente las recomendaciones emitidas por la SE-CONRED y revisar\nlas actualizaciones del boletín especial BEFGO-062-2026. Adicionalmente, debido a la temporada de\nlluvias y la gran cantidad de material volcánico recientemente depositado, no se descarta el\ndescenso de lahares en las barrancas principales, por lo que se recomienda evitar la permanencia o\ncercanía de las mismas.\nsE, | Ministerio de\n¿$ y Comunicaciones, . . . ' ' y . y\n- A : (ri Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nrar” vien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 5000,
+      "max": 7000
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW",
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "lahars"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

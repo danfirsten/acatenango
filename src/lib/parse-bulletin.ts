@@ -1,9 +1,11 @@
+import { activitySection, cleanOcrText } from './ocr';
 import {
   PARSER_VERSION,
   type Direction,
   type ParsedBulletin,
   type Phenomenon,
   type Range,
+  type Sky,
 } from './bulletin';
 
 /**
@@ -62,11 +64,29 @@ function matchRange(
   return null;
 }
 
-const EXPLOSION_UNIT = String.raw`explosion(?:es)?\s*(?:d[ée]biles?|moderadas?|fuertes?|\s|,|y)*\s*por\s+hora`;
+/**
+ * The rate is printed at least two ways:
+ *   "entre 6 y 9 explosiones por hora"          — numbers before the noun
+ *   "explosiones débiles... a un ritmo de 2 a 6 por hora"  — numbers after it
+ * so match "por hora" in a window around the mention rather than assuming the
+ * numbers sit adjacent to the word.
+ */
+/**
+ * Observers routinely stack qualifiers between the noun and the rate — "de 6 a 8
+ * explosiones de características débiles y moderadas por hora" — so allow a
+ * short run of words in between. "km" is excluded so a wind speed in km/h can
+ * never be read as an explosion rate.
+ */
+const PER_HOUR_UNIT = String.raw`(?:explosion(?:es)?\s+)?(?:(?!km\b)[a-záéíóúñ]+\s+){0,6}?por\s+hora`;
+/** Metres above sea level, in the several spellings the bulletins use. */
 const MASL_UNIT = String.raw`(?:msnm|m\.?\s?s\.?\s?n\.?\s?m\.?|metros\s+sobre\s+el\s+nivel\s+del\s+mar)`;
 
 export function parseExplosionsPerHour(text: string): Range | null {
-  return matchRange(text, EXPLOSION_UNIT);
+  const mention = /explosion\w*/i.exec(text);
+  if (!mention) return null;
+  const start = Math.max(0, mention.index - 120);
+  const window = text.slice(start, mention.index + 220);
+  return matchRange(window, PER_HOUR_UNIT);
 }
 
 export function parseAshColumn(text: string): Range | null {
@@ -130,48 +150,51 @@ export function parseDriftDirections(text: string): Direction[] {
 export function parseDriftKm(text: string): number | null {
   const clause = DISPERSAL_CLAUSE.exec(text);
   const scope = clause ? clause[0] : text;
-  const m = new RegExp(String.raw`(${NUM})\s*(?:km|kil[óo]metros?)`, 'i').exec(
-    scope,
-  );
-  return m ? parseSpanishNumber(m[1]) : null;
+  // Distance is often a range ("de 10 a 20 km"); the reach is the useful figure.
+  const range = matchRange(scope, String.raw`(?:km|kil[óo]metros?)`);
+  return range ? range.max : null;
 }
 
-/** The named barrancas on Fuego's flanks that bulletins report activity in. */
-const DRAINAGES = [
-  'Seca',
-  'Ceniza',
-  'Trinidad',
-  'Taniluyá',
-  'Las Lajas',
-  'Honda',
-  'El Jute',
-  'Santa Teresa',
-  'Mineral',
+/**
+ * The named barrancas on Fuego's flanks. Bulletins shorten and mis-accent these
+ * freely — "Las Lajas" is usually printed as just "Lajas" — so each canonical
+ * name carries the spellings actually seen in print.
+ */
+const DRAINAGES: Array<{ name: string; pattern: RegExp }> = [
+  { name: 'Seca', pattern: /\bseca\b/i },
+  { name: 'Ceniza', pattern: /\bceniza\b/i },
+  { name: 'Trinidad', pattern: /\btrinidad\b/i },
+  { name: 'Taniluyá', pattern: /\btanilu[yi][aá]\b/i },
+  { name: 'Las Lajas', pattern: /\b(?:las\s+)?lajas\b/i },
+  { name: 'Honda', pattern: /\bhonda\b/i },
+  { name: 'El Jute', pattern: /\b(?:el\s+)?jute\b/i },
+  { name: 'Santa Teresa', pattern: /\bsanta\s+teresa\b/i },
+  { name: 'Mineral', pattern: /\bmineral\b/i },
 ];
 
 export function parseDrainages(text: string): string[] {
   // "Ceniza" is both a barranca and the ordinary word for ash, so match only
   // inside the clause that actually names drainages.
-  const clauses = [
-    ...text.matchAll(/barrancas?[\s\S]{0,200}/gi),
-  ].map((m) => m[0]);
+  const clauses = [...text.matchAll(/barrancas?[\s\S]{0,200}/gi)].map((m) => m[0]);
   if (clauses.length === 0) return [];
   const scope = clauses.join(' ');
+  return DRAINAGES.filter((d) => d.pattern.test(scope)).map((d) => d.name);
+}
 
-  const found: string[] = [];
-  for (const name of DRAINAGES) {
-    // Accent-insensitive: bulletins are inconsistent about "Taniluyá"/"Taniluya".
-    const pattern = name
-      .replace(/á/gi, '[aá]')
-      .replace(/é/gi, '[eé]')
-      .replace(/í/gi, '[ií]')
-      .replace(/ó/gi, '[oó]')
-      .replace(/ú/gi, '[uú]');
-    if (new RegExp(String.raw`\b${pattern}\b`, 'i').test(scope)) {
-      found.push(name);
-    }
-  }
-  return found;
+const SKY_TERMS: Array<[RegExp, Sky]> = [
+  // Order matters: "parcialmente nublado" must not be read as "nublado".
+  [/parcialmente\s+nublad|semi\s*nublad/i, 'partlyCloudy'],
+  [/despejad/i, 'clear'],
+  [/nublad|cubierto/i, 'cloudy'],
+];
+
+export function parseSky(text: string): Sky | null {
+  // Anchored to the bulletin's own label so an offhand mention of cloud in the
+  // activity prose does not become the day's sky reading.
+  const clause = /condiciones\s+atmosf[eé]ricas?\s*:?([\s\S]{0,60})/i.exec(text);
+  const scope = clause ? clause[1] : '';
+  for (const [re, sky] of SKY_TERMS) if (re.test(scope)) return sky;
+  return null;
 }
 
 export function parseIncandescence(text: string): Range | null {
@@ -196,6 +219,10 @@ const PHENOMENON_TERMS: Array<[RegExp, Phenomenon]> = [
   [/lahares?/i, 'lahars'],
   [/flujos?\s+de\s+lava/i, 'lavaFlow'],
   [/incandescen\w+/i, 'incandescence'],
+  // During a paroxysm the bulletin stops counting explosions and describes a
+  // continuous emission instead. The missing rate is the signal, not a failure.
+  [/fase\s+eruptiva|emisi[óo]n\s+(?:constante|continua)|corrientes\s+de\s+densidad\s+pirocl[áa]stica/i,
+    'continuousPhase'],
 ];
 
 export function parsePhenomena(text: string): Phenomenon[] {
@@ -208,9 +235,20 @@ export interface ParseResult {
   parserVersion: number;
 }
 
+/**
+ * Parses the verbatim text of a Fuego bulletin page.
+ *
+ * Takes the raw text exactly as captured — OCR damage included — and does its
+ * own cleaning and sectioning, so it stays a pure function of what was stored.
+ * That is what lets a future parser re-derive the whole archive without
+ * re-fetching a single bulletin.
+ */
 export function parseBulletin(raw: string): ParseResult {
-  // Collapse whitespace so PDF-extracted line breaks don't split phrases.
-  const text = raw.replace(/\s+/g, ' ');
+  // Collapse whitespace so line breaks from OCR or PDF text do not split phrases.
+  const full = cleanOcrText(raw).replace(/\s+/g, ' ');
+  // Activity figures come from the activity paragraph only: the page sidebar
+  // carries the summit elevation, which reads exactly like an ash column.
+  const text = activitySection(full);
 
   const parsed: ParsedBulletin = {
     explosionsPerHour: parseExplosionsPerHour(text),
@@ -221,13 +259,27 @@ export function parseBulletin(raw: string): ParseResult {
     incandescenceM: parseIncandescence(text),
     lavaFlowM: parseLavaFlow(text),
     phenomena: parsePhenomena(text),
+    // Printed in the sidebar, outside the activity paragraph.
+    sky: parseSky(full),
   };
 
   const warnings: string[] = [];
-  if (!text.trim()) warnings.push('empty-bulletin-text');
-  if (parsed.explosionsPerHour === null) warnings.push('no-explosion-rate');
-  if (parsed.ashColumnMasl === null) warnings.push('no-ash-column');
-  if (parsed.driftDirections.length === 0) warnings.push('no-drift-direction');
+  if (!full.trim()) warnings.push('empty-bulletin-text');
+  // Warn only when the bulletin printed a rate that the parser then failed to
+  // read. Plenty of bulletins publish no per-hour figure at all — during a
+  // paroxysm there is nothing discrete to count, and on quieter days the
+  // observer sometimes just describes the explosions without counting them.
+  // Treating those as parser failures would make the error rate meaningless.
+  if (parsed.explosionsPerHour === null && /por\s+hora/i.test(text)) {
+    warnings.push('no-explosion-rate');
+  }
+  // Same rule for the other fields: only a printed-but-unread value is a failure.
+  if (parsed.ashColumnMasl === null && /msnm|nivel del mar/i.test(text)) {
+    warnings.push('no-ash-column');
+  }
+  if (parsed.driftDirections.length === 0 && DISPERSAL_CLAUSE.test(text)) {
+    warnings.push('no-drift-direction');
+  }
   // Fuego's summit is 3,763 m; a plume below that is a misparse, not a reading.
   if (parsed.ashColumnMasl && parsed.ashColumnMasl.min < 3763) {
     warnings.push('ash-column-below-summit');

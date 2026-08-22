@@ -1,11 +1,725 @@
 {
-  "generatedAt": "2026-08-21T23:47:16.040Z",
-  "parserVersion": 1,
-  "entries": [],
+  "generatedAt": "2026-08-22T00:44:38.631Z",
+  "parserVersion": 6,
+  "entries": [
+    {
+      "date": "2026-07-22",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4700,
+      "driftKm": 30,
+      "driftDirections": [
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "lavaFlow"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-23",
+      "explosionsMin": 5,
+      "explosionsMax": 9,
+      "ashMinMasl": 4400,
+      "ashMaxMasl": 4700,
+      "driftKm": null,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Trinidad",
+        "Las Lajas",
+        "Santa Teresa"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-24",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4500,
+      "driftKm": 20,
+      "driftDirections": [
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-25",
+      "explosionsMin": 7,
+      "explosionsMax": 10,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Taniluyá",
+        "Las Lajas",
+        "Honda"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-26",
+      "explosionsMin": 6,
+      "explosionsMax": 8,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-27",
+      "explosionsMin": 5,
+      "explosionsMax": 7,
+      "ashMinMasl": 4800,
+      "ashMaxMasl": 4800,
+      "driftKm": 20,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-28",
+      "explosionsMin": 7,
+      "explosionsMax": 11,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": null,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Taniluyá",
+        "Las Lajas",
+        "Honda"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-29",
+      "explosionsMin": 6,
+      "explosionsMax": 8,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-30",
+      "explosionsMin": 7,
+      "explosionsMax": 11,
+      "ashMinMasl": 4800,
+      "ashMaxMasl": 4800,
+      "driftKm": 20,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-07-31",
+      "explosionsMin": 6,
+      "explosionsMax": 11,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": null,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Taniluyá",
+        "Las Lajas",
+        "Honda"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-01",
+      "explosionsMin": 6,
+      "explosionsMax": 8,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "SW"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-02",
+      "explosionsMin": 6,
+      "explosionsMax": 10,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4700,
+      "driftKm": 30,
+      "driftDirections": [],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches",
+        "ashfall",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-03",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": null,
+      "ashMaxMasl": null,
+      "driftKm": null,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-04",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 5000,
+      "ashMaxMasl": 7000,
+      "driftKm": null,
+      "driftDirections": [
+        "NW",
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "lahars",
+        "continuousPhase"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-05",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 5000,
+      "ashMaxMasl": 7000,
+      "driftKm": null,
+      "driftDirections": [
+        "NW",
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "lahars",
+        "continuousPhase"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-06",
+      "explosionsMin": 5,
+      "explosionsMax": 10,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4500,
+      "driftKm": null,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-07",
+      "explosionsMin": 7,
+      "explosionsMax": 11,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4800,
+      "driftKm": null,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Trinidad",
+        "Las Lajas",
+        "Santa Teresa"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "avalanches",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-08",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4300,
+      "driftKm": 25,
+      "driftDirections": [
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches",
+        "ashfall"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-09",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4500,
+      "driftKm": 20,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": [
+        "no-explosion-rate"
+      ]
+    },
+    {
+      "date": "2026-08-10",
+      "explosionsMin": 6,
+      "explosionsMax": 10,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4700,
+      "driftKm": null,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Trinidad",
+        "Las Lajas",
+        "Santa Teresa"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "avalanches",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-11",
+      "explosionsMin": null,
+      "explosionsMax": null,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4500,
+      "driftKm": 25,
+      "driftDirections": [
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-12",
+      "explosionsMin": 6,
+      "explosionsMax": 10,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": null,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Taniluyá",
+        "Las Lajas",
+        "Honda"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-13",
+      "explosionsMin": 4,
+      "explosionsMax": 6,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "SW"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-14",
+      "explosionsMin": 5,
+      "explosionsMax": 7,
+      "ashMinMasl": 4800,
+      "ashMaxMasl": 4800,
+      "driftKm": 20,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-15",
+      "explosionsMin": 5,
+      "explosionsMax": 9,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4800,
+      "driftKm": null,
+      "driftDirections": [
+        "SW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Taniluyá",
+        "Las Lajas",
+        "Honda"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-16",
+      "explosionsMin": 6,
+      "explosionsMax": 8,
+      "ashMinMasl": 4300,
+      "ashMaxMasl": 4700,
+      "driftKm": 40,
+      "driftDirections": [
+        "NW",
+        "SW",
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-17",
+      "explosionsMin": 2,
+      "explosionsMax": 5,
+      "ashMinMasl": 4800,
+      "ashMaxMasl": 4800,
+      "driftKm": 20,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-19",
+      "explosionsMin": 6,
+      "explosionsMax": 8,
+      "ashMinMasl": 4500,
+      "ashMaxMasl": 4800,
+      "driftKm": 40,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-20",
+      "explosionsMin": 2,
+      "explosionsMax": 6,
+      "ashMinMasl": 4800,
+      "ashMaxMasl": 4800,
+      "driftKm": 20,
+      "driftDirections": [
+        "W"
+      ],
+      "drainages": [],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "ashfall",
+        "degassing",
+        "incandescence"
+      ],
+      "warnings": []
+    },
+    {
+      "date": "2026-08-21",
+      "explosionsMin": 6,
+      "explosionsMax": 9,
+      "ashMinMasl": 4200,
+      "ashMaxMasl": 4700,
+      "driftKm": 30,
+      "driftDirections": [
+        "NW",
+        "W"
+      ],
+      "drainages": [
+        "Seca",
+        "Ceniza",
+        "Las Lajas"
+      ],
+      "lavaFlowM": null,
+      "phenomena": [
+        "explosions",
+        "rumbling",
+        "shockwaves",
+        "avalanches",
+        "ashfall",
+        "lahars",
+        "incandescence"
+      ],
+      "warnings": []
+    }
+  ],
   "stats": {
-    "days": 0,
-    "firstDate": null,
-    "lastDate": null,
-    "daysMissingRate": 0
+    "days": 30,
+    "firstDate": "2026-07-22",
+    "lastDate": "2026-08-21",
+    "daysWithWarnings": 1,
+    "daysContinuous": 2
   }
 }

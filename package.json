@@ -11,7 +11,8 @@
     "collect": "tsx scripts/collect.ts",
     "build:index": "tsx scripts/build-index.ts",
     "fetch:terrain": "tsx scripts/fetch-terrain.ts",
-    "build:standalone": "tsx scripts/build-standalone.ts"
+    "build:standalone": "tsx scripts/build-standalone.ts",
+    "backfill": "tsx scripts/backfill.ts"
   },
   "dependencies": {
     "next": "16.3.2",

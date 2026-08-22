@@ -47,6 +47,7 @@ export function demoSeries(days = 90, endISO = '2026-08-21'): IndexEntry[] {
       drainages: max > 24 ? ['Seca', 'Ceniza', 'Taniluyá'] : ['Seca', 'Ceniza'],
       lavaFlowM: max > 30 ? 1200 : null,
       phenomena: ['explosions', 'degassing', 'incandescence'],
+      warnings: [],
     };
   });
 }

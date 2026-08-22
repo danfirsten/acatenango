@@ -1,0 +1,34 @@
+{
+  "date": "2026-08-08",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-08.pdf",
+  "fetchedAt": "2026-08-22T00:38:31.738Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\n8 de agosto de 2026 VOLC Á N DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\na E a\n(ca) a a, eS Condiciones atmosféricas:\nVr Despejado\nViento:\nLA , Del Este\na 0% Precipitación pluvial:\n8.6 mm\nMorfología: A A\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,300 msnm, las cuales se dispersaron hacia el\noeste y suroeste del complejo volcánico hasta una distancia aproximada de 25 kilómetros. Se reporta caída de\nceniza en San Pedro Yepocapa. Asimismo, se observan avalanchas por los flancos oeste, suroeste y sur, en las\nque algunos bloques alcanzan la vegetación. Algunas explosiones generan retumbos, ondas de choque y sonidos\nsimilares al de una locomotora de tren. Debido a la actividad descrita, es peligroso permanecer en la meseta, por\nel riesgo de caída de material balístico Las condiciones atmosféricas favorecen bajas temperaturas y podrían\nocasionar lluvias durante la tarde y la noche.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4300
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

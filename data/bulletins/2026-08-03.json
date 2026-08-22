@@ -1,0 +1,35 @@
+{
+  "date": "2026-08-03",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-03.pdf",
+  "fetchedAt": "2026-08-22T00:40:11.620Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (6337\nE\nGUATEMALA\nPORN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS LAS 14? 28' 54 Latitud N;\na ¿E 90252'54 Longitud W\nmE Altura: 3763 msnm\nAAA , E a\n5) ¡ón Condiciones atmosféricas:\nY Vr Despejado\nViento:\n29\nY Del Este\n0% Precipitación pluvial:\n3.5 mm\nMorfología: A A\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nEl volcán de Fuego continua con desgasificación constante y expulsión de fragmentos de lava a 200 mts de altura\nsobre el cráter. Esto confirma que la actividad continúa como se describe en el boletín especial BEFGO-055-2026\npublicado el día de hoy a las 00:30 am. Hasta el momento no se ha observado o registrado una columna eruptiva\npero la emisión de lava constante hacia el borde oeste del cráter y su acumulación inestable ha producido nubes de\ngas y ceniza que bajan por la barranca Seca, de corto alcance, generando dispersión y caída de ceniza en dirección\noeste. También se observan balísticos y descenso de material volcánico incandescente producto de las explosiones, hacia\nlos flancos oeste, sur y suroeste, llegando incluso hasta la vegetación. Asimismo, la actividad explosiva genera retumbos,\nondas de choque y sonidos similares a maquina de locomotora debido al gas expulsado de forma continua.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": null,
+    "driftKm": null,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate",
+    "no-ash-column"
+  ]
+}

@@ -7,6 +7,7 @@ import {
   QUIET,
   TYPICAL,
 } from './__fixtures__/bulletins';
+import { BVD_2026_08_21_FUEGO } from './__fixtures__/bvd-2026-08-21-page2';
 import { parseBulletin, parseSpanishNumber } from './parse-bulletin';
 
 describe('parseSpanishNumber', () => {
@@ -104,18 +105,20 @@ describe('parseBulletin — quiet day', () => {
     assert.deepEqual(parsed.explosionsPerHour, { min: 1, max: 1 });
   });
 
-  it('warns about the fields it could not find', () => {
-    assert.ok(warnings.includes('no-ash-column'));
-    assert.ok(warnings.includes('no-drift-direction'));
+  it('does not warn about fields the bulletin never printed', () => {
+    // A warning must mean "the parser failed", not "the observer stayed quiet".
+    assert.deepEqual(warnings, []);
   });
 });
 
 describe('parseBulletin — degradation', () => {
-  it('returns nulls and warnings rather than throwing', () => {
+  it('returns nulls rather than throwing, and blames nobody', () => {
+    // "sin datos disponibles por falla en la estación sísmica" — the station
+    // failed, not the parser, so there is nothing here to warn about.
     const { parsed, warnings } = parseBulletin(MALFORMED);
     assert.equal(parsed.explosionsPerHour, null);
     assert.equal(parsed.ashColumnMasl, null);
-    assert.ok(warnings.length > 0);
+    assert.deepEqual(warnings, []);
   });
 
   it('survives empty input', () => {
@@ -130,5 +133,157 @@ describe('parseBulletin — degradation', () => {
       'columnas de ceniza a una altura de 1,200 msnm',
     );
     assert.ok(warnings.includes('ash-column-below-summit'));
+  });
+});
+
+describe('parseBulletin — the real 21 August 2026 bulletin', () => {
+  // Verbatim tesseract output from the scanned PDF, not a reconstruction.
+  const { parsed, warnings } = parseBulletin(BVD_2026_08_21_FUEGO);
+
+  it('reads the explosion rate INSIVUMEH published', () => {
+    assert.deepEqual(parsed.explosionsPerHour, { min: 6, max: 9 });
+  });
+
+  it('reads the ash column, not the summit elevation in the sidebar', () => {
+    // The same page prints "Altura: 3763 msnm" for the volcano itself.
+    assert.deepEqual(parsed.ashColumnMasl, { min: 4200, max: 4700 });
+  });
+
+  it('reads dispersal direction and distance', () => {
+    assert.deepEqual([...parsed.driftDirections].sort(), ['NW', 'W']);
+    assert.equal(parsed.driftKm, 30);
+  });
+
+  it('matches "Lajas" as printed, without the leading "Las"', () => {
+    assert.deepEqual(parsed.drainages, ['Seca', 'Ceniza', 'Las Lajas']);
+  });
+
+  it('reads the sky from the sidebar', () => {
+    assert.equal(parsed.sky, 'clear');
+  });
+
+  it('identifies the reported phenomena', () => {
+    for (const p of ['explosions', 'rumbling', 'shockwaves', 'avalanches', 'ashfall', 'lahars', 'incandescence']) {
+      assert.ok(parsed.phenomena.includes(p as never), `expected ${p}`);
+    }
+  });
+
+  it('parses a real scan with no warnings at all', () => {
+    assert.deepEqual(warnings, []);
+  });
+});
+
+describe('sky parsing', () => {
+  it('does not read "parcialmente nublado" as "nublado"', () => {
+    assert.equal(
+      parseBulletin('Condiciones atmosféricas: Parcialmente nublado').parsed.sky,
+      'partlyCloudy',
+    );
+  });
+
+  it('ignores cloud mentioned in the activity prose', () => {
+    // Only the bulletin's own labelled field counts as the day's sky.
+    assert.equal(
+      parseBulletin('la nubosidad limita la observación de las barrancas').parsed.sky,
+      null,
+    );
+  });
+});
+
+describe('explosion rate phrasings seen in real bulletins', () => {
+  it('reads numbers that come before the noun', () => {
+    assert.deepEqual(
+      parseBulletin('reporta entre 6 y 9 explosiones por hora, de intensidad débil').parsed.explosionsPerHour,
+      { min: 6, max: 9 },
+    );
+  });
+
+  it('reads a rate detached from the noun by qualifiers', () => {
+    // 20 Aug 2026 phrased it this way and the first parser missed it entirely.
+    assert.deepEqual(
+      parseBulletin(
+        'Se registran explosiones débiles, moderadas y fuertes, a un ritmo de 2 a 6 por hora, generando columna',
+      ).parsed.explosionsPerHour,
+      { min: 2, max: 6 },
+    );
+  });
+
+  it('does not mistake a nearby altitude for a rate', () => {
+    assert.equal(
+      parseBulletin('desgasificación alcanzando alturas de 600 metros sobre el cráter').parsed.explosionsPerHour,
+      null,
+    );
+  });
+
+  it('takes the reach when dispersal distance is a range', () => {
+    assert.equal(
+      parseBulletin('La ceniza se dispersa de 10 a 20 km en dirección oeste').parsed.driftKm,
+      20,
+    );
+  });
+});
+
+describe('paroxysm phases', () => {
+  // 5 August 2026, mid-eruption: no explosion count is published at all.
+  const paroxysm =
+    'El volcán de Fuego continúa con la fase eruptiva descrita en la última ' +
+    'actualización. La actividad mantiene una emisión constante de material desde ' +
+    'el cráter, generando columnas de ceniza densas que alcanzan alturas de 5000 a ' +
+    '7000 msnm, con dispersión hacia el oeste y noroeste.';
+
+  it('recognises a continuous eruptive phase', () => {
+    assert.ok(parseBulletin(paroxysm).parsed.phenomena.includes('continuousPhase'));
+  });
+
+  it('does not warn about a rate that was never published', () => {
+    const { parsed, warnings } = parseBulletin(paroxysm);
+    assert.equal(parsed.explosionsPerHour, null);
+    assert.ok(!warnings.includes('no-explosion-rate'));
+  });
+
+  it('still reads the column height during a paroxysm', () => {
+    assert.deepEqual(parseBulletin(paroxysm).parsed.ashColumnMasl, { min: 5000, max: 7000 });
+  });
+
+  it('warns only when a printed rate could not be read', () => {
+    // Nothing printed — silence, not failure.
+    assert.ok(
+      !parseBulletin('Se registraron explosiones débiles a moderadas durante la noche.')
+        .warnings.includes('no-explosion-rate'),
+    );
+    // A rate is clearly printed but in a shape the parser cannot handle.
+    assert.ok(
+      parseBulletin('Se registran explosiones a un ritmo variable por hora.')
+        .warnings.includes('no-explosion-rate'),
+    );
+  });
+});
+
+describe('rates separated from the noun by qualifiers', () => {
+  it('reads a rate with the qualifier phrase in the middle', () => {
+    // 29 July 2026 and several other days phrase it exactly this way.
+    assert.deepEqual(
+      parseBulletin(
+        'Se registran de 6 a 8 explosiones de características débiles y moderadas por hora, las cuales elevan columnas',
+      ).parsed.explosionsPerHour,
+      { min: 6, max: 8 },
+    );
+  });
+
+  it('reads "entre X y Y explosiones <adjectives> por hora"', () => {
+    assert.deepEqual(
+      parseBulletin(
+        'La actividad explosiva se mantuvo entre 7 y 11 explosiones débiles y moderadas por hora, generando columnas',
+      ).parsed.explosionsPerHour,
+      { min: 7, max: 11 },
+    );
+  });
+
+  it('never reads a wind speed in km/h as an explosion rate', () => {
+    assert.equal(
+      parseBulletin('Se registran explosiones; viento del este a 15 km por hora.')
+        .parsed.explosionsPerHour,
+      null,
+    );
   });
 });

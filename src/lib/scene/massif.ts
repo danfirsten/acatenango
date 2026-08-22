@@ -46,6 +46,19 @@ const M_TO_UNITS = 0.001;
 
 const SUN_DIRECTION = new THREE.Vector3(0.72, 0.34, 0.6).normalize();
 
+/**
+ * Scene axes: +x is east (longitude increases with u), +z is south (the
+ * heightmap's v runs north to south). A bulletin saying ash drifted west means
+ * the plume travels toward -x.
+ */
+const COMPASS: Record<string, [number, number]> = {
+  N: [0, -1], NE: [0.7071, -0.7071], E: [1, 0], SE: [0.7071, 0.7071],
+  S: [0, 1], SW: [-0.7071, 0.7071], W: [-1, 0], NW: [-0.7071, -0.7071],
+};
+
+/** Fuego's summit, the datum the ash column height is measured against. */
+const FUEGO_SUMMIT_M = 3763;
+
 /* ── heightmap ─────────────────────────────────────────────────────────── */
 
 export interface Heightfield {
@@ -272,9 +285,25 @@ const PLUME_FRAG = /* glsl */ `
 
 /* ── scene ─────────────────────────────────────────────────────────────── */
 
+/** What one archived day tells the scene to draw. */
+export interface SceneDay {
+  /** Explosions per hour — drives plume density and ember rate. */
+  explosionsPerHour: number | null;
+  /** Ash column top in metres above sea level — drives how high the plume goes. */
+  ashColumnMasl: number | null;
+  /** Which way the plume leaned that day. */
+  driftDirections: string[];
+}
+
 export interface MassifHandle {
   dispose(): void;
   setActivity(explosionsPerHour: number): void;
+  /**
+   * Point the scene at one archived day. The plume then rises to that day's
+   * reported ash column and leans the way the bulletin said it leaned, so
+   * scrubbing the record replays the volcano rather than animating a mood.
+   */
+  setDay(day: SceneDay): void;
   /** 0 = orbiting overview, 1 = the view from the Acatenango camp. */
   setView(view: 'orbit' | 'camp'): void;
 }
@@ -287,6 +316,10 @@ export function createMassifScene(
 ): MassifHandle {
   const reduced = options.reducedMotion ?? false;
   let activity = options.activity ?? 10;
+  // Metres of ash column above the summit, and the direction it leans.
+  let plumeRiseM = 800;
+  const windDir = new THREE.Vector2(-1, 0.35).normalize();
+  const windTarget = new THREE.Vector2(-1, 0.35).normalize();
 
   const renderer = new THREE.WebGLRenderer({
     canvas, antialias: true, alpha: false, powerPreference: 'high-performance',
@@ -384,10 +417,18 @@ export function createMassifScene(
     plumePos[o] = craterPos.x + Math.cos(a) * r;
     plumePos[o + 1] = craterPos.y + 0.01;
     plumePos[o + 2] = craterPos.z + Math.sin(a) * r;
-    // Rise fast, then get carried west-southwest by the prevailing wind.
-    plumeVel[o] = -0.030 - Math.random() * 0.030;
-    plumeVel[o + 1] = 0.150 + Math.random() * 0.085;
-    plumeVel[o + 2] = 0.016 + Math.random() * 0.024;
+    // Vertical speed is solved from the day's reported column height: over a
+    // parcel's lifetime, with buoyancy decaying linearly, mean rise rate is
+    // about 0.76 of the initial. Scene units are km, and the terrain is
+    // exaggerated, so the target is scaled the same way the mountain is.
+    const targetUnits = (plumeRiseM / 1000) * EXAGGERATION;
+    const meanLifetime = 1 / 0.073;
+    const rise = targetUnits / (meanLifetime * 0.76);
+    plumeVel[o + 1] = rise * (0.86 + Math.random() * 0.28);
+    // Horizontal drift follows the bulletin's reported bearing.
+    const shear = 0.030 + Math.random() * 0.030;
+    plumeVel[o] = windDir.x * shear;
+    plumeVel[o + 2] = windDir.y * shear;
     plumeSize[i] = 12 + Math.random() * 13;   // 120–250 m at the vent
     plumeSeed[i] = Math.random();
     plumeLife[i] = stagger ? Math.random() : 0;
@@ -539,6 +580,9 @@ export function createMassifScene(
       0.30 + 0.42 * Math.min(intensity, 2) +
       (reduced ? 0 : Math.sin(now * 0.0021) * 0.05);
 
+    // Ease toward the scrubbed day's bearing so the column swings round.
+    windDir.lerp(windTarget, 1 - Math.exp(-dt * 1.4)).normalize();
+
     const speed = reduced ? 0.25 : 1;
     const activePlume = Math.floor(PLUME_COUNT * THREE.MathUtils.clamp(intensity / 1.1, 0.35, 1));
     for (let i = 0; i < PLUME_COUNT; i++) {
@@ -617,6 +661,20 @@ export function createMassifScene(
       renderer.dispose();
     },
     setActivity(explosionsPerHour: number) { activity = explosionsPerHour; },
+    setDay(day: SceneDay) {
+      if (day.explosionsPerHour !== null) activity = day.explosionsPerHour;
+      // A column below the summit is a misparse, not a reading — ignore it
+      // rather than drawing a plume that sinks into the mountain.
+      if (day.ashColumnMasl !== null && day.ashColumnMasl > FUEGO_SUMMIT_M) {
+        plumeRiseM = day.ashColumnMasl - FUEGO_SUMMIT_M;
+      }
+      const dirs = day.driftDirections.map((d) => COMPASS[d]).filter(Boolean);
+      if (dirs.length > 0) {
+        const x = dirs.reduce((a, d) => a + d[0], 0) / dirs.length;
+        const z = dirs.reduce((a, d) => a + d[1], 0) / dirs.length;
+        if (x !== 0 || z !== 0) windTarget.set(x, z).normalize();
+      }
+    },
     setView(next: 'orbit' | 'camp') { view = next; },
   };
 }

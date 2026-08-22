@@ -9,7 +9,7 @@
  * forever.
  */
 
-export const PARSER_VERSION = 1;
+export const PARSER_VERSION = 6;
 
 /** Compass directions INSIVUMEH uses for ash dispersal, normalised to English. */
 export type Direction =
@@ -44,6 +44,12 @@ export interface ParsedBulletin {
   lavaFlowM: number | null;
   /** Observed phenomena, normalised to a controlled vocabulary. */
   phenomena: Phenomenon[];
+  /**
+   * Sky over the observatory. The bulletin prints this as "Condiciones
+   * atmosféricas", and it is the closest thing to an answer for the question
+   * everyone hiking Acatenango actually asks: will the volcano be visible.
+   */
+  sky: Sky | null;
 }
 
 export const PHENOMENA = [
@@ -56,9 +62,13 @@ export const PHENOMENA = [
   'lahars',
   'lavaFlow',
   'incandescence',
+  'continuousPhase',
 ] as const;
 
 export type Phenomenon = (typeof PHENOMENA)[number];
+
+export const SKY = ['clear', 'partlyCloudy', 'cloudy'] as const;
+export type Sky = (typeof SKY)[number];
 
 export interface Bulletin {
   /** Local (Guatemala, UTC-6) date the bulletin describes: YYYY-MM-DD. */

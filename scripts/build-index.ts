@@ -28,6 +28,8 @@ export interface IndexEntry {
   drainages: string[];
   lavaFlowM: number | null;
   phenomena: string[];
+  /** Warnings from the parse, so the page can show what it could not read. */
+  warnings: string[];
 }
 
 export interface FuegoIndex {
@@ -39,17 +41,24 @@ export interface FuegoIndex {
     days: number;
     firstDate: string | null;
     lastDate: string | null;
-    /** Days where the parser failed to find an explosion rate. */
-    daysMissingRate: number;
+    /** Days the parser could not fully read — genuine failures. */
+    daysWithWarnings: number;
+    /**
+     * Days in a continuous eruptive phase. These publish no per-hour count at
+     * all, so a null rate is the volcano's state rather than a parse failure.
+     */
+    daysContinuous: number;
   };
 }
 
 function toEntry(b: Bulletin): IndexEntry {
   // Re-parse from raw so a stale record picks up parser improvements for free.
-  const { parsed } =
+  // Re-derive from the preserved raw text whenever the parser has moved on.
+  const re =
     b.parserVersion === PARSER_VERSION
-      ? { parsed: b.parsed }
+      ? { parsed: b.parsed, warnings: b.warnings }
       : parseBulletin(b.raw);
+  const { parsed, warnings } = re;
 
   return {
     date: b.date,
@@ -62,6 +71,7 @@ function toEntry(b: Bulletin): IndexEntry {
     drainages: parsed.drainages,
     lavaFlowM: parsed.lavaFlowM,
     phenomena: parsed.phenomena,
+    warnings,
   };
 }
 
@@ -92,7 +102,8 @@ export async function buildIndex(): Promise<FuegoIndex> {
       days: entries.length,
       firstDate: entries[0]?.date ?? null,
       lastDate: entries.at(-1)?.date ?? null,
-      daysMissingRate: entries.filter((e) => e.explosionsMax === null).length,
+      daysWithWarnings: entries.filter((e) => e.warnings.length > 0).length,
+      daysContinuous: entries.filter((e) => e.phenomena.includes('continuousPhase')).length,
     },
   };
 }
@@ -104,7 +115,8 @@ async function main(): Promise<void> {
   console.log(
     `[index] ${index.stats.days} days ` +
       `(${index.stats.firstDate ?? '—'} → ${index.stats.lastDate ?? '—'}), ` +
-      `${index.stats.daysMissingRate} missing a rate`,
+      `${index.stats.daysWithWarnings} with warnings, ` +
+      `${index.stats.daysContinuous} in a continuous phase`,
   );
 }
 

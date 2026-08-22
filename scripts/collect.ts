@@ -16,7 +16,8 @@ import path from 'node:path';
 import type { Bulletin } from '../src/lib/bulletin';
 import { guatemalaDate } from '../src/lib/date';
 import { bvdUrl, recentDates } from '../src/lib/bvd';
-import { fetchDocumentText } from '../src/lib/fetch-text';
+import { fetchWithRetry } from '../src/lib/fetch-text';
+import { ocrAvailable, ocrFuegoPage } from './ocr';
 import { parseBulletin } from '../src/lib/parse-bulletin';
 
 const DATA_DIR = path.join(process.cwd(), 'data', 'bulletins');
@@ -34,7 +35,13 @@ async function resolveBulletin(
   for (const date of recentDates(from, LOOKBACK_DAYS)) {
     const url = bvdUrl(date);
     try {
-      const raw = await fetchDocumentText(url);
+      const res = await fetchWithRetry(url);
+      const pdf = Buffer.from(await res.arrayBuffer());
+      const raw = await ocrFuegoPage(pdf);
+      if (!raw) {
+        console.warn(`[collect] ${date}: no Volcán de Fuego page found in the bulletin`);
+        continue;
+      }
       return { date, url, raw };
     } catch {
       // Not published for that date; try the day before.
@@ -46,9 +53,18 @@ async function resolveBulletin(
 async function main(): Promise<void> {
   const today = guatemalaDate();
 
+  if (!(await ocrAvailable())) {
+    console.error('[collect] pdftoppm and tesseract are required — see README');
+    process.exitCode = 1;
+    return;
+  }
+
   const override = process.env.BULLETIN_URL;
   const found = override
-    ? { date: today, url: override, raw: await fetchDocumentText(override) }
+    ? await (async () => {
+        const pdf = Buffer.from(await (await fetchWithRetry(override)).arrayBuffer());
+        return { date: today, url: override, raw: (await ocrFuegoPage(pdf)) ?? '' };
+      })()
     : await resolveBulletin(today);
 
   if (!found) {
@@ -58,13 +74,10 @@ async function main(): Promise<void> {
   const { date, url, raw } = found;
   console.log(`[collect] source: ${url}`);
 
-  // The bulletins are scans, so a PDF with no text layer is the normal failure
-  // mode, not a fetch error. Archiving an empty record would let build-index
-  // treat the day as collected when nothing was actually read.
+  // A near-empty page means OCR failed on the scan. Archiving it would let
+  // build-index count the day as collected when nothing was actually read.
   if (raw.trim().length < 80) {
-    console.warn(
-      `[collect] no text layer in ${url} (${raw.length} chars) — needs OCR; nothing archived`,
-    );
+    console.warn(`[collect] OCR returned ${raw.length} chars for ${url}; nothing archived`);
     return;
   }
 
@@ -97,6 +110,7 @@ async function main(): Promise<void> {
   console.log(`[collect] explosions/hr: ${format(parsed.explosionsPerHour)}`);
   console.log(`[collect] ash column masl: ${format(parsed.ashColumnMasl)}`);
   console.log(`[collect] drift: ${parsed.driftDirections.join(',') || '—'} ${parsed.driftKm ?? '—'}km`);
+  console.log(`[collect] sky: ${parsed.sky ?? '—'}`);
   if (warnings.length > 0) console.warn(`[collect] warnings: ${warnings.join(', ')}`);
 }
 
