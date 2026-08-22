@@ -28,6 +28,8 @@ export interface IndexEntry {
   drainages: string[];
   lavaFlowM: number | null;
   phenomena: string[];
+  /** Communities the bulletin named as taking ashfall. */
+  ashfallCommunities: string[];
   /** Warnings from the parse, so the page can show what it could not read. */
   warnings: string[];
 }
@@ -71,6 +73,7 @@ function toEntry(b: Bulletin): IndexEntry {
     drainages: parsed.drainages,
     lavaFlowM: parsed.lavaFlowM,
     phenomena: parsed.phenomena,
+    ashfallCommunities: parsed.ashfallCommunities,
     warnings,
   };
 }

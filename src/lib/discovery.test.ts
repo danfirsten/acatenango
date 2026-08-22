@@ -3,7 +3,7 @@ import { describe, it } from 'node:test';
 
 import { bvdUrl, recentDates } from './bvd';
 import { htmlToText } from './fetch-text';
-import { documentMentionsDate, printedDates } from './ocr';
+import { FUEGO_PAGE_CERTAIN, documentMentionsDate, printedDates, scoreFuegoPage } from './ocr';
 
 describe('bvdUrl', () => {
   it('builds the date-addressable bulletin URL', () => {
@@ -89,5 +89,27 @@ describe('documentMentionsDate', () => {
 
   it('accepts a bulletin with no legible date anywhere rather than discarding it', () => {
     assert.ok(documentMentionsDate(['garbled', 'Actividad: explosiones débiles'], '2026-08-21'));
+  });
+});
+
+describe('Fuego page scoring', () => {
+  it('scores a real Fuego page as certain', () => {
+    assert.ok(
+      scoreFuegoPage('El Observatorio del Volcán de Fuego (OVFGO) reporta ... Altura: 3763 msnm')
+        >= FUEGO_PAGE_CERTAIN,
+    );
+  });
+
+  it('never scores the other volcanoes in the same bulletin as Fuego', () => {
+    assert.ok(scoreFuegoPage('El OVPAC reporta actividad fumarólica en el cráter Mackenney') < 1);
+    assert.ok(scoreFuegoPage('El OVSAN reporta el domo Caliente del volcán Santiaguito') < 1);
+  });
+
+  it('does not treat a passing mention as the Fuego page', () => {
+    // The cover lists all three volcanoes; it is not Fuego's activity page.
+    assert.ok(
+      scoreFuegoPage('BOLETIN VULCANOLOGICO DIARIO — Fuego, Santiaguito y Pacaya')
+        < FUEGO_PAGE_CERTAIN,
+    );
   });
 });

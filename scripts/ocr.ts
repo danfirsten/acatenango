@@ -15,7 +15,7 @@ import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { promisify } from 'node:util';
 
-import { selectFuegoPage } from '../src/lib/ocr';
+import { FUEGO_PAGE_CERTAIN, scoreFuegoPage, selectFuegoPage } from '../src/lib/ocr';
 
 const exec = promisify(execFile);
 
@@ -42,6 +42,11 @@ export async function ocrPdf(pdf: Buffer): Promise<string[]> {
         path.join(dir, page), 'stdout', '-l', 'spa', '--psm', '6',
       ], { maxBuffer: 8 << 20 });
       texts.push(stdout);
+
+      // Stop once the cover (for the date) and an unmistakable Fuego page are
+      // both in hand. The remaining pages are Santiaguito and Pacaya, and OCR
+      // at 300 dpi is by far the slowest step in the collector.
+      if (texts.length > 1 && scoreFuegoPage(stdout) >= FUEGO_PAGE_CERTAIN) break;
     }
     return texts;
   } finally {

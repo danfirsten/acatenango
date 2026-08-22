@@ -83,7 +83,19 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
                 : `km ${day.driftDirections.join('·')}`
             }
           />
-          <Readout k="Drainages" v={String(day.drainages.length)} u={day.drainages.join(', ') || 'none named'} />
+          {day.ashfallCommunities.length > 0 ? (
+            <Readout
+              k="Ashfall named in"
+              v={String(day.ashfallCommunities.length)}
+              u={day.ashfallCommunities.join(', ')}
+            />
+          ) : (
+            <Readout
+              k="Drainages"
+              v={String(day.drainages.length)}
+              u={day.drainages.join(', ') || 'none named'}
+            />
+          )}
         </aside>
 
         <div className="scrollcue" aria-hidden="true">

@@ -23,6 +23,13 @@ export function scoreFuegoPage(text: string): number {
   return score;
 }
 
+/**
+ * A score at or above this can only be the Fuego page — no other volcano's page
+ * carries the OVFGO observatory code or Fuego's summit elevation — so pages
+ * after it need not be read at all.
+ */
+export const FUEGO_PAGE_CERTAIN = 7;
+
 /** Picks the Fuego page from per-page OCR output, or null if none qualifies. */
 export function selectFuegoPage(pages: string[]): { index: number; text: string } | null {
   let best = -1;
