@@ -25,7 +25,14 @@ function smooth(pts: Array<[number, number]>, tension = 0.45): string {
   return d;
 }
 
-export default function TempoChart({ series }: { series: IndexEntry[] }) {
+interface TempoChartProps {
+  series: IndexEntry[];
+  /** Index of the day currently driving the scene. */
+  selected: number;
+  onSelect: (index: number) => void;
+}
+
+export default function TempoChart({ series, selected, onSelect }: TempoChartProps) {
   const [hover, setHover] = useState<number | null>(null);
 
   const { path, area, pts, maxY, ticks } = useMemo(() => {
@@ -45,10 +52,17 @@ export default function TempoChart({ series }: { series: IndexEntry[] }) {
 
   const active = hover === null ? null : series[hover];
 
-  function onMove(ev: React.PointerEvent<SVGSVGElement>) {
+  function indexAt(ev: React.PointerEvent<SVGSVGElement>): number {
     const r = ev.currentTarget.getBoundingClientRect();
     const x = ((ev.clientX - r.left) / r.width) * W;
-    setHover(Math.max(0, Math.min(series.length - 1, Math.round((x / W) * (series.length - 1)))));
+    return Math.max(0, Math.min(series.length - 1, Math.round((x / W) * (series.length - 1))));
+  }
+
+  function onMove(ev: React.PointerEvent<SVGSVGElement>) {
+    const i = indexAt(ev);
+    setHover(i);
+    // Dragging scrubs the scene; a plain hover only moves the crosshair.
+    if (ev.buttons === 1) onSelect(i);
   }
 
   const fmt = (iso: string) =>
@@ -63,6 +77,7 @@ export default function TempoChart({ series }: { series: IndexEntry[] }) {
         role="img"
         aria-label={`Explosions per hour over ${series.length} days`}
         onPointerMove={onMove}
+        onPointerDown={(ev) => { ev.currentTarget.setPointerCapture(ev.pointerId); onSelect(indexAt(ev)); }}
         onPointerLeave={() => setHover(null)}
       >
         <defs>
@@ -85,14 +100,18 @@ export default function TempoChart({ series }: { series: IndexEntry[] }) {
         <path d={area} fill="url(#tempoFill)" />
         <path d={path} fill="none" stroke="#E8622C" strokeWidth={2} strokeLinejoin="round" />
 
-        <circle cx={pts[pts.length - 1][0]} cy={pts[pts.length - 1][1]} r={4}
-          fill="#E8622C" stroke="#0B1016" strokeWidth={2} />
-
         {[0, Math.floor(series.length / 3), Math.floor((series.length * 2) / 3), series.length - 1].map((i) => (
           <text key={i} x={Math.min(pts[i][0], W - 46)} y={H - 6} className="tempo-tick">
             {fmt(series[i].date).toUpperCase()}
           </text>
         ))}
+
+        <g className="tempo-selected">
+          <line x1={pts[selected][0]} x2={pts[selected][0]} y1={PAD.t} y2={H - PAD.b}
+            stroke="#E8622C" strokeWidth={1.5} opacity={0.85} />
+          <circle cx={pts[selected][0]} cy={pts[selected][1]} r={5}
+            fill="#E8622C" stroke="#0B1016" strokeWidth={2} />
+        </g>
 
         {hover !== null && (
           <>

@@ -1,0 +1,36 @@
+{
+  "date": "2026-07-11",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-11.pdf",
+  "fetchedAt": "2026-08-22T00:58:27.020Z",
+  "raw": "YSN UM\nA a\nBOLETIN VULCANOLOGICO DIARIO (62%\nEA:\n=\nGUATEMALA\n11 de julio de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nA AA | , E aa\n(9) x Condiciones atmosféricas:\nA Parcialmente nublado\nViento:\n25\nMs —a Del este\nA qe E 0% Precipitación pluvial:\nE o e : 0.00 mm\n“Y ed Acceda a las cámaras de vigilancia\nstrato volcán compuesto Los a a\nPp volcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones un poco favorables para la visualización del\ncráter debido a la presencia de nubosidad. Se registran de 8 a 10 explosiones de características\ndébiles y moderadas por hora, las cuales elevan columnas de gases con una tonalidad grisácea de\n4500 a 4800 msnm (14,764 a 15,748 pies). Estas se desplazan hacia el oeste debido a la acción del\nviento a distancias de 10 a 40 km. Algunas de estas explosiones expulsan material incandescente a\ndistancias de 200 metros sobre el nivel del cráter. Otras pueden ocasionar retumbos y ondas de\nchoque débiles. De igual forma se presentan sonidos de desgasificación similares a los de una\nmáquina locomotora. Se espera caída débil de ceniza fina sobre Finca El Recreo, Sangre de Cristo y\nsus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "partlyCloudy"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

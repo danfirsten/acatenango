@@ -49,10 +49,23 @@ export async function ocrPdf(pdf: Buffer): Promise<string[]> {
   }
 }
 
-/** OCRs a bulletin and returns just the Volcán de Fuego page. */
-export async function ocrFuegoPage(pdf: Buffer): Promise<string | null> {
+export interface OcrBulletin {
+  /** The Volcán de Fuego page, or null if none of the pages is Fuego's. */
+  fuego: string | null;
+  /** Every page's text, in order. Page 0 is the cover, which carries the date. */
+  pages: string[];
+}
+
+/**
+ * OCRs a bulletin, returning the Fuego page and the whole document.
+ *
+ * Both are needed: activity is parsed from the Fuego page alone, but the
+ * bulletin prints its own date on the cover, so verifying the date requires
+ * text this record will not otherwise keep.
+ */
+export async function ocrBulletin(pdf: Buffer): Promise<OcrBulletin> {
   const pages = await ocrPdf(pdf);
-  return selectFuegoPage(pages)?.text ?? null;
+  return { fuego: selectFuegoPage(pages)?.text ?? null, pages };
 }
 
 /** True when the OCR tooling this module shells out to is present. */

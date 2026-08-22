@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import type { IndexEntry } from '../../scripts/build-index';
 import {
   type LabelPosition,
   type MassifHandle,
@@ -11,8 +12,8 @@ import {
 } from '@/lib/scene/massif';
 
 interface MassifProps {
-  /** Explosions per hour — drives plume density and vent glow. */
-  activity: number;
+  /** The archived day the scene should draw. */
+  day: IndexEntry;
 }
 
 type Status = 'loading' | 'ready' | 'unsupported' | 'failed';
@@ -30,7 +31,7 @@ function webglAvailable(): boolean {
   }
 }
 
-export default function Massif({ activity }: MassifProps) {
+export default function Massif({ day }: MassifProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const handleRef = useRef<MassifHandle | null>(null);
   const [labels, setLabels] = useState<LabelPosition[]>([]);
@@ -58,7 +59,7 @@ export default function Massif({ activity }: MassifProps) {
         if (cancelled) return;
 
         handle = createMassifScene(canvas, field, meta, {
-          activity,
+          activity: day.explosionsMax ?? 10,
           reducedMotion: prefersReducedMotion(),
           // Labels are DOM, not WebGL, so they stay selectable and legible.
           onLabels: setLabels,
@@ -81,7 +82,13 @@ export default function Massif({ activity }: MassifProps) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  useEffect(() => { handleRef.current?.setActivity(activity); }, [activity]);
+  useEffect(() => {
+    handleRef.current?.setDay({
+      explosionsPerHour: day.explosionsMax,
+      ashColumnMasl: day.ashMaxMasl,
+      driftDirections: day.driftDirections,
+    });
+  }, [day]);
   useEffect(() => { handleRef.current?.setView(view); }, [view]);
 
   return (

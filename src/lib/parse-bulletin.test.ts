@@ -287,3 +287,57 @@ describe('rates separated from the noun by qualifiers', () => {
     );
   });
 });
+
+describe('lava flows versus things that merely mention lava', () => {
+  it('reads a flow with a stated length', () => {
+    assert.equal(
+      parseBulletin('Se mantiene un flujo de lava de 1,200 metros de longitud hacia la barranca').parsed.lavaFlowM,
+      1200,
+    );
+  });
+
+  it('does not record a forecast as an observed flow', () => {
+    // 22 July 2026: "posibilidad de generar flujos de lava en los próximos días".
+    assert.equal(
+      parseBulletin(
+        'existe la posibilidad de generar flujos de lava en los próximos días, con alturas de 300 metros',
+      ).parsed.lavaFlowM,
+      null,
+    );
+  });
+
+  it('does not record fragments thrown above the crater as a flow', () => {
+    // 3 Aug 2026: "expulsión de fragmentos de lava a 200 mts de altura".
+    assert.equal(
+      parseBulletin('expulsión de fragmentos de lava a 200 mts de altura sobre el cráter').parsed.lavaFlowM,
+      null,
+    );
+  });
+});
+
+describe('named ashfall communities', () => {
+  it('reads the places the observer named', () => {
+    assert.deepEqual(
+      parseBulletin(
+        'caída de ceniza en Sangre de Cristo, San Pedro Yepocapa, Pochuta y otras comunidades.',
+      ).parsed.ashfallCommunities,
+      ['Sangre de Cristo', 'San Pedro Yepocapa', 'Pochuta'],
+    );
+  });
+
+  it('returns nothing when the bulletin only says "communities to the west"', () => {
+    assert.deepEqual(
+      parseBulletin('Caída de ceniza fina en comunidades ubicadas en el flanco Oeste')
+        .parsed.ashfallCommunities,
+      [],
+    );
+  });
+
+  it('ignores place names outside the ashfall clause', () => {
+    assert.deepEqual(
+      parseBulletin('Se recomienda no transitar por los cauces cercanos a Alotenango.')
+        .parsed.ashfallCommunities,
+      [],
+    );
+  });
+});

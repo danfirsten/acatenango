@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
+  <rect width="64" height="64" fill="#0B1016"/>
+  <!-- Fuego's cone, with the ash column leaning west as it usually does. -->
+  <path d="M4 54 L26 20 L36 32 L44 22 L60 54 Z" fill="#151F29" stroke="#33434F" stroke-width="1.2"/>
+  <path d="M26 20 C22 14 18 12 14 8 C22 10 27 14 29 18 Z" fill="#93A7B8" opacity=".6"/>
+  <circle cx="26" cy="20" r="3" fill="#E8622C"/>
+</svg>

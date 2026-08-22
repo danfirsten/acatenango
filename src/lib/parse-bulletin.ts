@@ -204,9 +204,45 @@ export function parseIncandescence(text: string): Range | null {
 }
 
 export function parseLavaFlow(text: string): number | null {
+  // Only an observed flow with a stated length counts. Two look-alikes must
+  // never be recorded as flows: a forecast ("posibilidad de generar flujos de
+  // lava en los próximos días") and incandescent fragments thrown above the
+  // crater ("fragmentos de lava a 200 mts de altura"), which is a height.
   const m =
-    /flujos?\s+de\s+lava[\s\S]{0,120}?(\d[\d.,]*)\s*(?:m\b|metros)/i.exec(text);
+    /flujos?\s+de\s+lava(?![\s\S]{0,40}pr[óo]xim)[\s\S]{0,90}?(\d[\d.,]*)\s*(?:m\b|mts?\b|metros)\s*(?:de\s+)?(?:longitud|largo)/i
+      .exec(text);
   return m ? parseSpanishNumber(m[1]) : null;
+}
+
+/**
+ * Communities around Fuego that bulletins name when ash falls on them. A fixed
+ * list, because the parser must never invent a place name — matching real
+ * printed names is reporting; guessing at capitalised words is not.
+ */
+const COMMUNITIES: Array<{ name: string; pattern: RegExp }> = [
+  { name: 'Panimaché I', pattern: /\bpanimach[eé]\s*(?:i\b|1\b)(?!\s*i)/i },
+  { name: 'Panimaché II', pattern: /\bpanimach[eé]\s*(?:ii\b|2\b)/i },
+  { name: 'Morelia', pattern: /\bmorelia\b/i },
+  { name: 'Santa Sofía', pattern: /\bsanta\s+sof[ií]a\b/i },
+  { name: 'El Porvenir', pattern: /\bel\s+porvenir\b/i },
+  { name: 'Sangre de Cristo', pattern: /\bsangre\s+de\s+cristo\b/i },
+  { name: 'San Pedro Yepocapa', pattern: /\b(?:san\s+pedro\s+)?yepocapa\b/i },
+  { name: 'Pochuta', pattern: /\bpochuta\b/i },
+  { name: 'Alotenango', pattern: /\balotenango\b/i },
+  { name: 'La Rochela', pattern: /\bla\s+rochela\b/i },
+  { name: 'Ceilán', pattern: /\bceil[aá]n\b/i },
+  { name: 'El Rodeo', pattern: /\bel\s+rodeo\b/i },
+  { name: 'Los Yucales', pattern: /\blos\s+yucales\b/i },
+  { name: 'Sacatepéquez', pattern: /\bsacatep[eé]quez\b/i },
+];
+
+export function parseAshfallCommunities(text: string): string[] {
+  // Scope to the ashfall clause: these names also appear in evacuation advice
+  // and in lahar warnings, which are different statements about the same places.
+  const clauses = [...text.matchAll(/ca[íi]da\s+de\s+ceniza[\s\S]{0,240}/gi)].map((m) => m[0]);
+  if (clauses.length === 0) return [];
+  const scope = clauses.join(' ');
+  return COMMUNITIES.filter((c) => c.pattern.test(scope)).map((c) => c.name);
 }
 
 const PHENOMENON_TERMS: Array<[RegExp, Phenomenon]> = [
@@ -261,6 +297,7 @@ export function parseBulletin(raw: string): ParseResult {
     phenomena: parsePhenomena(text),
     // Printed in the sidebar, outside the activity paragraph.
     sky: parseSky(full),
+    ashfallCommunities: parseAshfallCommunities(text),
   };
 
   const warnings: string[] = [];

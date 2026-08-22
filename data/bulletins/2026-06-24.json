@@ -1,0 +1,34 @@
+{
+  "date": "2026-06-24",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-24.pdf",
+  "fetchedAt": "2026-08-22T01:24:08.250Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\nÓN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS LAS 14? 28' 54 Latitud N;\ne 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nN L, sz o.\n¡On Condiciones atmosféricas:\nVr Despejado\n— Viento:\n: Dn\nY Del Este\n0% Precipitación pluvial:\n0.0 mm\nMorfología: : E ñ\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nSe observa desgasificación débil sobre el cráter, alcanzando alturas de 600 metros y dispersándose al Oeste. Se\nregistran explosiones débiles y moderadas, a un ritmo de 2 a 5 por hora, generando columna de gas y ceniza que\nalcanzan los 4800 msnm. La ceniza se dispersa de 10 a 20 km en dirección oeste. Caída de ceniza fina en\ncomunidades ubicadas en el flanco Oeste. También se observan balísticos y descenso de material volcánico\nincandescente producto de las explosiones, hacia los flancos oeste, sur y suroeste, llegando incluso hasta la\nvegetación. Asimismo, la actividad explosiva genera retumbos, ondas de choque y sonidos similares a turbina de\navión debido al gas expulsado de forma continua. Durante al noche y madrugada es posible observar\nincandescencia que permanece en el cráter y que también se denota como pulsos incandescentes alcanzando\nalturas de 100 a 300 metros\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : | Infraestructura y Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivienda\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4800,
+      "max": 4800
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

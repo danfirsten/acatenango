@@ -1,0 +1,44 @@
+{
+  "date": "2026-07-20",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-20.pdf",
+  "fetchedAt": "2026-08-22T00:45:05.219Z",
+  "raw": "YO UM,\nz z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n20 de julio de 2026 VO LC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\n(==) eS Condiciones atmosféricas:\nVr Despejado\nViento:\n7 CES = _D5\nRON -—Y O Del Este\nA SS\nA A SS 0 Precipitación pluvial:\nEa AI A OS SA Yo .\n0.0 mm\nMorfología: A dinos\nEstrato volcán compuesto cceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA Sl https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 200 metros sobre el cráter y se dispersaron hacia el oeste. La\nactividad explosiva se mantuvo entre 3 y 6 explosiones débiles y moderadas por hora, generando\ncolumnas de ceniza entre 4200 y 4500 msnm, que se desplazaron hacia el oeste y suroeste.\nAlgunas explosiones estuvieron acompañadas de retumbos, ondas de choque y sonidos similares a\nlocomotoras con lapsos de 1 a 3 minutos, asociados a la expulsión continua de gases. Se\nobservaron pulsos incandescentes de hasta 300 metros sobre el cráter, acompañados de avalanchas\ndébiles. Además, se registró caída de material incandescente alrededor del cráter, el cual se encauza\nhacia las barrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en ocasiones\ndescendiendo hasta el límite de la vegetación.\nsE, | Ministerio de\nss y Comunicaciones, . . . y ' y . '\n3 , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 300,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": []
+}

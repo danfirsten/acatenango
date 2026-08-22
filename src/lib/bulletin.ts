@@ -9,7 +9,7 @@
  * forever.
  */
 
-export const PARSER_VERSION = 6;
+export const PARSER_VERSION = 7;
 
 /** Compass directions INSIVUMEH uses for ash dispersal, normalised to English. */
 export type Direction =
@@ -40,7 +40,14 @@ export interface ParsedBulletin {
   drainages: string[];
   /** Height of incandescent pulses above the crater, in metres. */
   incandescenceM: Range | null;
-  /** Length of any active lava flow, in metres. */
+  /**
+   * Length of an active lava flow, in metres.
+   *
+   * Usually null, and correctly so: most bulletins that mention lava are either
+   * forecasting the possibility of a flow or describing incandescent fragments
+   * thrown above the crater. Neither is a flow, and neither may be recorded as
+   * one.
+   */
   lavaFlowM: number | null;
   /** Observed phenomena, normalised to a controlled vocabulary. */
   phenomena: Phenomenon[];
@@ -50,6 +57,12 @@ export interface ParsedBulletin {
    * everyone hiking Acatenango actually asks: will the volcano be visible.
    */
   sky: Sky | null;
+  /**
+   * Communities the bulletin names as taking ashfall. Most days say only
+   * "comunidades ubicadas en el flanco Oeste"; when the observer names places,
+   * those names are the most human thing in the whole record.
+   */
+  ashfallCommunities: string[];
 }
 
 export const PHENOMENA = [

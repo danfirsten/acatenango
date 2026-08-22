@@ -35,6 +35,16 @@ async function main(): Promise<void> {
   const png = await readFile(path.join(ROOT, 'public/terrain/massif.png'));
   const css = await readFile(path.join(ROOT, 'src/app/globals.css'), 'utf8');
 
+  // Inline the real archive so the offline file carries the collected record
+  // rather than the placeholder.
+  let seriesJson = '[]';
+  try {
+    const index = JSON.parse(await readFile(path.join(ROOT, 'data/index.json'), 'utf8'));
+    seriesJson = JSON.stringify(index.entries ?? []);
+  } catch {
+    // No archive yet; the entry point falls back to the labelled placeholder.
+  }
+
   const html = `<title>Fuego</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -94,6 +104,7 @@ ${css.replace(/var\(--font-barlow-condensed\)/g, '"Barlow Condensed"')
 <script>
 window.__MASSIF_META__ = ${meta.trim()};
 window.__MASSIF_PNG__ = "data:image/png;base64,${png.toString('base64')}";
+window.__SERIES__ = ${seriesJson};
 </script>
 <script type="module">
 ${js}

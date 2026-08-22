@@ -156,6 +156,19 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-weight: 400;
 }
 
+.badge[data-warn="true"] {
+  color: #C9A227;
+  border-color: #4A4020;
+  background: #191506;
+}
+
+.record-foot { padding-top: 0; }
+.colophon p + p { margin-top: 12px; }
+
+/* The selected day persists; the crosshair is only where the pointer is. */
+.tempo svg { cursor: crosshair; }
+.tempo-selected { pointer-events: none; }
+
 .massif-views {
   position: absolute;
   left: 26px;
@@ -285,7 +298,20 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   }
   .readout-row { border-bottom: 0; border-right: 1px solid var(--line); }
   .readout-row:nth-child(n + 4) { display: none; }
-  .massif-views { left: 16px; bottom: 20px; }
+  .badge[data-warn="true"] {
+  color: #C9A227;
+  border-color: #4A4020;
+  background: #191506;
+}
+
+.record-foot { padding-top: 0; }
+.colophon p + p { margin-top: 12px; }
+
+/* The selected day persists; the crosshair is only where the pointer is. */
+.tempo svg { cursor: crosshair; }
+.tempo-selected { pointer-events: none; }
+
+.massif-views { left: 16px; bottom: 20px; }
   .scrollcue { display: none; }
   .record-head { grid-template-columns: 1fr; gap: 22px; }
   .figures { flex-wrap: wrap; }

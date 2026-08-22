@@ -60,3 +60,55 @@ export function activitySection(text: string): string {
   const m = /Actividad\b([\s\S]{40,2600})/i.exec(text);
   return m ? m[1] : text;
 }
+
+const MONTHS: Record<string, number> = {
+  enero: 1, febrero: 2, marzo: 3, abril: 4, mayo: 5, junio: 6,
+  julio: 7, agosto: 8, septiembre: 9, setiembre: 9, octubre: 10,
+  noviembre: 11, diciembre: 12,
+};
+
+/**
+ * Every date the document prints anywhere, as ISO strings.
+ *
+ * Returns all of them rather than picking one on purpose. These scans carry
+ * more than one date — the bulletin's own, and sometimes site furniture caught
+ * in the image ("lunes, 17 de agosto de 2026 ... Editar"). Choosing between
+ * them by position would be guesswork; asking "does the document mention the
+ * date we are about to file it under" is answerable.
+ */
+export function printedDates(text: string): string[] {
+  const found = new Set<string>();
+  const re = /(\d{1,2})\s+de\s+([a-záéíóú]+)\s+de\s+(\d{4})/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text)) !== null) {
+    const month = MONTHS[m[2].toLowerCase()];
+    if (!month) continue;
+    const day = Number(m[1]);
+    if (day < 1 || day > 31) continue;
+    found.add(`${m[3]}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`);
+  }
+  return [...found];
+}
+
+/**
+ * Whether a bulletin filed under `date` actually says so.
+ *
+ * INSIVUMEH occasionally leaves a stale PDF at a day's URL. Filing that under
+ * the requested date would silently attribute one day's volcano to another —
+ * the same class of quiet wrong value that got the earlier link-scraping
+ * approach removed.
+ *
+ * The cover page carries the bulletin's own date and is treated as the
+ * authority. Later pages are only consulted when the cover yields nothing,
+ * because they contain site furniture with unrelated dates of its own — real
+ * page 2 of BVD-2026-08-21 prints "lunes, 17 de agosto de 2026 ... Editar".
+ * Trusting that line would reject a perfectly good bulletin.
+ *
+ * A document with no legible date at all is accepted: OCR loses decorative
+ * mastheads often enough that rejecting on silence would throw away real days.
+ */
+export function documentMentionsDate(pages: string[], date: string): boolean {
+  const cover = pages.length > 0 ? printedDates(pages[0]) : [];
+  const candidates = cover.length > 0 ? cover : printedDates(pages.join('\n'));
+  return candidates.length === 0 ? true : candidates.includes(date);
+}

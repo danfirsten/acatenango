@@ -1,0 +1,32 @@
+{
+  "date": "2026-07-16",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-16.pdf",
+  "fetchedAt": "2026-08-22T00:46:36.258Z",
+  "raw": "YSN UM\nz z STE IN\nBOLETIN VULCANOLÓGICO DIARIO (6353\nGUATEMALA\nA CÓN VOLCÁN DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nyl e ] Ls .. es\ny ¡On Condiciones atmosféricas:\nVr Despejado\nS .\n: Viento:\ny Del Nor-Noreste\n0% Precipitación pluvial:\n20.8 mm en FG14\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\n5 SS https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nLa actividad del volcán de Fuego se mantiene con explosiones moderadas a fuertes en forma recurrente, generando\ncolumnas de ceniza con alturas entre 4,200 y 4,700 msnm. Dispersándose al oeste y suroeste, alcanzando una\ndistancia aproximada de 30 km. La actividad explosiva es acompañada por avalanchas de bloques incandescentes y\nmaterial volcánico suelto que descienden por los flancos oeste, sur y suroeste del edificio volcánico. Se reporta caída\nde finas partículas de ceniza en las aldeas de Panimache, Santa Sofía, Morelia, Yucales, Sangre de cristo y en otras\ncomunidades cercanas. Algunas explosiones generan retumbos fuertes y ondas de choque perceptibles en\nmunicipios y aldeas alrededor del complejo volcánico. También se reportan sonidos similares a locomotora de tren.\nDebido a las condiciones actuales de actividad, se considera de alto riesgo permanecer en la meseta del volcán y\náreas cercanas al cráter, por la posible caída de material balístico, expulsado a distancias superiores a 700 metros. Se\nrecomienda utilizar ropa adecuada para condiciones de montaña, considerando las bajas temperaturas, así como la\nposibilidad de lluvias vespertinas y nocturnas.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\near | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate",
+    "no-drift-direction"
+  ]
+}

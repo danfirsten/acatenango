@@ -7,6 +7,7 @@
  */
 
 import { demoSeries } from '@/lib/demo-series';
+import type { IndexEntry } from '../../scripts/build-index';
 import {
   type LabelPosition,
   type MassifMeta,
@@ -18,6 +19,8 @@ declare global {
   interface Window {
     __MASSIF_META__: MassifMeta;
     __MASSIF_PNG__: string;
+    /** Real archive, inlined at build time; absent means fall back. */
+    __SERIES__?: IndexEntry[];
   }
 }
 
@@ -27,7 +30,7 @@ const $ = <T extends Element>(sel: string): T => {
   return el;
 };
 
-const series = demoSeries();
+const series = window.__SERIES__?.length ? window.__SERIES__ : demoSeries();
 const today = series[series.length - 1];
 
 /* ── readout ─────────────────────────────────────────────────────────────── */

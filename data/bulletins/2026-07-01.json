@@ -1,0 +1,33 @@
+{
+  "date": "2026-07-01",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-01.pdf",
+  "fetchedAt": "2026-08-22T01:16:57.405Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\nón VOLCÁN DE\nó LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\na ¿E 90252'54 Longitud W\nmE Altura: 3763 msnm\nyl e ] Ls ._. es\ny Y 3 Condiciones atmosféricas:\nVr Despejado\nS .\n: Viento:\nY Del Este, Noreste\n0% Precipitación pluvial:\n1.8 mm en FG14\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nEl Volcán de Fuego, mantiene constantes explosiones de tipo estrombolianas y vulcanianas, débiles, moderadas y\nalgunas fuertes, acompañadas de columnas de gases y ceniza con alturas entre 4,200 y 4,700 msnm. Dispersándose\nal oeste, suroeste, a una distancia aproximada de 30 km desde el cráter. La actividad está acompañada por el\ndescenso de avalanchas de bloques incandescentes y material volcánico sobre los flancos oeste, sur y suroeste del\nvolcán. Así mismo, se reporta caída de ceniza en las comunidades de Santa Sofía, El Porvenir, San Pedro Yepocapa,\nSangre de Cristo y otras localidades de la zona. Las explosiones más energéticas generan retumbos y ondas de\nchoque, perceptibles en municipios y comunidades cercanas al complejo volcánico. También se reportan sonidos\nsimilares a locomotora de tren, por lapsos de 3, 5, 10, minutos. Las condiciones actuales de actividad mantienen un\nalto nivel de peligro en la meseta y en las inmediaciones del cráter, debido a la expulsión de material balístico que\nalcanza distancias superiores a 500 m alrededor del cráter. Por esta razón, se recomienda no permanecer ni transitar\npor estas áreas. A las personas que realicen ascensos al volcán se les recomienda utilizar ropa y equipo adecuados\npara condiciones de montaña, debido a las bajas temperaturas registradas en la zona y a la probabilidad de lluvias\ndurante la tarde y la noche.\nFE y) $ ' Comunicaciones, . . : y y y : '\n3 : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivienda\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate",
+    "no-drift-direction"
+  ]
+}

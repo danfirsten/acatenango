@@ -13,7 +13,8 @@
     "fetch:terrain": "tsx scripts/fetch-terrain.ts",
     "build:standalone": "tsx scripts/build-standalone.ts",
     "backfill": "tsx scripts/backfill.ts",
-    "prebuild": "tsx scripts/build-index.ts"
+    "prebuild": "tsx scripts/build-index.ts",
+    "postbuild": "tsx scripts/build-sw.ts"
   },
   "dependencies": {
     "next": "16.3.2",

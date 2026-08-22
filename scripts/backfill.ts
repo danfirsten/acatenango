@@ -16,7 +16,8 @@ import { bvdUrl, recentDates } from '../src/lib/bvd';
 import { guatemalaDate } from '../src/lib/date';
 import { fetchWithRetry } from '../src/lib/fetch-text';
 import { parseBulletin } from '../src/lib/parse-bulletin';
-import { ocrAvailable, ocrFuegoPage } from './ocr';
+import { documentMentionsDate } from '../src/lib/ocr';
+import { ocrAvailable, ocrBulletin } from './ocr';
 
 const DATA_DIR = path.join(process.cwd(), 'data', 'bulletins');
 
@@ -50,9 +51,14 @@ async function main(): Promise<void> {
     try {
       const res = await fetchWithRetry(url, 2);
       const pdf = Buffer.from(await res.arrayBuffer());
-      const raw = await ocrFuegoPage(pdf);
+      const { fuego: raw, pages } = await ocrBulletin(pdf);
       if (!raw || raw.trim().length < 80) {
         console.warn(`[backfill] ${date}: no readable Fuego page`);
+        failed++;
+        continue;
+      }
+      if (!documentMentionsDate(pages, date)) {
+        console.warn(`[backfill] ${date}: document names another date — skipped`);
         failed++;
         continue;
       }

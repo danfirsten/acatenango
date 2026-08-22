@@ -1,0 +1,34 @@
+{
+  "date": "2026-07-21",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-21.pdf",
+  "fetchedAt": "2026-08-22T00:44:44.710Z",
+  "raw": "YSN UM\nz z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n21 de julio de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(e) eS Condiciones atmosféricas:\nVr Despejado\nViento:\nds Dn\nA” A Del Este\na E LOS oy. Precipitación pluvial:\nA e NN 0 mm\nIS A\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\na lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á cal E\n> volcanica/\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\noeste y suroeste del complejo volcánico hasta una distancia aproximada de 25 kilómetros. Se reporta caída de\nceniza en Yepocapa. Asimismo, se observan avalanchas por los flancos oeste, suroeste y sur, en las que algunos\nbloques alcanzan la vegetación. Algunas explosiones generan retumbos, ondas de choque y sonidos similares al\nde una locomotora de tren. Debido a la actividad descrita, es peligroso permanecer en la meseta, por el riesgo de\ncaída de material balístico.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "date": "2026-07-04",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-04.pdf",
+  "fetchedAt": "2026-08-22T01:15:24.093Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\nón VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS LAS 14? 28' 54 Latitud N;\ne 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\n\" ¡On Condiciones atmosféricas:\nA VI Despejado\nViento:\n29\nY Del Este, Noreste\n09 Precipitación pluvial:\n70\n4.8 mm en FG14\nMorfología:\nEstrato volcán compuesto ) E .\nAcceda a las cámaras de vigilancia\na e volcánica en el siguiente enlace:\nTipo de actividad: https://insivumeh.gob e ilancia-\nVulcaniana dd ia: a\nvolcanica/\nActividad\nEl volcán de Fuego mantiene constantes explosiones de tipo estrombolianas de intensidad débil, moderada y fuerte,\nque generan columnas de gases y ceniza entre 4,200 y 4,700 msnm. La ceniza se dispersa al oeste y suroeste,\nalcanzando aproximadamente 30 km de distancia. La actividad es acompañada de avalanchas de bloques\nincandescentes y material volcánico en los flancos oeste, sur y suroeste, así como caída de ceniza en las\ncomunidades de Panimache, Morelia, Santa Sofía y otras en la zona. Las explosiones fuertes producen retumbos,\nondas de choque y sonidos similares a una locomotora de tren, perceptibles en áreas aledañas. Debido al riesgo de\ncaída de balísticos a más de 500 metros del cráter, se recomienda no permanecer en la meseta ni en sus\ninmediaciones. Asimismo, quienes asciendan al volcán deben utilizar ropa y equipo adecuados para condiciones de\nmontaña, considerando las bajas temperaturas y la probabilidad de lluvias vespertinas y nocturnas.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : | Infraestructura y Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivienda\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

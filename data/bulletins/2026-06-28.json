@@ -1,0 +1,34 @@
+{
+  "date": "2026-06-28",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-28.pdf",
+  "fetchedAt": "2026-08-22T01:17:47.996Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\nÓN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\na ¿E 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\nY 3 Condiciones atmosféricas:\n, Vr Despejado\nViento:\n29\nY Del Este, Noreste\no, Precipitación pluvial:\n70\n12 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nLa actividad del volcán de Fuego continua siendo caracterizada por explosiones débiles, moderadas con algunas\nfuertes, que generan columnas de gases y ceniza con alturas entre 4,200 y 4,700 msnm. Estas emisiones se dispersan\nhacia el oeste, alcanzando una distancia aproximada de 30 km desde el cráter. La actividad está acompañada por el\ndescenso de avalanchas de bloques incandescentes y material volcánico sobre los flancos oeste, sur y suroeste del\nvolcán. Así mismo, se reporta caída de ceniza en las comunidades de El Porvenir, San Pedro Yepocapa, Sangre de\nCristo, Quisache y otras localidades ubicadas en la zona. Las explosiones más energéticas producen retumbos y\nondas de choque, perceptibles en municipios y comunidades cercanas al complejo volcánico. También se reportan\nsonidos similares a locomotora de tren, por lapsos de varios minutos. Las condiciones actuales de actividad\nmantienen un alto nivel de peligro en la meseta y en las inmediaciones del cráter, debido a la expulsión de material\nbalístico que alcanza distancias superiores a 500 m alrededor del cráter. Por esta razón, no se recomienda\npermanecer ni transitar por estas áreas. A las personas que realicen ascensos al volcán se les recomienda utilizar\nropa y equipo adecuados para condiciones de montaña, debido a las bajas temperaturas registradas en la zona y a\nla probabilidad de lluvias durante la tarde y la noche.\nFE y) $ ' Comunicaciones, . . : y y y : '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

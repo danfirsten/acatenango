@@ -1,0 +1,36 @@
+{
+  "date": "2026-07-08",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-08.pdf",
+  "fetchedAt": "2026-08-22T01:14:01.048Z",
+  "raw": "YSN UM\nz z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\nOA VOLCÁN DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\na AA ¡Or Condiciones atmosféricas:\n3 Despejado\no 2. Viento:\nA ÓN . a \"TALES\nE A O ON 0 Precipitación pluvial:\nA o\nA O NE\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto as Ae\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 8 a 10 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 4800 msnm (14,764 a 15,748 pies). Estas\nse desplazan hacia el oeste debido a la acción del viento a distancias de 10 a 40 km. Algunas de\nestas explosiones expulsan material incandescente a distancias de 200 metros sobre el nivel del\ncráter. Otras pueden ocasionar retumbos y ondas de choque débiles. De igual forma se presentan\nsonidos de desgasificación similares a los de una máquina locomotora. Se espera caída débil de\nceniza fina sobre Finca El Recreo, Sangre de Cristo y sus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

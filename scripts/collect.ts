@@ -17,7 +17,8 @@ import type { Bulletin } from '../src/lib/bulletin';
 import { guatemalaDate } from '../src/lib/date';
 import { bvdUrl, recentDates } from '../src/lib/bvd';
 import { fetchWithRetry } from '../src/lib/fetch-text';
-import { ocrAvailable, ocrFuegoPage } from './ocr';
+import { documentMentionsDate, printedDates } from '../src/lib/ocr';
+import { ocrAvailable, ocrBulletin } from './ocr';
 import { parseBulletin } from '../src/lib/parse-bulletin';
 
 const DATA_DIR = path.join(process.cwd(), 'data', 'bulletins');
@@ -37,12 +38,19 @@ async function resolveBulletin(
     try {
       const res = await fetchWithRetry(url);
       const pdf = Buffer.from(await res.arrayBuffer());
-      const raw = await ocrFuegoPage(pdf);
-      if (!raw) {
+      const { fuego, pages } = await ocrBulletin(pdf);
+      if (!fuego) {
         console.warn(`[collect] ${date}: no Volcán de Fuego page found in the bulletin`);
         continue;
       }
-      return { date, url, raw };
+      // A stale PDF left at a day's URL would otherwise be filed as that day.
+      if (!documentMentionsDate(pages, date)) {
+        console.warn(
+          `[collect] ${date}: cover names ${printedDates(pages[0] ?? '').join(', ') || 'no date'} — refusing to file it as ${date}`,
+        );
+        continue;
+      }
+      return { date, url, raw: fuego };
     } catch {
       // Not published for that date; try the day before.
     }
@@ -63,7 +71,7 @@ async function main(): Promise<void> {
   const found = override
     ? await (async () => {
         const pdf = Buffer.from(await (await fetchWithRetry(override)).arrayBuffer());
-        return { date: today, url: override, raw: (await ocrFuegoPage(pdf)) ?? '' };
+        return { date: today, url: override, raw: (await ocrBulletin(pdf)).fuego ?? '' };
       })()
     : await resolveBulletin(today);
 
