@@ -1,0 +1,33 @@
+{
+  "date": "2026-06-15",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-15.pdf",
+  "fetchedAt": "2026-08-22T01:50:47.423Z",
+  "raw": "YSNUM\nBOLETIN VULCANOLOGICO DIARIO (6337\nALAS\n==\nGUATEMALA\n15 de junio de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS o AA 14? 28' 54 Latitud N;\nAR 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(e) eS Condiciones atmosféricas:\nVr Despejado\nViento:\n> ¿5 29\nes WE E Y Del Noreste\na DA O % Precipitación pluvial:\nA AN 44.5 mm\nMorfología: acciaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\nsuroeste del complejo volcánico hasta una distancia aproximada de 25 kilómetros. Se reporta caida de ceniza en\nSan Pedro Yepocapa. Asimismo, se observan avalanchas por los flancos oeste, suroeste y sur, en las que algunos\nbloques alcanzan la vegetación. Algunas explosiones generan retumbos, ondas de choque y sonidos similares al\nde una locomotora de tren. Debido a la actividad descrita, es peligroso permanecer en la meseta, por el riesgo de\ncaida de material balístico. Las condiciones atmosféricas favorecen bajas temperaturas y podrían ocasionar\nlluvias durante la tarde y la noche.\nsE, | Ministerio de\n¿$ y Comunicaciones, . . . ' ' y . y\n- A : (ri Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

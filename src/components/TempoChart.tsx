@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
+import { axisLabelIndices } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 const W = 1000;
@@ -100,7 +101,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         <path d={area} fill="url(#tempoFill)" />
         <path d={path} fill="none" stroke="#E8622C" strokeWidth={2} strokeLinejoin="round" />
 
-        {[0, Math.floor(series.length / 3), Math.floor((series.length * 2) / 3), series.length - 1].map((i) => (
+        {axisLabelIndices(series.length).map((i) => (
           <text key={i} x={Math.min(pts[i][0], W - 46)} y={H - 6} className="tempo-tick">
             {fmt(series[i].date).toUpperCase()}
           </text>

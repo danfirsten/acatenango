@@ -4,10 +4,8 @@ import { useCallback, useMemo, useState } from 'react';
 
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
+import { paroxysmIndex, readoutRows } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
-
-/** Fuego's summit — the datum an ash column height is quoted against. */
-const SUMMIT_M = 3763;
 
 interface FuegoViewProps {
   series: IndexEntry[];
@@ -31,19 +29,11 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   const day = series[Math.min(selected, series.length - 1)];
   const isToday = selected === series.length - 1;
 
-  const paroxysm = useMemo(
-    () => series.reduce(
-      (best, e, i) => ((e.ashMaxMasl ?? 0) > (series[best].ashMaxMasl ?? 0) ? i : best),
-      0,
-    ),
-    [series],
-  );
+  const paroxysm = useMemo(() => paroxysmIndex(series), [series]);
+  const rows = useMemo(() => readoutRows(day), [day]);
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
-
-  const aboveSummit = day.ashMaxMasl === null ? null : day.ashMaxMasl - SUMMIT_M;
-  const continuous = day.phenomena.includes('continuousPhase');
 
   return (
     <>
@@ -64,38 +54,12 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
         </header>
 
         <aside className="readout">
-          <Readout
-            k="Explosions"
-            v={day.explosionsMax === null
-              ? (continuous ? 'continuous' : '—')
-              : `${day.explosionsMin}–${day.explosionsMax}`}
-            u={day.explosionsMax === null ? (continuous ? 'emission' : 'not reported') : 'per hour'}
-            lead
-          />
-          <Readout k="Ash column" v={day.ashMaxMasl?.toLocaleString() ?? '—'} u="m asl" />
-          <Readout k="Above summit" v={aboveSummit?.toLocaleString() ?? '—'} u="m" />
-          <Readout
-            k="Drift"
-            v={day.driftKm === null ? '—' : String(day.driftKm)}
-            u={
-              day.driftKm === null
-                ? (day.driftDirections.join('·') || 'not reported')
-                : `km ${day.driftDirections.join('·')}`
-            }
-          />
-          {day.ashfallCommunities.length > 0 ? (
-            <Readout
-              k="Ashfall named in"
-              v={String(day.ashfallCommunities.length)}
-              u={day.ashfallCommunities.join(', ')}
-            />
-          ) : (
-            <Readout
-              k="Drainages"
-              v={String(day.drainages.length)}
-              u={day.drainages.join(', ') || 'none named'}
-            />
-          )}
+          {rows.map((r) => (
+            <div className="readout-row" key={r.key} data-lead={r.lead}>
+              <span className="readout-k">{r.key}</span>
+              <span className="readout-v">{r.value}<small>{r.unit}</small></span>
+            </div>
+          ))}
         </aside>
 
         <div className="scrollcue" aria-hidden="true">
@@ -123,14 +87,5 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
         <TempoChart series={series} selected={selected} onSelect={onSelect} />
       </section>
     </>
-  );
-}
-
-function Readout({ k, v, u, lead }: { k: string; v: string; u: string; lead?: boolean }) {
-  return (
-    <div className="readout-row" data-lead={lead}>
-      <span className="readout-k">{k}</span>
-      <span className="readout-v">{v}<small>{u}</small></span>
-    </div>
   );
 }

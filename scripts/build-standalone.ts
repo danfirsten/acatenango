@@ -45,7 +45,9 @@ async function main(): Promise<void> {
     // No archive yet; the entry point falls back to the labelled placeholder.
   }
 
-  const html = `<title>Fuego</title>
+  const html = `<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fuego</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600&display=swap">
@@ -73,14 +75,14 @@ ${css.replace(/var\(--font-barlow-condensed\)/g, '"Barlow Condensed"')
     </div>
     <header class="topbar">
       <span class="brand">Fuego</span>
-      <span class="observed"><span class="badge">Representative data</span>Observed 21 Aug · 07:30 CST</span>
+      <span class="observed">Loading…</span>
     </header>
     <aside class="readout"></aside>
     <div class="massif-views" role="group" aria-label="Camera view">
       <button type="button" data-view="orbit" aria-pressed="true">Orbit</button>
       <button type="button" data-view="camp" aria-pressed="false">From camp</button>
     </div>
-    <div class="scrollcue" aria-hidden="true"><span>Ninety days below</span></div>
+    <div class="scrollcue" aria-hidden="true"><span>The record below drives the mountain</span></div>
   </section>
 
   <section class="record">
@@ -88,7 +90,8 @@ ${css.replace(/var\(--font-barlow-condensed\)/g, '"Barlow Condensed"')
       <div>
         <h2>Explosion tempo</h2>
         <p>Fuego does not stop. It pulses — six to fourteen times an hour on an ordinary day,
-           then, every few weeks, it does something else entirely.</p>
+           then, every few weeks, it does something else entirely. Drag along the record and the
+           mountain replays that day.</p>
       </div>
     </div>
     <figure class="tempo"></figure>

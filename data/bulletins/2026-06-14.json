@@ -1,0 +1,44 @@
+{
+  "date": "2026-06-14",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-14.pdf",
+  "fetchedAt": "2026-08-22T01:51:08.234Z",
+  "raw": "Y SON UM.\nz z AE\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n14 de junio de 2026 VOLC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nAR 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(E) eS Condiciones atmosféricas:\nVr Despejado\nde Viento:\nA SS\nPd CEN ES 0 Precipitación pluvial:\nE 0 da A A Yo\n: iz 0.0 mm\nMorfología: acciaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 200 metros sobre el cráter y se dispersaron hacia el noroeste. La\nactividad explosiva se mantuvo entre 8 y 12 explosiones débiles y moderadas por hora, generando\ncolumnas de ceniza entre 4400 y 4800 msnm, que se desplazaron hacia el oeste y noroeste.\nAlgunas explosiones estuvieron acompañadas de retumbos, ondas de choque y sonidos similares a\nlocomotoras con corta duración, asociados a la expulsión continua de gases. Se observaron pulsos\nincandescentes de hasta 300 metros sobre el cráter, acompañados de avalanchas débiles. Además,\nse registró caída de material incandescente alrededor del cráter, el cual se encauza hacia las\nbarrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en ocasiones descendiendo\nhasta el límite de la vegetación.\nsE, | Ministerio de\n¿$ y Comunicaciones, . . . ' ' y . y\n- A : (ri Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nru? ivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 8,
+      "max": 12
+    },
+    "ashColumnMasl": {
+      "min": 4400,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 300,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": []
+}

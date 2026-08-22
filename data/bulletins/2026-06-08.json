@@ -1,0 +1,36 @@
+{
+  "date": "2026-06-08",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-08.pdf",
+  "fetchedAt": "2026-08-22T01:53:07.141Z",
+  "raw": "YEN UY,\nz z SgiR IN\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\n8 de junio de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\ne 2d GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(e) eS Condiciones atmosféricas:\n>, Nublado\nViento:\n25\n—3 Del este\nPP ció 0% Precipitación pluvial:\n174.8 mm\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto o. o\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones poco favorables para la visualización del\ncráter debido a la presencia de nubosidad. Se registran de 6 a 8 explosiones de características\ndébiles y moderadas por hora, las cuales elevan columnas de gases con una tonalidad grisácea de\n4500 a 4800 msnm (14,764 a 15,748 pies). Estas se desplazan hacia el oeste y noroeste debido a la\nacción del viento a distancias de 10 a 40 km. Algunas de estas explosiones expulsan material\nincandescente a distancias de 200 metros sobre el nivel del cráter. Otras pueden ocasionar retumbos\ny ondas de choque débiles. Se espera caída débil de ceniza fina sobre Finca El Recreo, Montellano y\nsus alrededores\nsE, | Ministerio de\nEF y Comunicaciones, Ñ . . ' ' y . '\n3 : | Infraestructura y Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "incandescence"
+    ],
+    "sky": "cloudy"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "date": "2026-06-16",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/06/BVD-2026-06-16.pdf",
+  "fetchedAt": "2026-08-22T01:50:27.260Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOÓGICO DIARIO (63%\nGUATEMALA\nPARA VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\na ¿E 90252'54 Longitud W\npays Altura: 3763 msnm\ns La ._. Zo\n¡On Condiciones atmosféricas:\n, Vr Despejado\nViento:\n25\nY Del Noreste\n0% Precipitación pluvial:\n111 mm En FG14\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nLa principal actividad del volcán de Fuego continúa siendo de explosiones moderadas y fuertes, acompañadas de\ncolumnas de ceniza a 4,200 y 4,700 msnm. que se desplazan en dirección suroeste, alcanzando distancias aproximadas\nde 30 km. Las explosiones en su mayoría generan avalanchas de bloques incandescentes y material volcánico por los\nflancos oeste, sur y suroeste del edificio volcánico. Caída de partículas de ceniza en Panimache | y II, Morelia, Santa Sofía,\nEl Porvenir y otras en esta zona. Algunas explosiones generaron retumbos moderados y fuertes, acompañadas de ondas\nde choque perceptibles en comunidades y municipios alrededor del volcán. Asimismo, se reportaron sonidos similares a\nlocomotora de tren. La actividad explosiva expulsa material balístico a distancias superiores a 500 m alrededor del cráter,\npor lo que es altamente peligroso permanecer en la meseta y en las áreas próximas, debido al riesgo de impacto por\nfragmentos incandescentes y bloques volcánicos. Debido a las condiciones atmosféricas se recomienda utilizar ropa\nadecuada para bajas temperaturas y protección para la lluvia.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nano ivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "incandescence"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}
