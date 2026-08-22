@@ -41,3 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 dist/
+
+# Generated from data/bulletins/ by `npm run build:index`.
+data/index.json

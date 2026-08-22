@@ -1,0 +1,32 @@
+{
+  "date": "2026-07-22",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/07/BVD-2026-07-22.pdf",
+  "fetchedAt": "2026-08-22T00:44:24.414Z",
+  "raw": "YSN UM\nz z STE IN\nBOLETIN VULCANOLÓGICO DIARIO (6353\nGUATEMALA\nA CÓN VOLCÁN DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ne e Ly \"E as\ny ¡On Condiciones atmosféricas:\nVr Despejado\nS .\n: Viento:\ny Del Nor-Noreste\n0% Precipitación pluvial:\n0.0 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nLa actividad sísmica del volcán de Fuego mantiene períodos de tremor armónico de baja frecuencia, asociados a la\nactividad estromboliana, lo que indica que el magma se encuentra a un nivel superficial y que existe la posibilidad\nde generar flujos de lava en los próximos días. En el crater se generan explosiones predominantemente de tipo\nestrombolianas y algunas de tipo vulcanianas, expulsando columnas de ceniza y material volcanico entre 4200 a\n4700 msnm. produciendo sonidos similares a una locomotora de tren que duran varios minutos. Las explosiones\nmoderadas y fuertes generan retumbos de intensidad moderada a fuerte que ocasionan alarma en algunas\ncomunidades. La ceniza producida por la actividad explosiva se dispersa hacia el oeste y suroeste, alcanzando una\ndistancia aproximada de 30 km. Debido a la expulsión de material balístico que puede alcanzar más de 700 m\nalrededor del cráter, se recomienda no permanecer en la meseta ni en sus inmediaciones. Quienes asciendan al\nvolcán deben utilizar ropa y equipo adecuados para condiciones de montaña, considerando la probabilidad de\nlluvias durante la tarde y la noche.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\near | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "lavaFlow"
+    ],
+    "sky": "clear"
+  },
+  "parserVersion": 2,
+  "warnings": [
+    "no-explosion-rate"
+  ]
+}
