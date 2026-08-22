@@ -2,7 +2,7 @@
   "date": "2026-08-21",
   "source": "insivumeh",
   "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-21.pdf",
-  "fetchedAt": "2026-08-22T00:33:59.096Z",
+  "fetchedAt": "2026-08-22T14:51:59.993Z",
   "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (633%\n=\nGUATEMALA\nA VOLCÁN DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\n¡On Condiciones atmosféricas:\n' Vr Despejado\nViento:\n29\nY Del Este, Sureste\nó A Y 09 Precipitación pluvial:\nmá Pi” LES LIA Ye\nE?) Remasterizar 5 a + 0.0 mm\nlunes, 17 de agosto de 2026 - 6:28 a.m. Editar\nMorfología: ) UN ,\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\n5 SS https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego (OVFGO) reporta entre 6 y 9 explosiones por hora, de intensidad\ndébil, moderada y fuerte, acompañadas de columnas de gases y ceniza que alcanzan entre 4,200 y\n4,700 msnm. La ceniza se dispersa principalmente hacia el oeste y noroeste, mientras que los vientos\nsuperiores transportan finas partículas hasta aproximadamente 30 km. Las explosiones generan\nretumbos y ondas de choque, además de avalanchas de bloques por los flancos sur, oeste y suroeste, y\ncaída de ceniza en Sangre de Cristo, San Pedro Yepocapa, Pochuta y otras comunidades. Durante la\nnoche y madrugada se observó incandescencia en el cráter. La acumulación de depósitos de flujos\npiroclásticos (PDC) de la reciente erupción mantiene la posibilidad de generación de lahares por las\nbarrancas Seca, Ceniza, Lajas y otras. Se recomienda extremar precauciones, al transitar con vehículos\npor estos cauces, especialmente durante las lluvias de la tarde y noche. Asimismo, se recomienda no\npermanecer en la meseta ni en las áreas cercanas al cráter.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n- a : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\near | Vivien\n",
   "parsed": {
     "explosionsPerHour": {
@@ -34,8 +34,13 @@
       "lahars",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Sangre de Cristo",
+      "San Pedro Yepocapa",
+      "Pochuta"
+    ]
   },
-  "parserVersion": 2,
+  "parserVersion": 7,
   "warnings": []
 }
