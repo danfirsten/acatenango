@@ -1,0 +1,35 @@
+{
+  "date": "2026-08-23",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-23.pdf",
+  "fetchedAt": "2026-08-23T14:53:01.908Z",
+  "raw": "YO UM\nz z MER\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n23 de agosto de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nMEME Y —ceocrárica:\nPAS o AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\nE e dc eS Condiciones atmosféricas:\na ] Vr Nublados parciales\nale Viento:\nA cd A O 7 Precipitación pluvial:\nON O\nE 7.6 mm\ne a\nMorfología: , ON\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\na lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á ea a\n> volcanica/\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\noeste y suroeste del complejo volcánico hasta una distancia aproximada de 60 kilómetros. Se reporta caída de\nceniza en San Pedro Yepocapa. Asimismo, se observan avalanchas por los flancos oeste, suroeste y sur, en las\nque algunos bloques alcanzan la vegetación. Algunas explosiones generan retumbos, ondas de choque y sonidos\nsimilares al de una locomotora de tren. Debido a la actividad descrita, es peligroso permanecer en la meseta, por\nel riesgo de caída de material balístico.\nsE, | Ministerio de\nss y Comunicaciones, . . . y ' y . '\n>: , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 60,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "cloudy",
+    "ashfallCommunities": [
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
