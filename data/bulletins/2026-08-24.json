@@ -1,0 +1,44 @@
+{
+  "date": "2026-08-24",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/08/BVD-2026-08-24.pdf",
+  "fetchedAt": "2026-08-24T15:12:34.258Z",
+  "raw": "YSN UM\nz z TE IN\nBOLETIN VULCANOLÓGICO DIARIO (6353\nGUATEMALA\n24 de agosto de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n. s La ._. Ze\ny ¡On Condiciones atmosféricas:\nA nv: Despejado\np Viento:\n29\ny Del Este\n0% Precipitación pluvial:\n0.6 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego (OVFGO) reporta entre 6 y 9 explosiones por hora, de intensidad, moderada y\nfuerte, acompañadas de columnas de gases y ceniza que alcanzan entre 4,200 y 4,700 msnm. Dispersándose al oeste\ny suroeste aproximadamente a 30 km. Las explosiones generan retumbos y ondas de choque, audibles a más de 15\nkilometros del área, ocasionando vibración de casas en los flancos suroeste y oeste. Las explosiones acompañadas\nde avalanchas por los flancos sur, oeste y suroeste. También se generan sonidos similares a turbinas de avión. La\ncaída de ceniza se reporta en Panimaché, Morelia, Santa Sofía, El Porvenir, San Pedro Yepocapa, Sangre de Cristo y\notras comunidades. La acumulación de depósitos de flujos piroclásticos (PDC) de la reciente erupción mantiene\nla posibilidad de generar lahares en las barrancas Seca, Ceniza, Lajas y otras. Se recomienda extremar precauciones,\nespecialmente durante las lluvias de la tarde y noche al transitar con vehículos por estos cauces. Así mismo, se\nrecomienda no permanecer en la meseta ni en las áreas cercanas al cráter.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\near | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 9
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "El Porvenir",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
