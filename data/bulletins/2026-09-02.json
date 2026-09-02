@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-02",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/09/BVD-2026-09-02.pdf",
+  "fetchedAt": "2026-09-02T18:00:56.713Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLÓGICO DIARIO (6357\n==\nGUATEMALA\n2 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\na] E a\n2) eS Condiciones atmosféricas:\nUY Despejado\nViento:\nE O > Del Este\nE\nE AO O\nA 0.0 mm\nA a A\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA 5 lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: d ¡ele d\nVulcaniana\nActividad\nDurante la noche y madrugada se registró desgasificación de color gris claro a una altura de 4100\nmsnm. Se registran entre 4 a 6 explosiones por hora de características débiles, moderadas y fuertes,\nque elevan columnas de gases y ceniza a alturas de 4300 a 4800 msnm (14107 - 15748 pies) las cuales\nse desplazan hacia el oeste y noroeste.\nAlgunas explosiones generan sonidos, retumbos y ondas de choque débiles. Por la noche se observan\npulsos incandescentes, generando caída de material ardiente alrededor del cráter, encauzándose en\nlas barrancas Seca, Taniluya, Ceniza, Las Lajas, Honda y otras, en ocasiones llegando hasta el límite de\nla vegetación. Así mismo se registra caída de ceniza fina en Panimaché ll, Finca Palo Verde, Yepocapa\ny sus alrededores. Si se presentan lluvias durante el día se puede generar correntadas y/o\nlahares, se recomienda no permanecer dentro ni en las cercanías de dichas barrancas ante la\npresencia de lluvias en el edificio volcánico.\nse 2, | Ministerio de\nEF y Comunicaciones, Ñ . . ' ' y . '\n3 . (oi Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narme | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Taniluyá",
+      "Las Lajas",
+      "Honda"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
