@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-03",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/09/BVD-2026-09-03.pdf",
+  "fetchedAt": "2026-09-03T18:00:12.680Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (633%\n¿AA\nGUATEMALA\n3 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nA] ' \"E as\n(8 ¡On Condiciones atmosféricas:\nny Nublado\nViento:\n> 29\nY Del este\n0% Precipitación pluvial:\n24.4 mm\nMorfología: : E ñ\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nS la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nSe reporta fumarola de desgasificación de coloración blanca a una altura de 4000 msnm. Se generan entre 4 y 6\nexplosiones de características débiles y moderadas por hora que elevan columnas de gases y ceniza a alturas de\n4300 a 5000 msnm (14108 - 16404 pies), las cuales se desplazan hacia el oeste y noroeste a distancias de hasta 30\nkm. Las explosiones pueden generar sonidos, retumbos y ondas de choque. Por la noche, se observan pulsos\nincandescentes que se elevan entre 150 y 200 metros sobre el nivel del cráter, lo que provoca que la zona del cráter\nse cubra de fragmentos de roca ardientes. Se espera caída de ceniza sobre Panimaché | y Il, Morelia, Santa Sofía,\nSangre de Cristo, Finca Palo Verde, Yepocapa y otros. Por la tarde y noche, las lluvias podrían provocar el\ndescenso de lahares en diferentes barrancas del volcán.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\ne or | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 5000
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 150,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "cloudy",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
