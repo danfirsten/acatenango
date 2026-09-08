@@ -1,0 +1,49 @@
+{
+  "date": "2026-09-08",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/09/BVD-2026-09-08.pdf",
+  "fetchedAt": "2026-09-08T18:03:36.796Z",
+  "raw": "YO UM\nz z MER\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n8 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\nSn y ad, eS Condiciones atmosféricas:\n: iia Vi Parcialmente Nublado\nA e -.\n3 Viento:\n¡ 25\n- : - Y Del Este\n0% Precipitación pluvial:\n0.4 mm\nMorfología: . a ;\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA Sl https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 300 metros sobre el cráter y se dispersaron hacia el oeste. Actualmente, el\ncomplejo volcánico presenta nubosidad que dificulta la observación directa; sin embargo, la actividad\nexplosiva se mantiene en un rango de 5 a 8 explosiones débiles y moderadas por hora, generando\ncolumnas de ceniza entre 4500 y 4800 msnm, que se desplazaron hacia el oeste y noroeste, generando\ncaída de ceniza fina en áreas de Panimaché | y II, Morelia y Santa Sofía.\nAlgunas explosiones estuvieron acompañadas de retumbos débiles y ondas de choque que generaron\nvibraciones en los techos de las viviendas aledañas. Se observaron pulsos incandescentes de hasta 200\nmetros sobre el cráter, acompañados de avalanchas débiles. Además, se registró caída de material\nincandescente alrededor del cráter, el cual se encauza hacia las barrancas Ceniza, Taniluyá, Seca, Santa\nTeresa, Trinidad y Las Lajas, en ocasiones descendiendo hasta el límite de la vegetación.\nsE, | Ministerio de\nss y Comunicaciones, . . . y ' y . '\n>: , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "partlyCloudy",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
