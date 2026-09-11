@@ -1,0 +1,44 @@
+{
+  "date": "2026-09-11",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/09/BVD-2026-09-11.pdf",
+  "fetchedAt": "2026-09-11T17:51:53.925Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOÓGICO DIARIO (6%\nE\nGUATEMALA\n11 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nIR 90%52'54 Longitud W\nmE Altura: 3763 msnm\n. Los ... Zo\n..— ¡On Condiciones atmosféricas:\n0 A\nPS -] Vr Despejado\nñ 4\n; ó Viento:\n25\nY Del Este, Noreste\no, Precipitación pluvial:\n70\n66.2 mm\nMorfología: , o.\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad:\n> volcanica/\nVulcaniana\nActividad\nEn el trascurso de la noche y madrugada se observaron explosiones en rangos de 5 a 7 por hora, de intensidad débil,\nmoderadas y fuertes. Acompañadas de gruesas columnas de ceniza entre 4,200 y 4,700 msnm, dispersándose al oeste,\nsuroeste. La actividad de explosiones produce retumbos, ondas de choque, avalanchas por los flancos sur, oeste y\nsuroeste, así como caída de ceniza en aldeas de Panimaché, Morelia, Santa Sofía, El Porvenir, Sangre de Cristo y San\nPedro Yepocapa. Debido a la cantidad de material de PDCs de la reciente erupción se pueden generar lahares en\nbarrancas como Seca, Ceniza, Lajas y otras por lo que se recomienda extremar las precauciones, principalmente al paso\nde vehículos dentro de las mismas, principalmente por las lluvias por la tarde y noche. También se recomienda no\npermanecer en la meseta ni en sus inmediaciones.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nano ivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": null,
+    "driftDirections": [],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "El Porvenir",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
