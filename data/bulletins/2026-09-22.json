@@ -1,0 +1,36 @@
+{
+  "date": "2026-09-22",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/09/BVD-2026-09-22.pdf",
+  "fetchedAt": "2026-09-22T18:15:06.044Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (62%\nEA:\n=\nGUATEMALA\n22 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nMEMEY  —ceocrárica:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nLo \"Tr as\nless) Condiciones atmosféricas:\nVr Despejado\nViento:\n29\nY Del Este\n0% Precipitación pluvial:\n12.44 mm\nMorfología: accdaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\nS la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nSe observa desgasificación débil sobre el cráter, alcanzando alturas de 600 metros y dispersándose al Oeste. Se\nregistran explosiones débiles y moderadas , a un ritmo de 2 a 5 por hora, generando columna de gas y ceniza que\nalcanzan los 4800 msnm. La ceniza se dispersa de 10 a 20 km en dirección oeste. Caída de ceniza fina en\ncomunidades ubicadas en el flanco Oeste. También se observan balísticos y descenso de material volcánico\nincandescente producto de las explosiones, hacia los flancos oeste, sur y suroeste, llegando incluso hasta la\nvegetación. Asimismo, la actividad explosiva puede generar retumbos, ondas de choque y sonidos similares a\nturbina de avión debido al gas expulsado de forma continua. Durante al noche y madrugada es posible observar\nincandescencia que permanece en el cráter y que también se denota como pulsos incandescentes alcanzando\nalturas de 100 a 300 metros.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n- a : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\ne or | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4800,
+      "max": 4800
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
