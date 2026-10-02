@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-02",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-02.pdf",
+  "fetchedAt": "2026-10-02T19:29:33.626Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\n2 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\n¡On Condiciones atmosféricas:\nij Y\nVr Despejado\n. Viento:\n29\n' Y Del sur, suroeste\n0% Precipitación pluvial:\n0.0 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: E ¡ia s\n> volcanica/\nVulcaniana\nActividad\nEn el transcurso de la noche y madrugada se observó la actividad del Volcán de Fuego, con explosiones en rangos\nde 5 a 9 por hora, de intensidad débil, moderadas y fuertes. Acompañadas de columnas de gases y ceniza con\nviento variable con alturas de 4,200 y 4,700 msnm, dispersándose al, Este, Noreste, Sureste, aproximadamente a 25\nkm. La actividad de explosiones produce retumbos con ondas de choque, avalanchas por los flancos sur, oeste y\nsuroeste, así como caída de ceniza en San Juan Alotenango, Santa María de Jesús, con probabililidaes de extenderse\nsobre la ciudad de Antigua Guatemala y otras comunidades. Por la noche y madrugada se observó el cráter con\nincandescencia. Debido a la cantidad de material de PDCs de la reciente erupción se pueden continuar los lahares\nen barrancas Seca, Ceniza, Lajas y otras por lo que se recomienda extremar las precauciones, principalmente al paso\nde vehículos dentro de las mismas, principalmente por las lluvias por la tarde y noche. También se recomienda no\npermanecer en la meseta ni en sus inmediaciones.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 9
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 25,
+    "driftDirections": [],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Alotenango"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
