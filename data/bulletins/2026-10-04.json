@@ -1,0 +1,34 @@
+{
+  "date": "2026-10-04",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-04.pdf",
+  "fetchedAt": "2026-10-04T18:19:19.237Z",
+  "raw": "Y SON UM\nz z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n4 de octubre de 2026 VOLC de N DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(6) ¡Or Condiciones atmosféricas:\n3 Nublado\nViento:\n25\n—) Del sureste\na An 0% Precipitación pluvial:\n76.5 mm\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto as Ae\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones no favorables para la visualización del cráter\ndebido a la presencia de nubosidad. Se registran de 6 a 8 explosiones de características débiles y\nmoderadas por hora, las cuales elevan columnas de gases con una tonalidad grisácea de 4500 a\n4800 msnm (14,764 a 15,748 pies). Estas se desplazan hacia el noroeste debido a la acción del\nviento a distancias de 10 a 40 km. Algunas de estas explosiones pueden ocasionar retumbos y ondas\nde choque débiles. Se espera caída débil de ceniza fina sobre La Soledad, Los planes y sus\nalrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "NW",
+      "S"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves"
+    ],
+    "sky": "cloudy",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
