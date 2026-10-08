@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-08",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-08.pdf",
+  "fetchedAt": "2026-10-08T20:04:34.107Z",
+  "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (635\nE\n=\nGUATEMALA\n8 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nMEMESY —ceocrárica:\nPAS e AA 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n> at Los ... Zo\n“ALA - Condiciones atmosféricas:\n> nn E\n: F MER. ZA Vr Parcialmente Despejado\n- <= Viento:\n3 29\nY Del Oeste, Noroeste\n0% Precipitación pluvial:\n95.6 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nEl Volcán de Fuego se mantiene con rangos de 5 a 8 e explosiones por hora, de intensidad débil, moderada y fuerte,\nacompañadas de columnas de gases y ceniza de 4,200 a 4,700 msnm, con dispersión al este y sureste de\naproximadamente 25 km. La actividad genera retumbos, ondas de choque, avalanchas que descienden por las\nbarrancas, Seca, Ceniza y Lajas. Se reporta caída de ceniza en El Porvenir, El Rodeo, La Reina, La Reunión y otras en el\nárea. Por la noche y madrugada se observó incandescencia en el cráter. Debido al material de PDCs depositado por\nla reciente erupción, existe posibilidad de continuar generando lahares en las barrancas Seca, Ceniza, Lajas y otras,\npor lo que se recomienda extremar precauciones, especialmente durante lluvias, y no permanecer en la meseta ni\nsus inmediaciones.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "SE",
+      "E"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "El Rodeo"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
