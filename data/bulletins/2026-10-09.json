@@ -1,0 +1,45 @@
+{
+  "date": "2026-10-09",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-09.pdf",
+  "fetchedAt": "2026-10-09T19:42:29.688Z",
+  "raw": "YO UM\nBOLETIN VULCANOLOGICO DIARIO (62%\nGUATEMALA\n9 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nMEME Y —ceocrárica:\nPAS 0 AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\nA Pr eS Condiciones atmosféricas:\nEs me ¿e . 2 k\nye pue 3 a) nv Parcialmente Nublado\n» mn. al e y\"\nd e A .\n¿Tí z Viento:\nE e 0)\n> \" Y Del Noreste\ndE 0% Precipitación pluvial:\nAA es 29.2 mm\nMorfología: : E Ñ\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA Sl https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que alcanzaron\naproximadamente 300 metros sobre el cráter y se dispersaron hacia el suroeste. Actualmente, el complejo\nvolcánico presenta nubosidad que dificulta la observación directa; sin embargo, la actividad explosiva se\nmantiene en un rango de 5 a 7 explosiones débiles y moderadas por hora, generando columnas de ceniza\nentre 4300 y 4800 msnm, que se desplazaron hacia el oeste y suroeste.\nAlgunas explosiones estuvieron acompañadas de retumbos débiles y moderados. Se observaron pulsos\nincandescentes de hasta 200 metros sobre el cráter, acompañados de avalanchas débiles. Además, se\nregistró caída de material incandescente alrededor del cráter, el cual se encauza hacia las barrancas Ceniza,\nTaniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en ocasiones descendiendo hasta el límite de la\nvegetación.Debido a la temporada de lluvias y al material acumulado en las barrancas, persiste el riesgo de\nlahares en horas de la tarde y noche. Se recomienda evitar las cercanías de las barrancas del volcán y seguir\nlas indicaciones del boletín especial BEFG0-013-2026.\nse | Ministerio de\nss y Comunicaciones, . . . y ' ' . '\n>: , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nSe 0 vien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "avalanches",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "partlyCloudy",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
