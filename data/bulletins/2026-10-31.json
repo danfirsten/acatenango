@@ -1,0 +1,32 @@
+{
+  "date": "2026-10-31",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-31.pdf",
+  "fetchedAt": "2026-11-01T02:26:14.110Z",
+  "raw": "YSN UM,\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\n31 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nas 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(2) 7 eS Condiciones atmosféricas:\nVr Despejado\nES Viento:\n25\nO e Bu ¿ o Del Este\nA EE o, Precipitación pluvial:\na A O E A E, 14.6 mm\nE A NR ae: O\nMorfología: A A\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na a https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron entre 1 y 2 explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\noeste y suroeste del complejo volcánico hasta una distancia aproximada de 45 kilómetros. Asimismo, se\nobservan avalanchas por los flancos oeste, suroeste y sur, en las que algunos bloques alcanzan la vegetación.\nAlgunas explosiones generan retumbos, ondas de choque y sonidos similares al de una locomotora de tren.\nDebido a la actividad descrita, es peligroso permanecer en la meseta, por el riesgo de caída de material balístico.\nsE, | Ministerio de\nEF y Comunicaciones, . Ñ . y ' y . y\n3 S | Infraestructura y Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narca” | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 45,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
