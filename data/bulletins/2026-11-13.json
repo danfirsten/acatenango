@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-13",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/11/BVD-2026-11-13.pdf",
+  "fetchedAt": "2026-11-13T20:59:04.388Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\n13 de noviembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2 GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nAa 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nN L, A sz .\n¡On Condiciones atmosféricas:\na Vr Despejado\nViento:\n25\nY Del Suroeste\n0% Precipitación pluvial:\n13 de noviembre de 2026 6:01a.m. 45 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA 0 https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\nE volcanica/\nVulcaniana\nActividad\nLa actividad del Volcán de Fuego se observó con explosiones en rangos de 3 a 5 por hora, con intensidades entre\ndébiles, moderadas y fuertes. Estas generan columnas de gases y ceniza de 4,200 a 4,700 msnm que se dispersan\nhacia el este y noreste, alcanzando aproximadamente 20 km de distancia debido a los vientos superiores. Esta\nactividad produce retumbos, ondas de choque, avalanchas sobre los flancos sur, oeste y suroeste, así como caída\nde ceniza en El Porvenir, La Candelaria, Alotenango, Ciudad Vieja, Antigua Guatemala y comunidades aledañas.\nSe recomienda precaución en los pasos vehiculares sobre los cauces de los ríos por posibles lluvias vespertinas y\nnocturnas. Además, se recomienda no permanecer en la meseta ni en sus alrededores debido al riesgo de impacto\nde balísticos.\nsE, | Ministerio de\nEF y Comunicaciones, Ñ . . ' ' y . y\n3 : e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nparos vien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "NE",
+      "E"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "Alotenango"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
