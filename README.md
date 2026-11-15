@@ -1,3 +1,5 @@
+![Fuego: a live monitor for Volcán de Fuego. Hoop camps across the valley while the plume rises one dot a day.](docs/assets/banner.png)
+
 # Fuego
 
 A live monitor for **Volcán de Fuego**, Guatemala — one of the most
