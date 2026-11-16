@@ -21,6 +21,8 @@ function day(date: string, over: Partial<IndexEntry> = {}): IndexEntry {
     ashMaxMasl: 4600,
     driftKm: 12,
     driftDirections: ['W'],
+    incandescenceMinM: 100,
+    incandescenceMaxM: 200,
     drainages: ['Las Lajas'],
     lavaFlowM: null,
     phenomena: [],

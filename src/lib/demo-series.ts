@@ -44,6 +44,8 @@ export function demoSeries(days = 90, endISO = '2026-08-21'): IndexEntry[] {
       ashMaxMasl: ash,
       driftKm: Math.round(8 + (max / 47) * 34),
       driftDirections: ['W', 'SW'],
+      incandescenceMinM: 100,
+      incandescenceMaxM: 150 + Math.round(max * 6),
       drainages: max > 24 ? ['Seca', 'Ceniza', 'Taniluyá'] : ['Seca', 'Ceniza'],
       lavaFlowM: max > 30 ? 1200 : null,
       phenomena: ['explosions', 'degassing', 'incandescence'],

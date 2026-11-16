@@ -449,3 +449,68 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .notice { padding: 10px 16px; }
   .topbar { flex-wrap: wrap; row-gap: 6px; }
 }
+
+/* ── field lanes (under the tempo chart, same axis) ───────────────────── */
+
+.lanes { margin: 22px 0 0; }
+.lanes-plot { cursor: crosshair; touch-action: pan-y; }
+.lanes-plot:focus-visible { outline: 2px solid var(--ember); outline-offset: 4px; }
+.lane { margin: 0 0 10px; }
+.lane svg { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); }
+.lane-head {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0 0 3px;
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ash);
+}
+.lane-note { color: var(--muted); letter-spacing: 0.1em; }
+.lane-arrow { fill: none; stroke: var(--ash); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.lane-bar, .lane-mark { fill: var(--ember); }
+.lane-mark { opacity: 0.7; }
+.lane-sel { stroke: var(--ember); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lane-hover { stroke: var(--ember); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.6; vector-effect: non-scaling-stroke; }
+.lanes-day {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin-top: 6px;
+  font-size: 14px;
+  font-variant-numeric: tabular-nums;
+}
+.lanes-day b { font-weight: 600; }
+.lanes-day span { color: var(--muted); }
+.lanes-summary {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 18px 0 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.lanes-summary > div { background: var(--ground); padding: 12px 18px; }
+.lanes-summary dt {
+  font-family: var(--label);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lanes-summary dd { margin: 4px 0 0; font-size: 18px; font-variant-numeric: tabular-nums; }
+.lanes-summary ul { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; padding: 0; list-style: none; font-size: 15px; }
+.lanes-summary li span { color: var(--ember); font-weight: 600; }
+.lanes-summary .figures-note { font-size: 13px; color: var(--muted); }
+@media (max-width: 560px) {
+  .lanes-summary { grid-template-columns: 1fr; }
+}
+/* Arrows need about 6px a day; on narrow screens the lane shows one mark per day by compass row instead. */
+.lane svg { overflow: visible; }
+.lane[data-lane="driftdots"] { display: none; }
+@media (max-width: 860px) {
+  .lane[data-lane="drift"] { display: none; }
+  .lane[data-lane="driftdots"] { display: block; }
+}
