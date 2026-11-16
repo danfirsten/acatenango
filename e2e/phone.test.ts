@@ -67,13 +67,13 @@ describe('phone layout', () => {
     await new Promise((r) => srv?.close(r));
   });
 
-  async function open(width: number, height: number, reducedMotion = false): Promise<Page> {
+  async function open(width: number, height: number, reducedMotion = false, path = ''): Promise<Page> {
     const ctx = await browser.newContext({
       viewport: { width, height },
       reducedMotion: reducedMotion ? 'reduce' : 'no-preference',
     });
     const page = await ctx.newPage();
-    await page.goto(url, { waitUntil: 'load' });
+    await page.goto(url + path, { waitUntil: 'load' });
     await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
     return page;
   }
@@ -110,6 +110,28 @@ describe('phone layout', () => {
       }
       await page.context().close();
     });
+
+    for (const path of ['', 'es/']) {
+      it(`keeps the topbar clear of the summit labels at ${w}x${h} on /${path}`, async () => {
+        const page = await open(w, h, false, path);
+        const boxes = await summitBoxes(page);
+        const bar = await page.evaluate(() => {
+          const range = document.createRange();
+          range.selectNodeContents(document.querySelector('.observed')!);
+          return [document.querySelector('.topbar .lang-switch')!.getBoundingClientRect(), ...range.getClientRects()]
+            .map((b) => ({ left: b.left, right: b.right, top: b.top, bottom: b.bottom }));
+        });
+        for (const b of boxes) {
+          assert.ok(b.left >= 0 && b.right <= b.vw, `${b.name} label inside the viewport (${b.left}..${b.right})`);
+          const label = { left: b.left, right: b.right, top: b.top, bottom: b.bottom };
+          for (const t of bar) {
+            const hit = t.left < label.right && label.left < t.right && t.top < label.bottom && label.top < t.bottom;
+            assert.ok(!hit, `${b.name} label is clear of the topbar (${JSON.stringify(t)} vs ${JSON.stringify(label)})`);
+          }
+        }
+        await page.context().close();
+      });
+    }
 
     it(`frames Fuego from camp at ${w}x${h}`, async () => {
       const page = await open(w, h);

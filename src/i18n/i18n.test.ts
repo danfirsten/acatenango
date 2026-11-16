@@ -86,9 +86,9 @@ describe('dictionaries', () => {
 describe('the notice keeps its meaning in Spanish', () => {
   test('unofficial, not a warning service, copies INSIVUMEH, always behind', () => {
     assert.equal(es.notice.lead, 'Archivo no oficial.');
-    assert.match(es.notice.body, /^Fuego no es un servicio de alertas\./);
+    assert.match(es.notice.body, /^Este sitio, Fuego, no es un servicio de alertas\./);
     assert.match(es.notice.body, /Copia el boletín diario del INSIVUMEH una o dos veces al día/);
-    assert.match(es.notice.body, /siempre va por detrás del observatorio/);
+    assert.match(es.notice.body, /siempre va con retraso respecto al observatorio/);
     assert.match(es.notice.insivumeh, /INSIVUMEH/);
     assert.match(es.notice.conred, /CONRED/);
   });
@@ -138,7 +138,7 @@ describe('camp panel sentences, both languages', () => {
       '3 a 6 explosiones por hora, ceniza hasta 5,000 m, desplazándose hacia el noreste, en dirección al Acatenango, y hacia el este, hacia un costado de él.',
     );
     assert.equal(camp(es, e, 'column').text, 'Columnas de ceniza de 4,500 a 5,000 m s.n.m., hasta 1,237 m sobre la cumbre del Fuego.');
-    assert.equal(camp(es, e, 'drift').text, 'Ceniza desplazándose 20 km hacia el noreste, en dirección al Acatenango, y hacia el este, hacia un costado de él.');
+    assert.equal(camp(es, e, 'drift').text, 'La ceniza se desplaza 20 km hacia el noreste, en dirección al Acatenango, y hacia el este, hacia un costado de él.');
     assert.equal(camp(es, e, 'ashfall').text, 'Caída de ceniza reportada en Morelia y Panimaché I.');
     assert.equal(camp(es, e, 'rate').label, 'Explosiones');
   });
@@ -147,7 +147,7 @@ describe('camp panel sentences, both languages', () => {
     const e = entry({ driftDirections: ['N', 'NE', 'SW'] });
     assert.equal(
       camp(es, e, 'drift').text,
-      'Ceniza desplazándose 20 km hacia el norte y el noreste, en dirección al Acatenango, y hacia el suroeste, alejándose de él.',
+      'La ceniza se desplaza 20 km hacia el norte y el noreste, en dirección al Acatenango, y hacia el suroeste, alejándose de él.',
     );
   });
 
@@ -187,11 +187,11 @@ describe('camp panel sentences, both languages', () => {
   test('drift with no direction, and direction with no distance', () => {
     assert.equal(
       camp(es, entry({ driftDirections: [] }), 'drift').text,
-      'Ceniza desplazándose 20 km. El boletín no dio la dirección, así que no se sabe hacia dónde fue respecto al Acatenango.',
+      'La ceniza se desplaza 20 km. El boletín no dio la dirección, así que no se sabe hacia dónde fue respecto al Acatenango.',
     );
     assert.equal(
       camp(es, entry({ driftKm: null, driftDirections: ['W'] }), 'drift').text,
-      'Ceniza desplazándose hacia el oeste, hacia un costado del Acatenango. El boletín no dio la distancia del desplazamiento.',
+      'La ceniza se desplaza hacia el oeste, hacia un costado del Acatenango. El boletín no dio la distancia del desplazamiento.',
     );
   });
 });
@@ -224,8 +224,8 @@ describe('completeness lines, both languages', () => {
 
 describe('readout, both languages', () => {
   test('the most common drift is spelled out in Spanish, where a lone O would read as zero', () => {
-    assert.equal(es.lanes.commonDriftValue(['W'], 107), 'oeste (107 días)');
-    assert.equal(es.lanes.commonDriftValue(['W', 'SW'], 1), 'oeste y suroeste (1 día)');
+    assert.equal(es.lanes.commonDriftValue(['W'], 107), 'Oeste (107 días)');
+    assert.equal(es.lanes.commonDriftValue(['W', 'SW'], 1), 'Oeste y suroeste (1 día)');
     assert.equal(en.lanes.commonDriftValue(['W'], 107), 'W (107 days)');
   });
 

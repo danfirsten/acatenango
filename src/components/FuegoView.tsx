@@ -101,8 +101,8 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
               </span>
               {isToday && <BulletinAge date={day.date} locale={locale} />}
             </span>
-            <LanguageSwitch locale={locale} />
           </span>
+          <LanguageSwitch locale={locale} />
         </header>
 
         <aside className="readout">

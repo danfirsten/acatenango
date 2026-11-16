@@ -36,6 +36,8 @@ const RELATION_AGAIN: Record<DriftRelation, string> = {
   side: 'hacia un costado de él',
 };
 
+const capital = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
+
 const plural = (n: number, one: string, many: string) => (n === 1 ? one : many);
 
 export const es: Dict = {
@@ -52,7 +54,7 @@ export const es: Dict = {
   notice: {
     label: 'Acerca de este registro',
     lead: 'Archivo no oficial.',
-    body: 'Fuego no es un servicio de alertas. Copia el boletín diario del INSIVUMEH una o dos veces al día, así que siempre va por detrás del observatorio.',
+    body: 'Este sitio, Fuego, no es un servicio de alertas. Copia el boletín diario del INSIVUMEH una o dos veces al día, así que siempre va con retraso respecto al observatorio.',
     linksLabel: 'Fuentes oficiales',
     insivumeh: 'Vulcanología del INSIVUMEH',
     conred: 'Alertas de la CONRED',
@@ -61,7 +63,7 @@ export const es: Dict = {
     representative: 'Datos representativos',
     unread: (n) => `${n} ${plural(n, 'campo sin leer', 'campos sin leer')}`,
     latest: 'Último boletín',
-    replaying: 'Repasando',
+    replaying: 'Día seleccionado',
   },
   age: {
     label: (days) => (days === 0 ? 'hoy' : days === 1 ? 'hace 1 día' : `hace ${days} días`),
@@ -97,7 +99,7 @@ export const es: Dict = {
   massif: {
     canvasLabel: 'Vista tridimensional del macizo del Acatenango y el Fuego, construida con datos de elevación',
     erupting: 'en erupción',
-    yourCamp: 'su campamento',
+    yourCamp: 'campamento',
     viewsLabel: 'Vista de la cámara',
     orbit: 'Órbita',
     fromCamp: 'Desde el campamento',
@@ -147,13 +149,13 @@ export const es: Dict = {
     dayTowns: (names) => `Comunidades ${names ?? 'sin reporte'}`,
     key: 'Dato no indicado ese día',
     commonDrift: 'Desplazamiento más frecuente',
-    commonDriftValue: (dirs, days) => `${list(dirs.map((d) => COMPASS[d] ?? d))} (${days} ${plural(days, 'día', 'días')})`,
+    commonDriftValue: (dirs, days) => `${capital(list(dirs.map((d) => COMPASS[d] ?? d)))} (${days} ${plural(days, 'día', 'días')})`,
     commonDriftNote: (n) => `de los ${n} días que indicaron uno`,
     drainagesNamed: 'Barrancas nombradas',
-    drainagesNote: (n) => `días nombrada, de los ${n} días que nombraron alguna`,
+    drainagesNote: (n) => `días en que se nombró, de los ${n} días que nombraron alguna`,
   },
   gvp: {
-    sectionLabel: 'Contraste con el reporte semanal del Smithsonian',
+    sectionLabel: 'Cotejo con el reporte semanal del Smithsonian',
     title: 'Reporte semanal del Smithsonian',
     notStated: 'no indicado',
     range: (min, max, unit) => `${max === null ? min : `${min} a ${max}`} ${unit}`,
@@ -168,7 +170,7 @@ export const es: Dict = {
     keyMissing: 'Sin reporte del GVP recopilado para la semana',
     keyDiffer: 'Las dos fuentes difieren',
     empty:
-      'El Programa Global de Vulcanismo de la Smithsonian escribe un reporte semanal sobre el Fuego a partir de los mismos reportes del observatorio. Cuando se recopilen sus semanas, aquí se marcará cualquier semana en la que sus cifras discrepen claramente de las de los boletines.',
+      'El Programa Global de Vulcanismo del Smithsonian escribe un reporte semanal sobre el Fuego a partir de los mismos reportes del observatorio. Cuando se recopilen sus semanas, aquí se marcará cualquier semana en la que sus cifras discrepen claramente de las de los boletines.',
     agree: 'Ninguna semana tiene cifras que discrepen claramente de las de los boletines.',
     differIntro:
       'En estas semanas las cifras del reporte y las de los boletines quedan claramente separadas. Puede deberse a un escaneo mal leído, a un error del analizador o a una diferencia en lo que cuenta cada fuente. Ninguna se da por correcta, y aquí no se ha corregido nada.',
@@ -177,7 +179,7 @@ export const es: Dict = {
     bulletins: 'Boletines del INSIVUMEH:',
     bulletinLabel: (d) => `Boletín del INSIVUMEH, ${d}`,
     credit: 'Cifras semanales del {gvp}, Weekly Volcanic Activity Reports sobre el Fuego.',
-    programme: 'Programa Global de Vulcanismo de la Smithsonian Institution',
+    programme: 'Programa Global de Vulcanismo del Smithsonian',
   },
   camp: {
     title: 'Desde el campamento',
@@ -205,10 +207,10 @@ export const es: Dict = {
       groups
         .map((g, i) => `hacia ${list(g.directions.map((d) => `el ${COMPASS[d]}`))}, ${(i === 0 ? RELATION_FIRST : RELATION_AGAIN)[g.relation]}`)
         .join(', y '),
-    driftFull: (km, where) => `Ceniza desplazándose ${km}${NBSP}km ${where}.`,
-    driftNoKm: (where) => `Ceniza desplazándose ${where}. El boletín no dio la distancia del desplazamiento.`,
+    driftFull: (km, where) => `La ceniza se desplaza ${km}${NBSP}km ${where}.`,
+    driftNoKm: (where) => `La ceniza se desplaza ${where}. El boletín no dio la distancia del desplazamiento.`,
     driftNoDirection: (km) =>
-      `Ceniza desplazándose ${km}${NBSP}km. El boletín no dio la dirección, así que no se sabe hacia dónde fue respecto al Acatenango.`,
+      `La ceniza se desplaza ${km}${NBSP}km. El boletín no dio la dirección, así que no se sabe hacia dónde fue respecto al Acatenango.`,
     driftMissing: 'El boletín no dio distancia ni dirección del desplazamiento.',
     ashfall: (places) => `Caída de ceniza reportada en ${places}.`,
     ashfallUnnamed: 'Caída de ceniza reportada; el boletín no nombró comunidades.',
@@ -219,7 +221,7 @@ export const es: Dict = {
   },
   colophon: {
     terrain: (dem, published, exaggeration, relief, across) =>
-      `Terreno de {aws}, derivado de SRTM y de dominio público. El Fuego resulta de ${dem} m frente a los ${published} m publicados. El relieve vertical está exagerado ×${exaggeration} para que sus ${relief} km de desnivel en ${across} km se lean como se ven desde la cresta.`,
+      `Terreno de {aws}, derivado de SRTM y de dominio público. En el modelo, el Fuego mide ${dem} m, frente a los ${published} m publicados. El relieve vertical está exagerado ×${exaggeration} para que sus ${relief} km de desnivel en ${across} km se lean como se ven desde la cresta.`,
     representative: 'La serie que se muestra es representativa mientras se completa el archivo.',
     record: (count, first, last) =>
       `${count} boletines del {insivumeh}, del ${first} al ${last}, leídos de PDF escaneados mediante OCR. No todos los boletines indican todas las cifras, y una cifra omitida se muestra como un hueco, nunca como 0.`,

@@ -6,7 +6,7 @@ import { withBase } from '@/lib/base-path';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Fuego: page not found · página no encontrada',
+  title: 'Fuego: page not found / página no encontrada',
 };
 
 /**
@@ -19,8 +19,10 @@ export default function GlobalNotFound() {
     <Document locale="en">
       <main className="lost">
         <h1>Page not found</h1>
+        <p>No page of the record is at this address.</p>
         <p><a href={withBase('/')}>Go to Fuego</a></p>
-        <h1 lang="es">Página no encontrada</h1>
+        <p lang="es" className="lost-h">Página no encontrada</p>
+        <p lang="es">Ninguna página del registro está en esta dirección.</p>
         <p lang="es"><a href={withBase('/es/')}>Ir a Fuego en español</a></p>
       </main>
     </Document>

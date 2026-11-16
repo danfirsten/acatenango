@@ -72,7 +72,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 
 .brand { color: var(--ink); letter-spacing: 0.3em; font-size: 14px; font-weight: 500; }
-.observed { display: flex; align-items: center; gap: 14px; }
+.observed { display: flex; align-items: center; gap: 14px; margin-left: auto; }
 
 .badge {
   font-size: 11px;
@@ -454,16 +454,16 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   padding: 0 2px;
   color: var(--ink);
   text-decoration: underline;
-  text-decoration-color: var(--line);
+  text-decoration-color: var(--ash);
   text-underline-offset: 4px;
   white-space: nowrap;
 }
-.lang-switch:hover { text-decoration-color: var(--ash); }
+.lang-switch:hover { text-decoration-color: var(--ink); }
 .lang-switch:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
 
 /* The 404, in both languages. */
 .lost { max-width: 60ch; margin: 0 auto; padding: 18vh 24px; }
-.lost h1 {
+.lost h1, .lost .lost-h {
   margin: 0 0 6px;
   font-family: var(--label);
   font-size: 14px;
@@ -472,12 +472,19 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   text-transform: uppercase;
   color: var(--ink);
 }
-.lost p { margin: 0 0 32px; }
+.lost p { margin: 0 0 8px; color: var(--ash); }
+.lost p:has(a) { margin-bottom: 40px; }
+.lost .lost-h { margin: 0 0 6px; }
 .lost a { color: var(--ink); text-decoration-color: var(--ash); }
 
 @media (max-width: 860px) {
   .notice { padding: 10px 16px; }
   .topbar { flex-wrap: wrap; row-gap: 6px; }
+  /* The switch shares the brand's row; the bulletin line gets its own row below,
+     where it always sat, clear of the summit labels. */
+  .topbar .lang-switch { order: 1; margin-left: auto; min-height: 32px; }
+  .topbar .observed { order: 2; flex-basis: 100%; margin-left: 0; }
+  .topbar .observed-text { text-align: left; }
 }
 
 /* ── field lanes (under the tempo chart, same axis) ───────────────────── */
