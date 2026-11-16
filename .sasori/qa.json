@@ -3,9 +3,7 @@
   "routes": [
     "/"
   ],
-  "public": [
-    "/"
-  ],
+  "public": [],
   "widths": [
     390,
     768,
@@ -13,6 +11,8 @@
   ],
   "interactions": [],
   "motion": {
-    "allow": []
+    "allow": [
+      "breathe"
+    ]
   }
 }
