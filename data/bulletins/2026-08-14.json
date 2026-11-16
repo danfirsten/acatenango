@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:36:29.820Z",
   "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (633%\nAA:\nGUATEMALA\n14 de agosto de 2026 VO LC Á N DE\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ns La ._. Ze\n¡On Condiciones atmosféricas:\n| Vr Despejado\n. Viento:\n29\nY Del Este\n0% Precipitación pluvial:\n0.0 mm\nMorfología: accdaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\nS la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nSe observa desgasificación débil sobre el cráter, alcanzando alturas de 500 metros y dispersándose al Oeste. Se\nregistran explosiones débiles y moderadas, a un ritmo de 5 a 7 por hora, generando columna de gas y ceniza que\nalcanzan los 4800 msnm. La ceniza se dispersa de 10 a 20 km en dirección oeste. Caída de ceniza fina en\ncomunidades ubicadas en el flanco Oeste. También se observan balísticos y descenso de material volcánico\nincandescente producto de las explosiones, hacia los flancos oeste, sur y suroeste, llegando incluso hasta la\nvegetación. Asimismo, la actividad explosiva genera retumbos y ondas de choque. Durante al noche y madrugada es\nposible observar incandescencia que permanece en el cráter y que también se denota como pulsos incandescentes\nalcanzando alturas de 100 a 300 metros.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\ne or | Vivien\nATEMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 7
+    },
     "ashColumnMasl": {
       "min": 4800,
       "max": 4800
@@ -25,10 +28,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

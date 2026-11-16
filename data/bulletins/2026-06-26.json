@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T01:23:22.581Z",
   "raw": "YSN UM\nBOLETÍN VULCANOLÓGICO DIARIO (6%)\nA\n=Y\nGUATEMALA\n26 de junio de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\nMEMES)  —ceocrárica:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n+ Af Condiciones atmosféricas:\nal > 7 Y 6 A e >, Parcialmente nublado\n3 Gas e 3 .\npt 0 Viento:\n? 7, . ) —Í Del este\n. DE LS 0% Precipitación pluvial:\nO O AA 4.80 mm\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto as Ae\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones un poco favorables para la visualización del\ncráter debido a la presencia de nubosidad. Se registran de 6 a 8 explosiones de características\ndébiles y moderadas por hora, las cuales elevan columnas de gases con una tonalidad grisácea de\n4500 a 4800 msnm (14,764 a 15,748 pies). Estas se desplazan hacia el oeste debido a la acción del\nviento a distancias de 10 a 40 km. Algunas de estas explosiones expulsan material incandescente a\ndistancias de 250 metros sobre el nivel del cráter. Otras pueden ocasionar retumbos y ondas de\nchoque débiles. De igual forma se presentan sonidos de desgasificación similares a los de una\nmáquina locomotora. Se espera caída débil de ceniza fina sobre Finca El Recreo, Sangre de Cristo y\nsus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' ' . '\n- a : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4800
@@ -27,10 +30,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "partlyCloudy"
+    "sky": "partlyCloudy",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }
