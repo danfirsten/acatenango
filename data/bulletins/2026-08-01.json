@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:40:56.915Z",
   "raw": "¡VUM\nz E 5\n«META\nBOLETIN VULCANOLOGICO DIARIO E\nGUATEMALA\n1 de agosto de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\na rl ¡Or Condiciones atmosféricas:\nA Despejado\nViento:\nNS = Del noreste\nnn E es y ES :\nAd SO el\nSS o,, Precipitación pluvial:\nE A AF 7 “o. 0.00\nA AS AR A\n4 ed Acceda a las cámaras de vigilancia\nstrato volcán compuesto Los a E\np volcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 6 a 8 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4300 a 4800 msnm (14,108 a 15,748 pies). Estas\nse desplazan hacia el suroeste debido a la acción del viento a distancias de 10 a 40 km. Algunas de\nestas explosiones expulsan material incandescente a distancias de 200 metros sobre el nivel del\ncráter. Otras pueden ocasionar retumbos y ondas de choque débiles. De igual forma se presentan\nsonidos de desgasificación similares a los de una máquina locomotora. Se espera caída débil de\nceniza fina sobre Morelia, Panimaché | y Il y sus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
     "ashColumnMasl": {
       "min": 4300,
       "max": 4800
@@ -27,10 +30,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

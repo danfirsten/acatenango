@@ -30,9 +30,13 @@
       "lahars",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
   },
-  "parserVersion": 2,
+  "parserVersion": 7,
   "warnings": [
     "no-explosion-rate"
   ]
