@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-25",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "SE"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 100,
+      "max": 100
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Rodeo"
+    ]
+  }
+}
