@@ -12,10 +12,12 @@ import path from 'node:path';
 
 import type { Bulletin } from '../src/lib/bulletin';
 import { PARSER_VERSION } from '../src/lib/bulletin';
+import { type Gap, parseGaps } from '../src/lib/gaps';
 import { parseBulletin } from '../src/lib/parse-bulletin';
 
 const BULLETIN_DIR = path.join(process.cwd(), 'data', 'bulletins');
 const INDEX_PATH = path.join(process.cwd(), 'data', 'index.json');
+const GAPS_PATH = path.join(process.cwd(), 'data', 'gaps.json');
 
 export interface IndexEntry {
   date: string;
@@ -39,6 +41,8 @@ export interface FuegoIndex {
   parserVersion: number;
   /** Days present in the archive, oldest first. */
   entries: IndexEntry[];
+  /** Days with no bulletin that INSIVUMEH no longer serves; the chart marks them "no bulletin". */
+  gaps: Gap[];
   stats: {
     days: number;
     firstDate: string | null;
@@ -97,10 +101,19 @@ export async function buildIndex(): Promise<FuegoIndex> {
     }
   }
 
+  let gaps: Gap[] = [];
+  try {
+    const have = new Set(entries.map((e) => e.date));
+    gaps = parseGaps(await readFile(GAPS_PATH, 'utf8')).filter((g) => !have.has(g.date));
+  } catch {
+    // No gaps file yet.
+  }
+
   return {
     generatedAt: new Date().toISOString(),
     parserVersion: PARSER_VERSION,
     entries,
+    gaps,
     stats: {
       days: entries.length,
       firstDate: entries[0]?.date ?? null,

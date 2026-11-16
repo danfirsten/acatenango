@@ -1,0 +1,39 @@
+{
+  "date": "2026-10-20",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-20.pdf",
+  "fetchedAt": "2026-11-16T20:31:02.386Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (635\nAA:\nGUATEMALA\n20 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n: di s La e ei\nÑ ¡On Condiciones atmosféricas:\n3 Vr Parcialmente Despejado\n. . Viento:\nY Del Este, Noreste\n0% Precipitación pluvial:\n32.5 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\n5 SS https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nPor momentos se observa la actividad con explosiones en rangos de 3 a 6 por hora, de intensidad débil, moderadas\ny fuertes. Acompañadas de columnas de gases y ceniza entre 4,200 y 4,700 msnm, dispersándose al oeste y suroeste\na una distancia aproximadamente a 20 km. La actividad de explosiones produce retumbos con ondas de choque,\navalanchas por los flancos sur, oeste y suroeste, así como caída de ceniza en Panimaché, Morelia, Santa Sofía, El\nPorvenir, San Pedro Yepocapa, Sangre de Cristo y otras comunidades. Se recomienda tomar las precauciones, en el\npaso de vehículos en rios y barrancas, principalmente por las lluvias que se presentan por la tarde y noche. También\nse recomienda no permanecer en la meseta ni en sus inmediaciones.\nsE, | Ministerio de\nFF y Comunicaciones, Ñ . . ' ' y . y\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\ne or | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 20,
+    "driftDirections": [],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "El Porvenir",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}

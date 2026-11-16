@@ -49,11 +49,21 @@ jobs:
         env:
           BULLETIN_URL: ${{ inputs.bulletin_url }}
 
+      # A slipped day is caught the next morning: if today's run found nothing
+      # new, look at yesterday (a no-op when it is already archived).
+      - name: Retry yesterday if nothing new
+        if: ${{ inputs.bulletin_url == '' }}
+        run: |
+          if [ -z "$(git status --porcelain data/bulletins/)" ]; then
+            YESTERDAY=$(date -u -d '-30 hours' +%Y-%m-%d)
+            npm run backfill -- --from "$YESTERDAY" --to "$YESTERDAY"
+          fi
+
       - name: Commit archive
         run: |
           git config user.name  'fuego-collector[bot]'
           git config user.email 'fuego-collector[bot]@users.noreply.github.com'
-          git add data/bulletins/
+          git add data/
           if git diff --staged --quiet; then
             echo 'No new bulletin data today.'
             exit 0

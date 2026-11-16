@@ -1,0 +1,40 @@
+{
+  "date": "2026-10-18",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-18.pdf",
+  "fetchedAt": "2026-11-16T20:30:40.732Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (633%\n¿AA\n=\nGUATEMALA\n18 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nye o AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n2 S s Az ... >\nSS 2 > , ¡hn Condiciones atmosféricas:\nNANI Nublado\nViento:\n»o e >. Y Del Noreste\n0% Precipitación pluvial:\n5.4 mm\nMorfología: A A\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\nS la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego reporta condiciones poco favorables para la visualización del cráter.\nDurante la noche y madrugada se registró desgasificación débil a moderada. Mediante cámaras de vigilancia, se\nobservaron pulsos incandescentes de hasta aproximadamente 300 metros sobre el cráter, acompañados de\navalanchas débiles. Además, se registró caída de material incandescente alrededor del cráter, el cual se encauza\nprincipalmente hacia las barrancas Seca y Ceniza, en ocasiones descendiendo hasta el límite de la vegetación. De\nacuerdo a instrumentación de monitoreo, se registra un promedio de 3 explosiones por hora de características\ndébiles y moderadas, que elevan columnas de gas y ceniza a alturas de 4300 a 4500 msnm, las cuales se dispersan\nhacia el suroeste.\nDebido a la temporada de lluvias y al material acumulado en las barrancas, persiste el riesgo de lahares en\nhoras de la tarde y noche. Se recomienda no permanecer dentro ni en las cercanías de dichas barrancas y\nseguir las indicaciones del boletín especial BEFGO-013-2026.\nFE y! Comunicaciones, ¡ ¡ j j ' j\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 3
+    },
+    "ashColumnMasl": null,
+    "driftKm": null,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza"
+    ],
+    "incandescenceM": {
+      "min": 300,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "cloudy",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": [
+    "no-ash-column"
+  ]
+}
