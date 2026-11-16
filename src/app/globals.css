@@ -439,3 +439,95 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .notice { padding: 10px 16px; }
   .topbar { flex-wrap: wrap; row-gap: 6px; }
 }
+
+/* ── from camp (#9) ───────────────────────────────────────────────────── */
+
+.camp {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 72px 26px 8px;
+  border-top: 1px solid var(--line);
+}
+.camp-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  column-gap: 24px;
+  row-gap: 6px;
+  margin-bottom: 26px;
+}
+.camp-head h2 {
+  margin: 0;
+  font-size: clamp(26px, 3.6vw, 38px);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.camp-date {
+  margin: 0;
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 12px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.camp-date time { color: var(--ink); }
+.camp-body {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
+  gap: 44px;
+  align-items: start;
+}
+.camp-summary {
+  margin: 0;
+  font-size: clamp(21px, 2.4vw, 27px);
+  line-height: 1.35;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-variant-numeric: tabular-nums;
+  text-wrap: pretty;
+  max-width: 34ch;
+}
+.camp-lines { margin: 0; border-top: 1px solid var(--line); }
+.camp-line {
+  display: grid;
+  grid-template-columns: 9.5em minmax(0, 1fr);
+  gap: 16px;
+  padding: 13px 0 13px 14px;
+  border-bottom: 1px solid var(--line);
+  border-left: 2px solid var(--ember);
+}
+.camp-line dt {
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  line-height: 1.6;
+  padding-top: 2px;
+  color: var(--muted);
+}
+.camp-line dd {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.5;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+/* Something the bulletin left out reads as a gap: no ember, a broken rule. */
+.camp-line[data-missing="true"] { border-left: 2px dashed var(--ash); }
+.camp-line[data-missing="true"] dd { color: var(--ash); }
+.camp-empty { margin: 0; color: var(--muted); max-width: 60ch; }
+.camp-foot {
+  margin-top: 30px;
+  display: grid;
+  gap: 10px;
+}
+.camp-foot p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 76ch; }
+.camp-advice { color: var(--ash); }
+
+@media (max-width: 860px) {
+  .camp { padding: 56px 16px 8px; }
+  .camp-body { grid-template-columns: 1fr; gap: 24px; }
+  .camp-line { grid-template-columns: 1fr; gap: 2px; }
+}
