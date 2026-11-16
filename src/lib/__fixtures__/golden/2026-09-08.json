@@ -1,0 +1,46 @@
+{
+  "date": "2026-09-08",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "W",
+      "NW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "partlyCloudy",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía"
+    ]
+  }
+}

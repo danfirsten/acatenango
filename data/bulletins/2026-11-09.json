@@ -27,11 +27,14 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "incandescence"
     ],
     "sky": "partlyCloudy",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "El Porvenir"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

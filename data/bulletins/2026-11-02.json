@@ -5,7 +5,10 @@
   "fetchedAt": "2026-11-03T04:00:08.900Z",
   "raw": "YSN UM,\nBOLETIN VULCANOLOGICO DIARIO (637\nUL) E)\n=Y\nGUATEMALA\n2 de noviembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nas 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(==) eS Condiciones atmosféricas:\nVr Despejado\n: Viento:\npi Dn\nA Y Del Noreste\n0% Precipitación pluvial:\n00 mm\nMorfología: accdaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na a https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego reporta condiciones favorables para observar el cráter. Se observa una\nfumarola de desgasificación, explosiones débiles a moderadas y sonidos débiles de corta duración, similares a\nlos de una locomotora.\nDe acuerdo a la red de monitoreo del INSIVUMEH, durante la noche y madrugada se registró desgasificación\ndébil a moderada, de color gris claro, y un promedio de 3 explosiones débiles a moderadas por hora, que elevan\ncolumnas de gas y ceniza a alturas de 4200 a 4400 msnm. La ceniza se dispersa de 10 a 40 km hacia el suroeste.\nAlgunas explosiones pueden generar retumbos débiles.\nTambién se observaron pulsos incandescentes de 100 a 300 metros sobre el cráter, acompañados de caída de\nmaterial volcánico incandescente a su alrededor, el cual se encauza principalmente hacia las barrancas Seca,\nCeniza, El Jute y Las Lajas, y en ocasiones llega hasta el límite de la vegetación.\nsE, | Ministerio de\nEF y Comunicaciones, . Ñ . y ' y . y\n3 : terio Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 3
+    },
     "ashColumnMasl": {
       "min": 4200,
       "max": 4400
@@ -34,8 +37,6 @@
     "sky": "clear",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 8,
+  "warnings": []
 }

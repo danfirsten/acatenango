@@ -1,0 +1,35 @@
+{
+  "date": "2026-09-29",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 5000,
+      "max": 5000
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SE"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "cloudy",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía"
+    ]
+  }
+}

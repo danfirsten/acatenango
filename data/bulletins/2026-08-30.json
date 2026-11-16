@@ -14,7 +14,10 @@
       "max": 4700
     },
     "driftKm": 30,
-    "driftDirections": [],
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
     "drainages": [
       "Seca",
       "Ceniza",
@@ -40,6 +43,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

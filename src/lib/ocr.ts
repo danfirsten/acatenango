@@ -49,6 +49,10 @@ export function cleanOcrText(text: string): string {
   return text
     // Letter O read for a zero, but only when surrounded by digits.
     .replace(/(?<=\d)[OoQ](?=\d)/g, '0')
+    // ... and runs of them inside one figure: "4,5OO" is 4,500.
+    .replace(/\b\d[\d.,]*[OoQ][OoQ\d.,]*(?![A-Za-zÁ-ú])/g, (token) =>
+      /^\d[Oo]$/.test(token) ? token : token.replace(/[OoQ]/g, '0'),
+    )
     .replace(/(?<=\d)[lI](?=\d)/g, '1')
     // "4.200" / "4 200" thousands that lost their comma.
     .replace(/(?<=\d)\s(?=\d{3}\b)/g, ',')

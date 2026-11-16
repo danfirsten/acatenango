@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:38:11.510Z",
   "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\nGUATEMALA\nPORN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nETT Soo Ss ee\nNe) e Condiciones atmosféricas:\nVr Despejado\nViento:\nEN 29\nAS a - 9 Del Sureste\nmn NS E En\nO a le q ER ba Ed SS SP SN e. 8 . .\nA UM 0% Precipitación pluvial:\nO 16.3 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á cal E\n> volcanica/\nVulcaniana\nActividad\nSe reporta fumarola de desgasificación de coloración blanca a una altura de 4100 msnm. Se generan entre 6 y 8\nexplosiones de características débiles, moderadas y fuertes por hora que elevan columnas de gases y ceniza a alturas\nde 4200 a 4500 msnm (13,780 - 14,764 pies), las cuales se desplazan hacia el oeste y noroeste a distancias de hasta\n20 km. Las explosiones pueden generar sonidos, retumbos y ondas de choque. Por la noche, se observan pulsos\nincandescentes que se elevan entre 200 y 300 metros sobre el nivel del cráter. El observatorio del volcán de Fuego\n(OVFGO) reporta el colapso y descenso de materiales volcánicos desde el contorno del cráter. Caída de ceniza sobre\nSangre de Cristo, Finca Palo Verde, Yepocapa y otros. Por la tarde y noche, las lluvias podrían provocar el\ndescenso de lahares en diferentes barrancas del volcán. Debido a la reciente erupción, estos podrían\nincorporar materiales volcánicos calientes.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
     "ashColumnMasl": {
       "min": 4200,
       "max": 4500
@@ -36,8 +39,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 8,
+  "warnings": []
 }
