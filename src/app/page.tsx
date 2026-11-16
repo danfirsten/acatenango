@@ -25,15 +25,14 @@ export default function Page() {
                 {series.length} bulletins from{' '}
                 <a href="https://insivumeh.gob.gt">INSIVUMEH</a>, {firstDate} to {lastDate},
                 read out of scanned PDFs by OCR. Not every bulletin states every figure, and a
-                figure it left out is shown as a gap, never as 0:{' '}
-                {completeness.map((c, i) => (
+                figure it left out is shown as a gap, never as 0.
+                {completeness.map((c) => (
                   <span key={c.field}>
-                    {i > 0 && (i === completeness.length - 1 ? ' and ' : ', ')}
-                    {c.field} reported on {c.reported} of {c.total} days
-                    {c.continuous ? ` (${c.continuous} more were continuous emission, which has no hourly count)` : ''}
+                    {' '}The {c.field} was reported on {c.reported} of {c.total} days
+                    {c.continuous ? `, and ${c.continuous} more were continuous emission, which has no hourly count` : ''}.
                   </span>
                 ))}
-                . Every bulletin&rsquo;s raw text is kept, so improving the parser re-derives the
+                {' '}Every bulletin&rsquo;s raw text is kept, so improving the parser re-derives the
                 whole record without re-fetching anything.
               </>
             )}

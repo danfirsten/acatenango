@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
@@ -35,6 +35,8 @@ interface TempoChartProps {
 
 export default function TempoChart({ series, selected, onSelect }: TempoChartProps) {
   const [hover, setHover] = useState<number | null>(null);
+  const figRef = useRef<HTMLElement>(null);
+  const tipRef = useRef<HTMLElement>(null);
 
   const { runs, gaps, continuous, xs, ys, maxY, ticks, half } = useMemo(() => {
     // Only reported days set the scale; a missing day is not a 0.
@@ -77,6 +79,17 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
 
   const active = hover === null ? null : series[hover];
 
+  // Centre the tip over the hovered day, but keep it inside the chart: on a
+  // phone the chart is narrower than a fixed edge rule can allow for.
+  useLayoutEffect(() => {
+    const fig = figRef.current;
+    const tip = tipRef.current;
+    if (!fig || !tip || hover === null) return;
+    const width = fig.clientWidth;
+    const x = (xs[hover] / W) * width - tip.offsetWidth / 2;
+    tip.style.left = `${Math.max(0, Math.min(width - tip.offsetWidth, x))}px`;
+  }, [hover, xs]);
+
   function indexAt(ev: React.PointerEvent<SVGSVGElement>): number {
     const r = ev.currentTarget.getBoundingClientRect();
     const x = ((ev.clientX - r.left) / r.width) * W;
@@ -96,7 +109,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
     });
 
   return (
-    <figure className="tempo">
+    <figure className="tempo" ref={figRef}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
@@ -116,7 +129,15 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         </defs>
 
         {/* Continuous emission: the volcano at its most active, with no hourly count. */}
-        {continuous.map((r) => <rect key={`c${r.start}`} className="tempo-continuous" {...band(r)} />)}
+        {continuous.map((r) => {
+          const b = band(r);
+          return (
+            <g key={`c${r.start}`}>
+              <rect className="tempo-continuous" {...b} />
+              <rect className="tempo-continuous-cap" x={b.x} y={b.y} width={b.width} height={3} />
+            </g>
+          );
+        })}
 
         {/* Days with no reported rate: a quiet hatch, never a line at 0. */}
         {gaps.map((g) => <rect key={g.start} className="tempo-gap" fill="url(#tempoGap)" {...band(g)} />)}
@@ -167,9 +188,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         )}
       </svg>
 
-      <figcaption className="tempo-tip" data-on={active !== null}
-        data-edge={hover === null ? undefined : xs[hover] < W * 0.12 ? 'start' : xs[hover] > W * 0.88 ? 'end' : undefined}
-        style={{ left: `${(hover === null ? 0 : xs[hover] / W) * 100}%` }}>
+      <figcaption className="tempo-tip" ref={tipRef} data-on={active !== null}>
         {active && (
           <>
             <b>{fmt(active.date)}</b>

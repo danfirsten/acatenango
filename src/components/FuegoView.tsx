@@ -50,15 +50,21 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
     [day, rateFrom, columnFrom],
   );
   const notes: string[] = [];
-  if (day.explosionsMax === null && !continuous) {
-    notes.push(rateFrom
-      ? `No explosion rate in this bulletin. The plume holds the rate of ${formatDate(rateFrom.date)}, the last day that reported one.`
-      : 'No explosion rate in this bulletin, or any before it, so the plume cannot follow one.');
-  }
-  if (day.ashMaxMasl === null) {
-    notes.push(columnFrom
-      ? `No ash column in this bulletin. The plume holds the height of ${formatDate(columnFrom.date)}.`
-      : 'No ash column in this bulletin, or any before it, so the plume cannot follow one.');
+  const rateMissing = day.explosionsMax === null && !continuous;
+  const columnMissing = day.ashMaxMasl === null;
+  if (rateMissing && columnMissing && rateFrom && columnFrom && rateFrom === columnFrom) {
+    notes.push(`No rate or ash column in this bulletin; the plume holds ${formatDate(rateFrom.date)}\u2019s.`);
+  } else {
+    if (rateMissing) {
+      notes.push(rateFrom
+        ? `No explosion rate in this bulletin; the plume holds the rate of ${formatDate(rateFrom.date)}.`
+        : 'No explosion rate in this bulletin or any before it.');
+    }
+    if (columnMissing) {
+      notes.push(columnFrom
+        ? `No ash column in this bulletin; the plume holds the height of ${formatDate(columnFrom.date)}.`
+        : 'No ash column in this bulletin or any before it.');
+    }
   }
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
