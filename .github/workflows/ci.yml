@@ -1,0 +1,20 @@
+name: CI
+
+# Session CI: the Sasori conductor runs these checks in a cloud session and
+# posts the statuses, so this only runs when started by hand.
+on:
+  workflow_dispatch:
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: CI=1 npm test
+      - run: npm run build

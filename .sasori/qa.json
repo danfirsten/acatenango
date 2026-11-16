@@ -1,0 +1,18 @@
+{
+  "baseUrl": "http://localhost:3000",
+  "routes": [
+    "/"
+  ],
+  "public": [],
+  "widths": [
+    390,
+    768,
+    1440
+  ],
+  "interactions": [],
+  "motion": {
+    "allow": [
+      ".scrollcue"
+    ]
+  }
+}

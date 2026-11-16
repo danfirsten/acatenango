@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
-    "start": "next start",
+    "start": "serve out -l ${PORT:-3000} --no-clipboard",
     "lint": "eslint",
     "test": "node --import tsx --test 'src/**/*.test.ts'",
     "collect": "tsx scripts/collect.ts",
@@ -17,7 +17,7 @@
     "postbuild": "tsx scripts/build-sw.ts"
   },
   "dependencies": {
-    "next": "16.3.2",
+    "next": "^16.4.6",
     "pdfjs-dist": "^6.2.108",
     "pngjs": "^7.0.0",
     "react": "19.2.8",
@@ -31,9 +31,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@types/three": "^0.185.4",
+    "axe-core": "^4.14.1",
     "eslint": "^9",
-    "eslint-config-next": "16.3.2",
-    "playwright": "^1.62.1",
+    "eslint-config-next": "^16.4.6",
+    "playwright": "^1.63.0",
+    "serve": "^14.2.8",
     "tailwindcss": "^4",
     "tsx": "^4.23.12",
     "typescript": "^5"
