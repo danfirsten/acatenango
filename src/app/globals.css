@@ -462,7 +462,6 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .lane-arrow { fill: none; stroke: var(--ash); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
 .lane-bar, .lane-mark { fill: var(--ember); }
 .lane-mark { opacity: 0.7; }
-.lane-missing { opacity: 1; }
 .lane-sel { stroke: var(--ember); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .lane-hover { stroke: var(--ember); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.6; vector-effect: non-scaling-stroke; }
 .lanes-day {
@@ -498,4 +497,10 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 @media (max-width: 560px) {
   .lanes-summary { grid-template-columns: 1fr; }
 }
-.lane-missing { fill: color-mix(in srgb, var(--ash) 14%, transparent); }
+/* Arrows need about 6px a day; on narrow screens the lane shows one mark per day by compass row instead. */
+.lane svg { overflow: visible; }
+.lane[data-lane="driftdots"] { display: none; }
+@media (max-width: 860px) {
+  .lane[data-lane="drift"] { display: none; }
+  .lane[data-lane="driftdots"] { display: block; }
+}

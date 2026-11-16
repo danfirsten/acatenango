@@ -15,11 +15,13 @@ interface FieldLanesProps {
 const ROW = 15;
 const BAR_H = 30;
 const MARK_H = 26;
+const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
 const fmt = (iso: string) =>
   new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 
 const list = (names: string[]) => names.join(', ');
+const none = 'not reported';
 const times = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
 
 /**
@@ -94,6 +96,18 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
       ),
     },
     {
+      id: 'driftdots',
+      title: 'Ash drift toward',
+      note: `${summary.driftReported} of ${n} days · first direction named`,
+      h: COMPASS.length * 6 + 6,
+      body: series.map((e, i) => {
+        const row = COMPASS.indexOf(e.driftDirections[0]);
+        return e.driftDirections.length === 0 || row === -1
+          ? missing('driftdots', i, COMPASS.length * 6 + 6)
+          : <rect key={i} className="lane-mark" x={dayX(i, n) - cell / 2} width={cell} y={3 + row * 6} height={4} />;
+      }),
+    },
+    {
       id: 'glow',
       title: 'Incandescence height',
       note: top === null ? 'not reported' : `up to ${top.toLocaleString('en-GB')} m above the crater`,
@@ -134,8 +148,7 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
   ];
 
-  const none = 'not reported';
-  const drift = summary.driftReported === 0 ? none : `${list(summary.commonDrift)} (${times(summary.commonDriftDays)})`;
+    const drift = summary.driftReported === 0 ? none : `${list(summary.commonDrift)} (${times(summary.commonDriftDays)})`;
 
   return (
     <figure className="lanes" aria-label="Daily fields from the bulletin, on the same days as the chart above">
@@ -154,7 +167,7 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
         onPointerLeave={() => setHover(null)}
       >
         {lanes.map((l) => (
-          <div className="lane" key={l.id}>
+          <div className="lane" key={l.id} data-lane={l.id}>
             <p className="lane-head"><span>{l.title}</span><span className="lane-note">{l.note}</span></p>
             <svg viewBox={`0 0 ${W} ${l.h}`} preserveAspectRatio="none" style={{ aspectRatio: `${W} / ${l.h}` }}
               role="img" aria-label={`${l.title}: ${l.note}`}>
@@ -170,12 +183,12 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
         ))}
       </div>
 
-      <figcaption className="lanes-day" aria-live="polite">
+      <figcaption className="lanes-day" >
         <b>{fmt(d.date)}</b>
         <span>Drift {d.driftDirections.length > 0 ? `toward ${d.driftDirections.join(' · ')}` : none}</span>
         <span>Glow {d.incandescenceMaxM !== null ? `${d.incandescenceMaxM.toLocaleString('en-GB')} m` : none}</span>
-        <span>Drainages {d.drainages.length > 0 ? list(d.drainages) : 'none named'}</span>
-        <span>Towns {d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : 'none named'}</span>
+        <span>Drainages {d.drainages.length > 0 ? list(d.drainages) : none}</span>
+        <span>Towns {d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : none}</span>
       </figcaption>
 
       <p className="tempo-key">
