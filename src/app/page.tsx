@@ -1,3 +1,4 @@
+import Notice from '@/components/Notice';
 import FuegoView from '@/components/FuegoView';
 import { loadSeries } from '@/lib/series';
 
@@ -6,6 +7,7 @@ export default function Page() {
 
   return (
     <main>
+      <Notice />
       <FuegoView series={series} isRepresentative={isRepresentative} />
 
       <section className="record record-foot">
