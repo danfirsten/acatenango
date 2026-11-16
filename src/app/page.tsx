@@ -1,5 +1,7 @@
 import Notice from '@/components/Notice';
+import CampPanel from '@/components/CampPanel';
 import FuegoView from '@/components/FuegoView';
+import { latestEntry } from '@/lib/camp';
 import { loadSeries } from '@/lib/series';
 
 export default function Page() {
@@ -9,6 +11,7 @@ export default function Page() {
     <main>
       <Notice />
       <FuegoView series={series} isRepresentative={isRepresentative} />
+      <CampPanel entry={latestEntry(series)} isRepresentative={isRepresentative} />
 
       <section className="record record-foot">
         <footer className="colophon">
