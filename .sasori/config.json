@@ -2,6 +2,7 @@
   "base": "claude/guatemala-volcano-portfolio-vyahmq",
   "checks": [
     "npm run lint",
+    "npm run typecheck",
     "CI=1 npm test",
     "npm run build"
   ],
