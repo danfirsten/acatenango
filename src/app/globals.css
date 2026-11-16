@@ -515,6 +515,22 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .lane[data-lane="driftdots"] { display: block; }
 }
 
+/* ── Smithsonian weekly report lane (beside the field lanes) ──────────── */
+
+.gvp { margin: 14px 0 0; }
+.gvp-span { fill: var(--ash); opacity: 0.55; }
+.gvp-differ { fill: none; stroke: var(--ember); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.gvp-key-ring { width: 12px; height: 8px; border: 1.5px solid var(--ember); flex: none; }
+.gvp .lane-head { flex-wrap: wrap; }
+.gvp .lane svg { min-height: 18px; }
+.gvp-list a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 4px; }
+.gvp-note { margin: 10px 0 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
+.gvp-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
+.gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; background: var(--ground); font-size: 14px; font-variant-numeric: tabular-nums; }
+.gvp-list li span { color: var(--muted); }
+.gvp-list .gvp-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin-top: 2px; }
+.gvp-credit { margin: 12px 0 0; color: var(--muted); font-size: 13px; max-width: 76ch; }
+
 /* ── from camp (#9) ───────────────────────────────────────────────────── */
 
 .camp {
