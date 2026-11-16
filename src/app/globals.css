@@ -449,7 +449,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 /* The rule sits inside the side padding, so it spans the content width like the colophon's. */
 .camp-head {
-  padding-top: 72px;
+  padding-top: 48px;
   border-top: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;

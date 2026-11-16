@@ -83,6 +83,9 @@ function list(items: string[]): string {
 
 const metres = (n: number) => n.toLocaleString('en-GB');
 
+/** Joins a figure to its unit so a line never breaks between them. */
+const NBSP = '\u00a0';
+
 const RELATION_FIRST: Record<DriftRelation, string> = {
   towards: 'towards Acatenango',
   away: 'away from Acatenango',
@@ -164,8 +167,8 @@ export function describeCamp(entry: IndexEntry): CampDescription {
       key: 'column',
       label: 'Ash column',
       text: min !== null && min !== top
-        ? `Ash columns of ${metres(min)} to ${metres(top)} m above sea level, up to ${above} m above Fuego’s summit.`
-        : `Ash to ${metres(top)} m above sea level, ${above} m above Fuego’s summit.`,
+        ? `Ash columns of ${metres(min)} to ${metres(top)}${NBSP}m above sea level, up to ${above}${NBSP}m above Fuego’s summit.`
+        : `Ash to ${metres(top)}${NBSP}m above sea level, ${above}${NBSP}m above Fuego’s summit.`,
       missing: false,
     };
   } else {
@@ -177,7 +180,7 @@ export function describeCamp(entry: IndexEntry): CampDescription {
   const km = entry.driftKm;
   let driftLine: CampLine;
   if (where !== null && km !== null) {
-    driftLine = { key: 'drift', label: 'Drift from camp', text: `Ash drifting ${km} km ${where}.`, missing: false };
+    driftLine = { key: 'drift', label: 'Drift from camp', text: `Ash drifting ${km}${NBSP}km ${where}.`, missing: false };
   } else if (where !== null) {
     driftLine = {
       key: 'drift', label: 'Drift from camp',
@@ -186,7 +189,7 @@ export function describeCamp(entry: IndexEntry): CampDescription {
   } else if (km !== null) {
     driftLine = {
       key: 'drift', label: 'Drift from camp',
-      text: `Ash drifting ${km} km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.`,
+      text: `Ash drifting ${km}${NBSP}km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.`,
       missing: true,
     };
   } else {
@@ -203,7 +206,7 @@ export function describeCamp(entry: IndexEntry): CampDescription {
 
   // Summary: only what was reported.
   let ash: string | null = null;
-  if (top !== null) ash = `ash to ${metres(top)} m${where ? ` drifting ${where}` : ''}`;
+  if (top !== null) ash = `ash to ${metres(top)}${NBSP}m${where ? ` drifting ${where}` : ''}`;
   else if (where) ash = `ash drifting ${where}`;
   const parts = [rate, ash].filter((p): p is string => p !== null);
   const summary = parts.length > 0

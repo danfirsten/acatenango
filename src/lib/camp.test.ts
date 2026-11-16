@@ -38,7 +38,7 @@ const line = (e: IndexEntry, key: string) => {
 };
 
 describe('bearing from Fuego to camp', () => {
-  test('is computed from the terrain summits: just east of north, about 3 km', () => {
+  test('is computed from the terrain summits: just east of north, about 3\u00a0km', () => {
     const b = bearingDeg(SUMMITS.fuego, SUMMITS.acatenango);
     assert.equal(b, CAMP_BEARING_DEG);
     assert.ok(b > 5 && b < 15, `bearing ${b}`);
@@ -92,23 +92,23 @@ describe('the description', () => {
     const c = describeCamp(entry({ ashMinMasl: 4500, driftDirections: ['S', 'SW'] }));
     assert.equal(
       c.summary,
-      '3 to 6 explosions an hour, ash to 5,000 m drifting south and south-west, away from Acatenango.',
+      '3 to 6 explosions an hour, ash to 5,000\u00a0m drifting south and south-west, away from Acatenango.',
     );
     assert.equal(line(entry(), 'rate').text, '3 to 6 explosions an hour.');
     assert.equal(
       line(entry({ ashMinMasl: 4500 }), 'column').text,
-      'Ash columns of 4,500 to 5,000 m above sea level, up to 1,237 m above Fuego’s summit.',
+      'Ash columns of 4,500 to 5,000\u00a0m above sea level, up to 1,237\u00a0m above Fuego’s summit.',
     );
     assert.equal(
       line(entry(), 'column').text,
-      'Ash to 5,000 m above sea level, 1,237 m above Fuego’s summit.',
+      'Ash to 5,000\u00a0m above sea level, 1,237\u00a0m above Fuego’s summit.',
     );
   });
 
   test('mixed directions are grouped by how they sit from camp, in the bulletin’s order', () => {
     assert.equal(
       line(entry({ driftDirections: ['NE', 'E', 'N'] }), 'drift').text,
-      'Ash drifting 20 km north-east and north, towards Acatenango, and east, to one side of it.',
+      'Ash drifting 20\u00a0km north-east and north, towards Acatenango, and east, to one side of it.',
     );
   });
 
@@ -147,9 +147,9 @@ describe('the description', () => {
 
   test('drift with a distance but no direction cannot be placed relative to camp', () => {
     const l = line(entry({ driftDirections: [] }), 'drift');
-    assert.equal(l.text, 'Ash drifting 20 km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.');
+    assert.equal(l.text, 'Ash drifting 20\u00a0km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.');
     assert.equal(l.missing, true);
-    assert.equal(describeCamp(entry({ driftDirections: [] })).summary, '3 to 6 explosions an hour, ash to 5,000 m.');
+    assert.equal(describeCamp(entry({ driftDirections: [] })).summary, '3 to 6 explosions an hour, ash to 5,000\u00a0m.');
   });
 
   test('summary leaves out what is missing rather than inventing it', () => {
@@ -159,7 +159,7 @@ describe('the description', () => {
     );
     assert.equal(
       describeCamp(entry({ explosionsMin: null, explosionsMax: null, phenomena: [] })).summary,
-      'Ash to 5,000 m drifting east, to one side of Acatenango, and north-east, towards it.',
+      'Ash to 5,000\u00a0m drifting east, to one side of Acatenango, and north-east, towards it.',
     );
   });
 
