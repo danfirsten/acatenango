@@ -54,13 +54,13 @@ const COMPASS_WORD: Record<string, string> = {
   S: 'south', SW: 'south-west', W: 'west', NW: 'north-west',
 };
 
-/** Half of a quarter of the compass: a drift within this of camp's bearing is toward it. */
+/** Half of a quarter of the compass: a drift within this of camp's bearing is towards it. */
 const TOLERANCE_DEG = 45;
 
-export type DriftRelation = 'toward' | 'away' | 'side';
+export type DriftRelation = 'towards' | 'away' | 'side';
 
 /**
- * How a drift direction sits relative to camp: toward it (within a quarter of
+ * How a drift direction sits relative to camp: towards it (within a quarter of
  * the compass centred on camp's bearing), away from it (the opposite quarter),
  * or to one side. Null for a direction the bulletin vocabulary doesn't have.
  */
@@ -70,7 +70,7 @@ export function driftRelation(direction: string, campBearing: number = CAMP_BEAR
   const diff = Math.abs(((deg - campBearing + 540) % 360) - 180);
   // Rounded so a bearing that is a compass point on paper isn't moved by float noise.
   const d = Math.round(diff * 1e6) / 1e6;
-  if (d <= TOLERANCE_DEG) return 'toward';
+  if (d <= TOLERANCE_DEG) return 'towards';
   if (d >= 180 - TOLERANCE_DEG) return 'away';
   return 'side';
 }
@@ -84,18 +84,18 @@ function list(items: string[]): string {
 const metres = (n: number) => n.toLocaleString('en-GB');
 
 const RELATION_FIRST: Record<DriftRelation, string> = {
-  toward: 'toward Acatenango',
+  towards: 'towards Acatenango',
   away: 'away from Acatenango',
   side: 'to one side of Acatenango',
 };
 const RELATION_AGAIN: Record<DriftRelation, string> = {
-  toward: 'toward it',
+  towards: 'towards it',
   away: 'away from it',
   side: 'to one side of it',
 };
 
 /**
- * "north-east and north, toward Acatenango, and east, to one side of it":
+ * "north-east and north, towards Acatenango, and east, to one side of it":
  * directions grouped by how they sit from camp, in the order the bulletin gave
  * them. Null when no direction is known.
  */
@@ -165,7 +165,7 @@ export function describeCamp(entry: IndexEntry): CampDescription {
       label: 'Ash column',
       text: min !== null && min !== top
         ? `Ash columns of ${metres(min)} to ${metres(top)} m above sea level, up to ${above} m above Fuego’s summit.`
-        : `Ash to ${metres(top)} m above sea level, about ${above} m above Fuego’s summit.`,
+        : `Ash to ${metres(top)} m above sea level, ${above} m above Fuego’s summit.`,
       missing: false,
     };
   } else {

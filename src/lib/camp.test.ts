@@ -58,9 +58,9 @@ describe('bearing from Fuego to camp', () => {
 
 describe('drift relative to camp, every compass point', () => {
   // Camp is about 10° from Fuego. Within a quarter of the compass (45°) of that
-  // is toward, within 45° of the opposite is away, and the rest is to one side.
+  // is towards, within 45° of the opposite is away, and the rest is to one side.
   const expected = {
-    N: 'toward', NE: 'toward', E: 'side', SE: 'side',
+    N: 'towards', NE: 'towards', E: 'side', SE: 'side',
     S: 'away', SW: 'away', W: 'side', NW: 'side',
   } as const;
   for (const [dir, rel] of Object.entries(expected)) {
@@ -70,15 +70,15 @@ describe('drift relative to camp, every compass point', () => {
   }
 
   test('the relation follows the bearing, not a fixed table', () => {
-    // A camp due east: east is toward, west away, north and south to one side.
-    assert.equal(driftRelation('E', 90), 'toward');
+    // A camp due east: east is towards, west away, north and south to one side.
+    assert.equal(driftRelation('E', 90), 'towards');
     assert.equal(driftRelation('W', 90), 'away');
     assert.equal(driftRelation('N', 90), 'side');
     assert.equal(driftRelation('S', 90), 'side');
   });
 
-  test('exactly a quarter-compass point off counts as toward', () => {
-    assert.equal(driftRelation('NE', 0), 'toward');
+  test('exactly a quarter-compass point off counts as towards', () => {
+    assert.equal(driftRelation('NE', 0), 'towards');
     assert.equal(driftRelation('SE', 0), 'away');
   });
 
@@ -101,14 +101,14 @@ describe('the description', () => {
     );
     assert.equal(
       line(entry(), 'column').text,
-      'Ash to 5,000 m above sea level, about 1,237 m above Fuego’s summit.',
+      'Ash to 5,000 m above sea level, 1,237 m above Fuego’s summit.',
     );
   });
 
   test('mixed directions are grouped by how they sit from camp, in the bulletin’s order', () => {
     assert.equal(
       line(entry({ driftDirections: ['NE', 'E', 'N'] }), 'drift').text,
-      'Ash drifting 20 km north-east and north, toward Acatenango, and east, to one side of it.',
+      'Ash drifting 20 km north-east and north, towards Acatenango, and east, to one side of it.',
     );
   });
 
@@ -141,7 +141,7 @@ describe('the description', () => {
 
   test('drift with a direction but no distance says which part is missing', () => {
     const l = line(entry({ driftKm: null, driftDirections: ['N'] }), 'drift');
-    assert.equal(l.text, 'Ash drifting north, toward Acatenango. The bulletin gave no drift distance.');
+    assert.equal(l.text, 'Ash drifting north, towards Acatenango. The bulletin gave no drift distance.');
     assert.equal(l.missing, true);
   });
 
@@ -155,11 +155,11 @@ describe('the description', () => {
   test('summary leaves out what is missing rather than inventing it', () => {
     assert.equal(
       describeCamp(entry({ ashMinMasl: null, ashMaxMasl: null })).summary,
-      '3 to 6 explosions an hour, ash drifting east, to one side of Acatenango, and north-east, toward it.',
+      '3 to 6 explosions an hour, ash drifting east, to one side of Acatenango, and north-east, towards it.',
     );
     assert.equal(
       describeCamp(entry({ explosionsMin: null, explosionsMax: null, phenomena: [] })).summary,
-      'Ash to 5,000 m drifting east, to one side of Acatenango, and north-east, toward it.',
+      'Ash to 5,000 m drifting east, to one side of Acatenango, and north-east, towards it.',
     );
   });
 

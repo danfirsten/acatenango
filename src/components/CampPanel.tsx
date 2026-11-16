@@ -48,7 +48,7 @@ export default function CampPanel({ entry, isRepresentative }: CampPanelProps) {
         <p>
           Camp is taken at Acatenango&rsquo;s summit, {CAMP_DISTANCE_KM.toFixed(1)} km from Fuego&rsquo;s
           crater on a bearing of {bearing}&deg;, roughly {point}. Ash drifting within a quarter of the
-          compass of that bearing is described as toward Acatenango, the opposite quarter as away,
+          compass of that bearing is described as towards Acatenango, the opposite quarter as away,
           and the rest as to one side.
         </p>
         <p className="camp-advice">

@@ -445,10 +445,12 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .camp {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 72px 26px 8px;
-  border-top: 1px solid var(--line);
+  padding: 0 26px 8px;
 }
+/* The rule sits inside the side padding, so it spans the content width like the colophon's. */
 .camp-head {
+  padding-top: 72px;
+  border-top: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -527,7 +529,9 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .camp-advice { color: var(--ash); }
 
 @media (max-width: 860px) {
-  .camp { padding: 56px 16px 8px; }
+  .camp-head { padding-top: 56px; }
   .camp-body { grid-template-columns: 1fr; gap: 24px; }
+}
+@media (max-width: 560px) {
   .camp-line { grid-template-columns: 1fr; gap: 2px; }
 }
