@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-16",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 35,
+    "driftDirections": [
+      "SE",
+      "E"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  }
+}

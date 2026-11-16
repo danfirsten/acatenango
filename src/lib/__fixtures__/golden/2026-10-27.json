@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-27",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 4
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "SE",
+      "S"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  }
+}
