@@ -336,8 +336,20 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 .notice p { margin: 0; max-width: 90ch; font-size: 14px; line-height: 1.5; color: var(--ash); }
 .notice strong { color: var(--ink); font-weight: 600; }
-.bulletin-age { white-space: nowrap; }
-.bulletin-age[data-behind="true"] { color: var(--ash); }
+.notice-links { display: flex; flex-wrap: wrap; column-gap: 24px; }
+.notice-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ash);
+}
+.observed-text { text-align: right; }
+.observed-date { white-space: nowrap; }
+.bulletin-age { display: inline-block; }
+.bulletin-behind { color: var(--ink); font-weight: 600; }
 
 @media (max-width: 860px) {
   .notice { padding: 10px 16px; }

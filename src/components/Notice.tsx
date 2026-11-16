@@ -9,10 +9,11 @@ export default function Notice() {
       <p>
         <strong>Unofficial archive.</strong> Fuego is not a warning service. It copies
         INSIVUMEH&rsquo;s daily bulletin once or twice a day, so it always lags the observatory.
-        For official information, see{' '}
-        <a href="https://insivumeh.gob.gt/vulcanologia/">INSIVUMEH&rsquo;s volcano page</a> and{' '}
-        <a href="https://conred.gob.gt/alertas/">CONRED&rsquo;s alerts</a>.
       </p>
+      <nav className="notice-links" aria-label="Official sources">
+        <a href="https://insivumeh.gob.gt/vulcanologia/">INSIVUMEH volcano page</a>
+        <a href="https://conred.gob.gt/alertas/">CONRED alerts</a>
+      </nav>
     </aside>
   );
 }

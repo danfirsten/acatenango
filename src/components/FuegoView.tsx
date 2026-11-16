@@ -50,8 +50,10 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
                 {day.warnings.length} field{day.warnings.length > 1 ? 's' : ''} unread
               </span>
             )}
-            <span>
-              {isToday ? 'Latest bulletin' : 'Replaying'} · {formatDate(day.date)}
+            <span className="observed-text">
+              <span className="observed-date">
+                {isToday ? 'Latest bulletin' : 'Replaying'} · {formatDate(day.date)}
+              </span>
               {isToday && <BulletinAge date={day.date} />}
             </span>
           </span>

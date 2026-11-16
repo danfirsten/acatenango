@@ -23,7 +23,7 @@ export default function BulletinAge({ date }: { date: string }) {
   return (
     <span className="bulletin-age" data-behind={age.behind}>
       , {age.label}
-      {age.behind && <> · the record is behind</>}
+      {age.behind && <span className="bulletin-behind"> · the record is behind</span>}
     </span>
   );
 }
