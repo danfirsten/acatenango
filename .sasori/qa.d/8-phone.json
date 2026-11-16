@@ -1,0 +1,1 @@
+{ "interactions": [ { "route": "/", "selector": ".massif-views button:last-child", "action": "click", "label": "from camp" } ] }

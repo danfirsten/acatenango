@@ -1,13 +1,18 @@
 'use client';
 
-import { useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
-const W = 1000;
-const H = 220;
-const PAD = { t: 14, b: 24 };
+/** Drawn width before the chart has been measured. */
+const DEFAULT_W = 1000;
+/**
+ * One user unit is one CSS pixel, so type is the size the stylesheet says on
+ * every screen. Narrow screens get a taller plot so the line stays readable.
+ */
+const heightFor = (w: number) => (w < 600 ? 260 : 220);
+const PAD = { t: 14, b: 28 };
 
 /** Smooths a polyline into a bezier path, so the tempo reads as a ridgeline. */
 function smooth(pts: Array<[number, number]>, tension = 0.45): string {
@@ -37,6 +42,18 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
   const [hover, setHover] = useState<number | null>(null);
   const figRef = useRef<HTMLElement>(null);
   const tipRef = useRef<HTMLElement>(null);
+  const [W, setW] = useState(DEFAULT_W);
+  const H = heightFor(W);
+
+  useEffect(() => {
+    const fig = figRef.current;
+    if (!fig) return;
+    const measure = () => setW(Math.max(260, Math.round(fig.clientWidth)) || DEFAULT_W);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(fig);
+    return () => observer.disconnect();
+  }, []);
 
   const { runs, gaps, continuous, xs, ys, maxY, ticks, half } = useMemo(() => {
     // Only reported days set the scale; a missing day is not a 0.
@@ -68,7 +85,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
       ticks: Array.from({ length: Math.floor(maxY / 10) }, (_, i) => (i + 1) * 10),
       half: step / 2,
     };
-  }, [series]);
+  }, [series, W, H]);
 
   const missingDays = runDays(gaps);
   const continuousDays = runDays(continuous);
@@ -88,7 +105,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
     const width = fig.clientWidth;
     const x = (xs[hover] / W) * width - tip.offsetWidth / 2;
     tip.style.left = `${Math.max(0, Math.min(width - tip.offsetWidth, x))}px`;
-  }, [hover, xs]);
+  }, [hover, xs, W]);
 
   function indexAt(ev: React.PointerEvent<SVGSVGElement>): number {
     const r = ev.currentTarget.getBoundingClientRect();
@@ -165,7 +182,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         )}
 
         {axisLabelIndices(series.length).map((i) => (
-          <text key={i} x={Math.min(xs[i], W - 46)} y={H - 6} className="tempo-tick">
+          <text key={i} x={Math.min(xs[i], W - 52)} y={H - 8} className="tempo-tick">
             {fmt(series[i].date).toUpperCase()}
           </text>
         ))}
