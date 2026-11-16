@@ -308,6 +308,46 @@ export interface MassifHandle {
   setView(view: 'orbit' | 'camp'): void;
 }
 
+/**
+ * How the camera adapts to the canvas shape. Fitted by aspect ratio, not by
+ * user agent: a tall canvas needs a wider lens and a longer orbit to keep both
+ * summits in frame, and room below for the readout.
+ */
+export interface CameraFit {
+  /** Vertical field of view in degrees for the view from camp. */
+  campFov: number;
+  /** Multiplier on the orbit radius. */
+  orbitScale: number;
+  /** Multiplier on how far behind the camp the camera stands. */
+  campBack: number;
+  /** Fraction of the canvas height the picture is lifted, to clear the readout. */
+  lift: number;
+}
+
+const BASE_FOV = 42;
+
+export function fitCamera(aspect: number, summitGapKm = 0, orbitDistanceKm = 1): CameraFit {
+  const a = Math.max(0.2, aspect);
+  const tallness = Math.max(0, 1.3 - a);
+  return {
+    // Keep a horizontal field of about 44 degrees: enough to hold the plume.
+    campFov: Math.min(78, Math.max(BASE_FOV, (2 * Math.atan(Math.tan((22 * Math.PI) / 180) / a) * 180) / Math.PI)),
+    // The orbit looks at the midpoint between the summits, so each stays within
+    // half their separation of centre at every angle; stand back until that
+    // half, with a margin for the labels, fits the horizontal field of view.
+    orbitScale: Math.min(
+      3,
+      Math.max(
+        1,
+        (summitGapKm * 0.5 * 1.9) / (Math.tan(((BASE_FOV / 2) * Math.PI) / 180) * a * orbitDistanceKm),
+      ),
+    ),
+    campBack: 1 + Math.min(0.6, tallness * 0.5),
+    // The readout is a strip along the bottom on anything narrower than wide.
+    lift: a < 1.2 ? Math.min(0.17, 0.06 + tallness * 0.14) : 0,
+  };
+}
+
 export function createMassifScene(
   canvas: HTMLCanvasElement,
   field: Heightfield,
@@ -327,7 +367,8 @@ export function createMassifScene(
   renderer.setClearColor(0x080c11, 1);
 
   const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(42, 1, 0.05, 200);
+  const camera = new THREE.PerspectiveCamera(BASE_FOV, 1, 0.05, 200);
+  let fit = fitCamera(1);
 
   const spanKm = meta.spanMetres * M_TO_UNITS;
 
@@ -349,6 +390,16 @@ export function createMassifScene(
   const massifCentre = new THREE.Vector3(
     0, (meta.maxElevation * 0.55) * M_TO_UNITS * EXAGGERATION, 0,
   );
+  // The orbit is centred between the two summits, so both stay in frame.
+  const campSummit = summitEntries.find((e) => e.key === 'acatenango') ?? summitEntries[0];
+  const summitGapKm = Math.hypot(
+    fuego.position.x - campSummit.position.x, fuego.position.z - campSummit.position.z,
+  );
+  const orbitCentre = massifCentre.clone();
+  orbitCentre.x = (fuego.position.x + campSummit.position.x) / 2;
+  orbitCentre.z = (fuego.position.z + campSummit.position.z) / 2;
+  const orbitRadius = spanKm * 0.92;
+  const orbitDistance = Math.hypot(orbitRadius, spanKm * 0.40);
 
   /* ── sky ─────────────────────────────────────────────────────────────── */
   const sky = new THREE.Mesh(
@@ -509,13 +560,13 @@ export function createMassifScene(
   function updateCamera(dt: number) {
     if (view === 'orbit') {
       if (!reduced) orbitAngle += dt * 0.055;
-      const radius = spanKm * 0.92;
+      const radius = orbitRadius * fit.orbitScale;
       desired.set(
-        Math.cos(orbitAngle) * radius,
+        orbitCentre.x + Math.cos(orbitAngle) * radius,
         massifCentre.y + spanKm * 0.40,
-        Math.sin(orbitAngle) * radius,
+        orbitCentre.z + Math.sin(orbitAngle) * radius,
       );
-      lookAt.copy(massifCentre);
+      lookAt.copy(orbitCentre);
     } else {
       // Standing at the Acatenango camp looking south at Fuego, which is
       // exactly the view from the tents.
@@ -523,7 +574,7 @@ export function createMassifScene(
       // itself puts the column across the whole frame, so back off the ridge a
       // little and lift — which is also where the tents actually are.
       const sway = reduced ? 0 : Math.sin(performance.now() * 0.00016) * 0.07;
-      desired.copy(campPos).add(new THREE.Vector3(sway - 0.16, 0.30, -0.62));
+      desired.copy(campPos).add(new THREE.Vector3(sway - 0.16, 0.30, -0.62 * fit.campBack));
       lookAt.copy(craterPos).add(new THREE.Vector3(0, 0.62, 0));
     }
     // Critically-damped follow so view changes glide rather than snap.
@@ -559,32 +610,21 @@ export function createMassifScene(
     renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
+    fit = fitCamera(w / h, summitGapKm, orbitDistance);
+    applyLens();
+    // Lift the picture so the summits sit above the readout, not behind it.
+    camera.setViewOffset(w, h, 0, h * fit.lift, w, h);
+  }
+  function applyLens() {
+    const next = view === 'camp' ? fit.campFov : BASE_FOV;
+    if (camera.fov !== next) camera.fov = next;
     camera.updateProjectionMatrix();
   }
   resize();
   const observer = new ResizeObserver(resize);
   observer.observe(canvas);
 
-  function step(now: number) {
-    if (disposed) return;
-    frame = requestAnimationFrame(step);
-    const dt = Math.min((now - last) / 1000, 0.05);
-    last = now;
-
-    updateCamera(dt);
-    terrainMaterial.uniforms.uCameraPos.value.copy(camera.position);
-
-    // Activity drives how much of the plume is alive and how hot the vent looks.
-    const intensity = THREE.MathUtils.clamp(activity / 14, 0.25, 3.2);
-    terrainMaterial.uniforms.uCraterGlow.value =
-      0.30 + 0.42 * Math.min(intensity, 2) +
-      (reduced ? 0 : Math.sin(now * 0.0021) * 0.05);
-
-    // Ease toward the scrubbed day's bearing so the column swings round.
-    windDir.lerp(windTarget, 1 - Math.exp(-dt * 1.4)).normalize();
-
-    const speed = reduced ? 0.25 : 1;
-    const activePlume = Math.floor(PLUME_COUNT * THREE.MathUtils.clamp(intensity / 1.1, 0.35, 1));
+  function advancePlume(dt: number, speed: number, now: number, activePlume: number) {
     for (let i = 0; i < PLUME_COUNT; i++) {
       const o = i * 3;
       if (i > activePlume) { plumeLife[i] = 1; continue; }
@@ -604,6 +644,46 @@ export function createMassifScene(
       plumePos[o + 2] += (plumeVel[o + 2] * (0.35 + t * 1.6) + wanderZ) * dt * speed;
       plumeSize[i] += dt * speed * 3.0;         // widening to ~550 m aloft
     }
+  }
+
+  /**
+   * With reduced motion nothing moves, so the column is drawn once, fully
+   * grown, from the day's reading: run the plume ahead until it settles.
+   */
+  function settlePlume() {
+    if (!reduced) return;
+    for (let i = 0; i < PLUME_COUNT; i++) spawnPlume(i, true);
+    const intensity = THREE.MathUtils.clamp(activity / 14, 0.25, 3.2);
+    const activePlume = Math.floor(PLUME_COUNT * THREE.MathUtils.clamp(intensity / 1.1, 0.35, 1));
+    for (let k = 0; k < 400; k++) advancePlume(0.05, 1, 0, activePlume);
+    for (let i = 0; i < PLUME_COUNT; i++) plumeLife[i] = Math.min(plumeLife[i], 0.999);
+    plumeGeo.attributes.position.needsUpdate = true;
+    plumeGeo.attributes.aLife.needsUpdate = true;
+    plumeGeo.attributes.aSize.needsUpdate = true;
+  }
+
+  function step(now: number) {
+    if (disposed) return;
+    frame = requestAnimationFrame(step);
+    const dt = Math.min((now - last) / 1000, 0.05);
+    last = now;
+
+    updateCamera(dt);
+    terrainMaterial.uniforms.uCameraPos.value.copy(camera.position);
+
+    // Activity drives how much of the plume is alive and how hot the vent looks.
+    const intensity = THREE.MathUtils.clamp(activity / 14, 0.25, 3.2);
+    terrainMaterial.uniforms.uCraterGlow.value =
+      0.30 + 0.42 * Math.min(intensity, 2) +
+      (reduced ? 0 : Math.sin(now * 0.0021) * 0.05);
+
+    // Ease toward the scrubbed day's bearing so the column swings round.
+    windDir.lerp(windTarget, 1 - Math.exp(-dt * 1.4)).normalize();
+
+    // With reduced motion the scene holds still: the plume stands where it is.
+    const speed = reduced ? 0 : 1;
+    const activePlume = Math.floor(PLUME_COUNT * THREE.MathUtils.clamp(intensity / 1.1, 0.35, 1));
+    advancePlume(dt, speed, now, activePlume);
     plumeGeo.attributes.position.needsUpdate = true;
     plumeGeo.attributes.aLife.needsUpdate = true;
     plumeGeo.attributes.aSize.needsUpdate = true;
@@ -643,6 +723,7 @@ export function createMassifScene(
       }));
     }
   }
+  settlePlume();
   frame = requestAnimationFrame(step);
 
   return {
@@ -674,7 +755,8 @@ export function createMassifScene(
         const z = dirs.reduce((a, d) => a + d[1], 0) / dirs.length;
         if (x !== 0 || z !== 0) windTarget.set(x, z).normalize();
       }
+      if (reduced) { windDir.copy(windTarget); settlePlume(); }
     },
-    setView(next: 'orbit' | 'camp') { view = next; },
+    setView(next: 'orbit' | 'camp') { view = next; applyLens(); },
   };
 }
