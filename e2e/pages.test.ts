@@ -144,6 +144,22 @@ describe(`static build served under ${BASE}`, () => {
     }
     assert.ok(!cached.some((p) => !p.startsWith(`${BASE}/`)), 'nothing precached outside the base path');
 
+    // The "From camp" panel and the mountain describe the same day: the
+    // latest bulletin, which the scene opens on (and keeps in its camp view).
+    const topbarDate = (await page.locator('.observed-date').textContent() ?? '').split('·').at(-1)?.trim();
+    const campDate = (await page.locator('.camp-date time').textContent() ?? '').trim();
+    assert.ok(campDate, 'the From camp panel states its bulletin date');
+    assert.equal(campDate, topbarDate, 'the panel and the scene describe the same day');
+    await page.getByRole('button', { name: 'From camp' }).click();
+    assert.equal(
+      (await page.locator('.observed-date').textContent() ?? '').split('·').at(-1)?.trim(),
+      campDate,
+      'the scene\'s camp view shows the panel\'s day',
+    );
+    assert.equal(await page.locator('#camp-title').innerText(), 'From camp');
+    assert.equal(await page.locator('.camp a[href="#notice"]').count(), 1, 'the panel links the notice');
+    assert.equal(await page.locator('#notice').count(), 1, 'the notice is there to link to');
+
     assert.deepEqual(problems, [], 'online visit should be clean');
 
     // Offline: the same page, terrain and all, from the cache alone.
