@@ -153,6 +153,31 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   overflow-wrap: anywhere;
 }
 .readout-row[data-lead="true"] .readout-v { font-size: 29px; color: var(--ember); }
+/* A value the bulletin left out reads as a gap, not a figure. */
+.readout-row[data-missing="true"] .readout-v {
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 15px;
+  color: var(--ash);
+}
+.readout-note {
+  margin: 0;
+  padding: 10px 16px 12px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--muted);
+}
+.figures dd.figures-note {
+  white-space: normal;
+  margin-top: 2px;
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  font-size: 11px;
+  color: var(--muted);
+}
 .readout-v small {
   font-family: var(--label);
   text-transform: uppercase;
@@ -247,8 +272,26 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 .record-head p { margin: 0; color: var(--muted); max-width: 54ch; }
 
-.figures { display: flex; gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); }
-.figures > div { background: var(--ground); padding: 12px 18px; }
+/* The cells share one row structure (label, value, day count), so the values
+   line up across them at every width. */
+.figures {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 0 1px;
+  margin: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.figures > div {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
+  background: var(--ground);
+  padding: 12px 18px;
+}
 .figures dt { font-size: 10.5px; color: var(--muted); }
 .figures dd {
   margin: 4px 0 0;
@@ -269,7 +312,8 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .tempo-tip {
   position: absolute;
   top: -6px;
-  transform: translate(-50%, -100%);
+  left: 0;
+  transform: translateY(-100%);
   display: flex;
   flex-direction: column;
   gap: 1px;
@@ -288,6 +332,45 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .tempo-tip b { font-weight: 600; }
 .tempo-tip span { color: var(--muted); }
 
+/* The record's marks take the tokens; the line is the only warm thing in it. */
+.tempo-stop { stop-color: var(--ember); }
+.tempo-grid { stroke: var(--line); stroke-width: 1; }
+.tempo-line { fill: none; stroke: var(--ember); stroke-width: 2; stroke-linejoin: round; }
+.tempo-dot { fill: var(--ember); }
+.tempo-cross { stroke: var(--ember); }
+.tempo-point { fill: var(--ember); stroke: var(--ground); stroke-width: 2; }
+
+/* Missing days are hatched in ash, quiet enough not to read as activity. */
+.tempo-gap-hatch { stroke: var(--ash); stroke-width: 1; opacity: 0.36; }
+/* Continuous emission is activity, so it takes a faint ember wash, not the hatch. */
+.tempo-continuous { fill: color-mix(in srgb, var(--ember) 8%, transparent); }
+/* A thin ember tick under the baseline marks the stretch as a state; kept off
+   the value scale so it never reads as a rate. */
+.tempo-continuous-cap { fill: var(--ember); opacity: 0.7; }
+.tempo-key {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 22px;
+  margin: 10px 0 0;
+  font-family: var(--label);
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 11px;
+  color: var(--muted);
+}
+.tempo-key > span { display: inline-flex; align-items: center; gap: 8px; }
+.tempo-key-swatch {
+  flex: none;
+  width: 14px;
+  height: 10px;
+  border: 1px solid var(--line);
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--ash) 36%, transparent) 0 1px, transparent 1px 4px);
+}
+.tempo-key-swatch[data-kind="continuous"] {
+  background: color-mix(in srgb, var(--ember) 8%, transparent);
+  border-bottom: 2px solid var(--ember);
+}
+
 .colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
 .colophon p { margin: 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
 
@@ -304,6 +387,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   }
   .readout-row { border-bottom: 0; border-right: 1px solid var(--line); }
   .readout-row:nth-child(n + 4) { display: none; }
+  .readout-note { grid-column: 1 / -1; }
   .badge[data-warn="true"] {
   color: #C9A227;
   border-color: #4A4020;
