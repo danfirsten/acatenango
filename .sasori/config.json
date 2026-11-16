@@ -1,0 +1,29 @@
+{
+  "base": "claude/guatemala-volcano-portfolio-vyahmq",
+  "checks": [
+    "npm run lint",
+    "CI=1 npm test",
+    "npm run build"
+  ],
+  "workflows": {
+    "CI": "ci.yml",
+    "QA": "sasori-qa.yml",
+    "Security": "sasori-security.yml"
+  },
+  "ci": "sessions",
+  "hotFiles": [
+    "package.json",
+    "package-lock.json",
+    "src/app/layout.tsx",
+    "src/app/globals.css",
+    "src/app/page.tsx",
+    ".github/workflows/collect.yml",
+    "src/lib/bulletin.ts"
+  ],
+  "mergeMethod": "squash",
+  "trainMode": "fast",
+  "perRepoLanes": 5,
+  "actionsKeep": [
+    "collect.yml"
+  ]
+}
