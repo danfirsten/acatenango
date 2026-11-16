@@ -134,7 +134,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
           return (
             <g key={`c${r.start}`}>
               <rect className="tempo-continuous" {...b} />
-              <rect className="tempo-continuous-cap" x={b.x} y={b.y} width={b.width} height={3} />
+              <rect className="tempo-continuous-cap" x={b.x} y={H - PAD.b + 2} width={b.width} height={3} />
             </g>
           );
         })}

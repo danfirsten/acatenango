@@ -134,7 +134,7 @@ export function readoutRows(day: IndexEntry): ReadoutRow[] {
       : { key: 'Above summit', value: aboveSummit.toLocaleString('en-GB'), unit: 'm' },
     day.driftKm === null
       ? day.driftDirections.length > 0
-        ? { key: 'Drift', value: day.driftDirections.join('·'), unit: 'distance not reported' }
+        ? { key: 'Drift', value: NOT_REPORTED, unit: `heading ${day.driftDirections.join('·')}`, missing: true }
         : { key: 'Drift', value: NOT_REPORTED, unit: '', missing: true }
       : { key: 'Drift', value: String(day.driftKm), unit: `km ${day.driftDirections.join('·')}` },
   ];

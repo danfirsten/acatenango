@@ -54,7 +54,7 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   const rateMissing = day.explosionsMax === null && !continuous;
   const columnMissing = day.ashMaxMasl === null;
   if (rateMissing && columnMissing && rateFrom && columnFrom && rateFrom === columnFrom) {
-    notes.push(`No rate or ash column in this bulletin; the plume holds ${formatDate(rateFrom.date)}\u2019s.`);
+    notes.push(`No rate or ash column in this bulletin; the plume holds the rate and column of ${formatDate(rateFrom.date)}.`);
   } else {
     if (rateMissing) {
       notes.push(rateFrom
@@ -125,17 +125,13 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
             <div><dt>Days</dt><dd>{series.length}</dd></div>
             <div>
               <dt>Tallest column</dt>
-              <dd>
-                {figures.tallestColumn.value === null ? 'Not reported' : `${figures.tallestColumn.value.toLocaleString('en-GB')} m`}
-                <small>over {figures.tallestColumn.days} of {series.length} days</small>
-              </dd>
+              <dd>{figures.tallestColumn.value === null ? 'Not reported' : `${figures.tallestColumn.value.toLocaleString('en-GB')} m`}</dd>
+              <dd className="figures-note">{figures.tallestColumn.days} of {series.length} days</dd>
             </div>
             <div>
               <dt>Peak rate</dt>
-              <dd>
-                {figures.peakRate.value === null ? 'Not reported' : `${figures.peakRate.value} /hr`}
-                <small>over {figures.peakRate.days} of {series.length} days</small>
-              </dd>
+              <dd>{figures.peakRate.value === null ? 'Not reported' : `${figures.peakRate.value} /hr`}</dd>
+              <dd className="figures-note">{figures.peakRate.days} of {series.length} days</dd>
             </div>
           </dl>
         </div>

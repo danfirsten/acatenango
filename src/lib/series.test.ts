@@ -161,6 +161,6 @@ describe('no null becomes 0', () => {
   it('shows a drift heading without inventing a distance', () => {
     const rows = readoutRows(day('2026-11-08', { driftKm: null, driftDirections: ['SW'] }));
     const drift = rows.find((r) => r.key === 'Drift');
-    assert.deepEqual([drift?.value, drift?.unit], ['SW', 'distance not reported']);
+    assert.deepEqual([drift?.value, drift?.unit, drift?.missing], ['Not reported', 'heading SW', true]);
   });
 });

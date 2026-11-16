@@ -169,10 +169,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   line-height: 1.45;
   color: var(--muted);
 }
-/* The cells share the width, so the figures stay on one row on a phone. */
-.figures > div { flex: 1 1 0; }
-.figures dd small {
-  display: block;
+.figures dd.figures-note {
   white-space: normal;
   margin-top: 2px;
   font-family: var(--label);
@@ -275,8 +272,26 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 .record-head p { margin: 0; color: var(--muted); max-width: 54ch; }
 
-.figures { display: flex; gap: 1px; margin: 0; background: var(--line); border: 1px solid var(--line); }
-.figures > div { background: var(--ground); padding: 12px 18px; }
+/* The cells share one row structure (label, value, day count), so the values
+   line up across them at every width. */
+.figures {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(0, 1fr);
+  grid-template-rows: auto auto auto;
+  gap: 0 1px;
+  margin: 0;
+  background: var(--line);
+  border: 1px solid var(--line);
+}
+.figures > div {
+  display: grid;
+  grid-row: span 3;
+  grid-template-rows: subgrid;
+  align-content: start;
+  background: var(--ground);
+  padding: 12px 18px;
+}
 .figures dt { font-size: 10.5px; color: var(--muted); }
 .figures dd {
   margin: 4px 0 0;
@@ -329,7 +344,8 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .tempo-gap-hatch { stroke: var(--ash); stroke-width: 1; opacity: 0.36; }
 /* Continuous emission is activity, so it takes a faint ember wash, not the hatch. */
 .tempo-continuous { fill: color-mix(in srgb, var(--ember) 8%, transparent); }
-/* A thin ember cap marks the stretch as a state, not a tall value. */
+/* A thin ember tick under the baseline marks the stretch as a state; kept off
+   the value scale so it never reads as a rate. */
 .tempo-continuous-cap { fill: var(--ember); opacity: 0.7; }
 .tempo-key {
   display: flex;
@@ -352,7 +368,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 .tempo-key-swatch[data-kind="continuous"] {
   background: color-mix(in srgb, var(--ember) 8%, transparent);
-  border-top: 2px solid var(--ember);
+  border-bottom: 2px solid var(--ember);
 }
 
 .colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
