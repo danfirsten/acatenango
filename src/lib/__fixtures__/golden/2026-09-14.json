@@ -1,0 +1,42 @@
+{
+  "date": "2026-09-14",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 9
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  }
+}

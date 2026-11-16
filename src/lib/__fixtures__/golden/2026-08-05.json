@@ -1,0 +1,26 @@
+{
+  "date": "2026-08-05",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 5000,
+      "max": 7000
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "lahars",
+      "continuousPhase"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  }
+}

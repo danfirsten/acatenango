@@ -1,0 +1,37 @@
+{
+  "date": "2026-11-15",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 5000
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "NE",
+      "E"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Alotenango"
+    ]
+  }
+}

@@ -1,0 +1,38 @@
+{
+  "date": "2026-11-02",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 3
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4400
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas",
+      "El Jute"
+    ],
+    "incandescenceM": {
+      "min": 100,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  }
+}

@@ -85,6 +85,7 @@ Ash columns below Fuego's 3,763 m summit are flagged as misparses, not readings.
 ```bash
 npm install
 npm test            # parser tests — no network required
+node --import tsx scripts/golden.ts  # regenerate parser snapshots on purpose, then review the diff
 npm run collect     # fetch and archive today's bulletin
 npm run build:index # rebuild data/index.json from the archive
 npm run dev

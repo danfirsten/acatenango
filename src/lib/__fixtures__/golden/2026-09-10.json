@@ -1,0 +1,32 @@
+{
+  "date": "2026-09-10",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4800,
+      "max": 4800
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "NW"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  }
+}
