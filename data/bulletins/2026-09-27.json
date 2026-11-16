@@ -27,11 +27,12 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "incandescence"
     ],
     "sky": "cloudy",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

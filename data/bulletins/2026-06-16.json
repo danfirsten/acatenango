@@ -22,11 +22,16 @@
       "rumbling",
       "shockwaves",
       "avalanches",
+      "ashfall",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "El Porvenir"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

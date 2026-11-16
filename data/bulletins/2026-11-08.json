@@ -15,7 +15,8 @@
     },
     "driftKm": null,
     "driftDirections": [
-      "SW"
+      "SW",
+      "W"
     ],
     "drainages": [
       "Seca",
@@ -40,6 +41,6 @@
     "sky": "partlyCloudy",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

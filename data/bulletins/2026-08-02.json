@@ -14,7 +14,10 @@
       "max": 4700
     },
     "driftKm": 30,
-    "driftDirections": [],
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
     "drainages": [],
     "incandescenceM": {
       "min": 700,
@@ -38,6 +41,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

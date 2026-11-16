@@ -13,10 +13,9 @@
       "min": 4200,
       "max": 4700
     },
-    "driftKm": null,
+    "driftKm": 20,
     "driftDirections": [
-      "NW",
-      "W"
+      "SW"
     ],
     "drainages": [
       "Seca",
@@ -40,6 +39,6 @@
       "Santa Sofía"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

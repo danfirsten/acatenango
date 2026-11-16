@@ -27,12 +27,15 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "degassing",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "Sangre de Cristo"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

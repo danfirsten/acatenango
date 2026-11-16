@@ -11,7 +11,10 @@
       "max": 4700
     },
     "driftKm": 30,
-    "driftDirections": [],
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
     "drainages": [],
     "incandescenceM": null,
     "lavaFlowM": null,
@@ -20,11 +23,16 @@
       "rumbling",
       "shockwaves",
       "avalanches",
+      "ashfall",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "Sangre de Cristo"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

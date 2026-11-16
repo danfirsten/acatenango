@@ -15,8 +15,7 @@
     },
     "driftKm": 40,
     "driftDirections": [
-      "NW",
-      "S"
+      "NW"
     ],
     "drainages": [],
     "incandescenceM": null,
@@ -24,11 +23,12 @@
     "phenomena": [
       "explosions",
       "rumbling",
-      "shockwaves"
+      "shockwaves",
+      "ashfall"
     ],
     "sky": "cloudy",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }
