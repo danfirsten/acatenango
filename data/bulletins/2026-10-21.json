@@ -1,0 +1,47 @@
+{
+  "date": "2026-10-21",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-21.pdf",
+  "fetchedAt": "2026-11-16T20:31:22.228Z",
+  "raw": "Y SON UM\n» z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n21 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne Ed GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\n(E) eS Condiciones atmosféricas:\nVr Despejado\nViento:\nLS A Y Del Sureste\nA O A 0% Precipitación pluvial\nA A A\nMorfología: A dinos\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\nA Sl https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 200 metros sobre el cráter y se dispersaron hacia el noroeste. La actividad\nexplosiva se mantuvo entre 4 y 8 explosiones débiles y moderadas por hora, generando columnas de\nceniza entre 4300 y 4800 msnm, que se desplazaron hacia el oeste y noroeste. Esta actividad produjo\ncaída de ceniza fina en Yepocapa y comunidades cercanas.\nSe observaron pulsos incandescentes de hasta 200 metros sobre el cráter, acompañados de avalanchas\ndébiles. Además, se registró caída de material incandescente alrededor del cráter, el cual se encauza\nhacia las barrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en ocasiones\ndescendiendo hasta el límite de la vegetación.\nDebido a la temporada de lluvias y al material acumulado en las barrancas, persiste el riesgo de lahares\nen horas de la tarde y noche. Se recomienda evitar las cercanías de las barrancas del volcán y seguir las\nindicaciones del boletín especial BEFGO-013-2026.\nPY y | Comunicaciones, , , , y ' y , '\n3 , e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "NW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches",
+      "ashfall",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "San Pedro Yepocapa"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}

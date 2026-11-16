@@ -1,0 +1,37 @@
+{
+  "date": "2026-10-28",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-28.pdf",
+  "fetchedAt": "2026-11-16T20:33:32.546Z",
+  "raw": "YONUM >\nBOLETÍN VULCANOLÓGICO DIARIO (3%)\nA\n=Y\nGUATEMALA\n28 de octubre de 2026 VO LE £ N DE\n; LOCALIZACIÓN EAN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nes 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(22) o ES Condiciones atmosféricas:\n1 4 A Despejado\n> z Viento:\nSS E 259\n> => Del noreste\n» : Sorted DE Ñ 0% Precipitación pluvial:\nCE peón ANY 0.00 mm\nEM UA\n“Y e Acceda a las cámaras de vigilancia\nEstrato volcán compuesto Los a a\nPp volcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 4 a 6 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 5000 msnm (14,764 a 16,404 pies). Estas\nse desplazan hacia el suroeste debido a la acción del viento a distancias de 10 a 40 km. Algunas de\nestas explosiones expulsan material incandescente a distancias de 100 metros sobre el nivel del\ncráter. Otras pueden ocasionar retumbos y ondas de choque débiles. Se espera caída débil de ceniza\nfina sobre Panimaché | y II, El Porvenir y sus alrededores.\nsE, | Ministerio de\nEF y Comunicaciones, . . . - - - . '\n3 : ter Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nero | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 5000
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 100,
+      "max": 100
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
