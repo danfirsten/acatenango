@@ -36,8 +36,11 @@
       "lahars",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": [
+      "San Pedro Yepocapa"
+    ]
   },
-  "parserVersion": 2,
+  "parserVersion": 7,
   "warnings": []
 }

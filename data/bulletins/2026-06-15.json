@@ -24,10 +24,11 @@
       "avalanches",
       "ashfall"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": [
+      "San Pedro Yepocapa"
+    ]
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

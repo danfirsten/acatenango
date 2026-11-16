@@ -20,12 +20,12 @@
     "incandescenceM": null,
     "lavaFlowM": null,
     "phenomena": [
-      "lahars"
+      "lahars",
+      "continuousPhase"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }
