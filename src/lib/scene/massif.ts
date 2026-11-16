@@ -604,6 +604,9 @@ export function createMassifScene(
   let last = performance.now();
   let disposed = false;
 
+  // Frames still to draw after a change, for the reduced-motion idle below.
+  let redraw = 3;
+
   function resize() {
     const w = canvas.clientWidth || 1;
     const h = canvas.clientHeight || 1;
@@ -611,6 +614,7 @@ export function createMassifScene(
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     fit = fitCamera(w / h, summitGapKm, orbitDistance);
+    redraw = 3;
     applyLens();
     // Lift the picture so the summits sit above the readout, not behind it.
     camera.setViewOffset(w, h, 0, h * fit.lift, w, h);
@@ -662,6 +666,9 @@ export function createMassifScene(
     plumeGeo.attributes.aSize.needsUpdate = true;
   }
 
+  const lastPosition = new THREE.Vector3();
+  const lastLook = new THREE.Vector3();
+
   function step(now: number) {
     if (disposed) return;
     frame = requestAnimationFrame(step);
@@ -669,6 +676,15 @@ export function createMassifScene(
     last = now;
 
     updateCamera(dt);
+    // With reduced motion nothing changes between a camera glide and the next
+    // reading, so stop drawing once the picture has settled: the scene holds
+    // still and the page stays responsive on slow or busy machines.
+    const moved =
+      camera.position.distanceToSquared(lastPosition) + currentLook.distanceToSquared(lastLook) > 1e-10;
+    lastPosition.copy(camera.position);
+    lastLook.copy(currentLook);
+    if (reduced && !moved && redraw <= 0) return;
+    if (redraw > 0) redraw--;
     terrainMaterial.uniforms.uCameraPos.value.copy(camera.position);
 
     // Activity drives how much of the plume is alive and how hot the vent looks.
@@ -741,8 +757,9 @@ export function createMassifScene(
       (sky.material as THREE.Material).dispose();
       renderer.dispose();
     },
-    setActivity(explosionsPerHour: number) { activity = explosionsPerHour; },
+    setActivity(explosionsPerHour: number) { activity = explosionsPerHour; redraw = 3; },
     setDay(day: SceneDay) {
+      redraw = 3;
       if (day.explosionsPerHour !== null) activity = day.explosionsPerHour;
       // A column below the summit is a misparse, not a reading — ignore it
       // rather than drawing a plume that sinks into the mountain.
@@ -757,6 +774,6 @@ export function createMassifScene(
       }
       if (reduced) { windDir.copy(windTarget); settlePlume(); }
     },
-    setView(next: 'orbit' | 'camp') { view = next; applyLens(); },
+    setView(next: 'orbit' | 'camp') { view = next; applyLens(); redraw = 3; },
   };
 }
