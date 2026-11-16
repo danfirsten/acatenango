@@ -24,7 +24,7 @@ interface Week { mark: GvpMark; first: number; last: number }
 
 /**
  * A lane beside the field lanes, on the same axis: one line over each week the
- * Smithsonian GVP weekly report covers, and a quiet ring on a week where its
+ * Smithsonian GVP weekly report covers, and a quiet outline on a week where its
  * figures clearly disagree with the bulletins. Days with no GVP report are
  * hatched. Neither source is treated as the truth; the list below links both.
  */
@@ -74,7 +74,7 @@ export default function GvpWeeks({ series, selected }: { series: IndexEntry[]; s
               <g key={w.mark.week} data-state={w.mark.state}>
                 <rect className="gvp-span" x={x0} width={x1 - x0} y={H / 2 - 1.5} height={3} />
                 {w.mark.state === 'differ' && (
-                  <circle className="gvp-differ" cx={(x0 + x1) / 2} cy={H / 2} r={6} />
+                  <rect className="gvp-differ" x={x0} width={x1 - x0} y={2} height={H - 4} />
                 )}
               </g>
             );
