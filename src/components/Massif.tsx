@@ -10,6 +10,7 @@ import {
   createMassifScene,
   loadHeightfield,
 } from '@/lib/scene/massif';
+import { MASSIF_JSON_URL, MASSIF_PNG_URL } from '@/lib/terrain';
 
 interface MassifProps {
   /** The archived day the scene should draw. */
@@ -54,8 +55,8 @@ export default function Massif({ day }: MassifProps) {
           return;
         }
 
-        const meta = (await (await fetch('/terrain/massif.json')).json()) as MassifMeta;
-        const field = await loadHeightfield('/terrain/massif.png', meta);
+        const meta = (await (await fetch(MASSIF_JSON_URL)).json()) as MassifMeta;
+        const field = await loadHeightfield(MASSIF_PNG_URL, meta);
         if (cancelled) return;
 
         handle = createMassifScene(canvas, field, meta, {

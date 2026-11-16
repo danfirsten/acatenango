@@ -10,6 +10,12 @@
  * on screen is the actual mountain — the whole premise depends on not faking it.
  */
 
+import { withBase } from './base-path';
+
+/** The baked heightmap and its metadata, as served by the site (under the base path). */
+export const MASSIF_JSON_URL = withBase('/terrain/massif.json');
+export const MASSIF_PNG_URL = withBase('/terrain/massif.png');
+
 export const TERRARIUM_ORIGIN = 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium';
 
 /** Known summits, used to verify a fetched tile set is really this massif. */

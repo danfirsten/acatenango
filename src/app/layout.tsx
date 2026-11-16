@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Barlow, Barlow_Condensed } from 'next/font/google';
 
 import ServiceWorker from '@/components/ServiceWorker';
+import { siteUrl, withBase } from '@/lib/base-path';
 
 import './globals.css';
 
@@ -19,8 +20,11 @@ const barlowCondensed = Barlow_Condensed({
   display: 'swap',
 });
 
-/** Where the site is served; the social card needs absolute URLs. */
-const SITE_URL = process.env.SITE_URL ?? 'https://danfirsten.github.io/acatenango/';
+/**
+ * Where the site is served; the social card needs absolute URLs. Always ends in
+ * a slash, so 'og.png' resolves inside the base path, not at the host root.
+ */
+const SITE_URL = siteUrl(process.env.SITE_URL, 'https://danfirsten.github.io/acatenango/');
 const TITLE = 'Fuego: live from the Acatenango massif';
 const DESCRIPTION =
   'An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.';
@@ -29,8 +33,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: TITLE,
   description: DESCRIPTION,
-  manifest: '/manifest.webmanifest',
-  icons: { icon: '/icon.svg' },
+  // Next does not prefix the base path onto metadata links, so do it here.
+  manifest: withBase('/manifest.webmanifest'),
+  icons: { icon: withBase('/icon.svg') },
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
