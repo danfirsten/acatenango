@@ -513,7 +513,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .gvp-key-ring { width: 12px; height: 8px; border: 1.5px solid var(--ember); flex: none; }
 .gvp .lane-head { flex-wrap: wrap; }
 .gvp .lane svg { min-height: 18px; }
-.gvp-list a { display: inline-flex; align-items: center; min-height: 44px; padding: 0 4px; }
+.gvp-list a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 4px; }
 .gvp-note { margin: 10px 0 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
 .gvp-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
 .gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; background: var(--ground); font-size: 14px; font-variant-numeric: tabular-nums; }
