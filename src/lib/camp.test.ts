@@ -22,6 +22,8 @@ function entry(over: Partial<IndexEntry> = {}): IndexEntry {
     ashMaxMasl: 5000,
     driftKm: 20,
     driftDirections: ['E', 'NE'],
+    incandescenceMinM: null,
+    incandescenceMaxM: null,
     drainages: [],
     lavaFlowM: null,
     phenomena: ['explosions', 'ashfall'],

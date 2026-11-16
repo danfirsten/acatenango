@@ -503,6 +503,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 @media (max-width: 860px) {
   .lane[data-lane="drift"] { display: none; }
   .lane[data-lane="driftdots"] { display: block; }
+}
 
 /* ── from camp (#9) ───────────────────────────────────────────────────── */
 
