@@ -5,7 +5,10 @@
   "fetchedAt": "2026-09-19T17:24:14.185Z",
   "raw": "YSN UM»\nBOLETIN VULCANOLÓGICO DIARIO (E259\n=\nGUATEMALA\n18 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS az 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nEEN ITA Soo Ss ee\nNel ¡On Condiciones atmosféricas:\nVr Despejado\nViento:\nALE 3\nA 9 Del sureste\nE 0% Precipitación pluvial:\n> z a 14.7 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á cal E\n> volcanica/\nVulcaniana\nActividad\nSe generan entre 2 y 4 explosiones de características débiles, moderadas y fuertes por hora que elevan columnas de\ngases y ceniza a alturas de 4000 a 4800 msnm (13,123 a 15,748 pies), las cuales se desplazan hacia el oeste y\nnoroeste a distancias de hasta 30 km. Las explosiones pueden generar sonidos, retumbos y ondas de choque. Por la\nnoche, se observa constante incandescencia en en la zona del cráter. Al momento en que se generan las\nexplosiones, la zona del cráter se cubre de fragmentos de roca ardientes. El Observatorio del Volcán de Fuego\n(OVFGO) reporta el colapso de bloques y fragmentos de roca en la parte alta del edificio volcánico, los cuales\ndescienden por las laderas. Se espera caída de ceniza sobre Panimaché | y Il, Morelia, Santa Sofía, Sangre de Cristo,\nFinca Palo Verde, Yepocapa y otros. Por la tarde y noche, las lluvias podrían provocar el descenso de lahares en\ndiferentes barrancas del volcán.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 4
+    },
     "ashColumnMasl": {
       "min": 4000,
       "max": 4800
@@ -34,8 +37,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 8,
+  "warnings": []
 }

@@ -27,11 +27,15 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "Morelia",
+      "El Porvenir"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

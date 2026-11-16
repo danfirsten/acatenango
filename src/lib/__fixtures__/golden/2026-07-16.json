@@ -1,0 +1,34 @@
+{
+  "date": "2026-07-16",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "Sangre de Cristo"
+    ]
+  }
+}

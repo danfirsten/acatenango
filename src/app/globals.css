@@ -394,3 +394,32 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 @media (prefers-reduced-motion: reduce) {
   * { animation: none !important; transition: none !important; }
 }
+
+/* ── standing notice and bulletin age ─────────────────────────────────── */
+
+.notice {
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  padding: 10px 26px;
+}
+.notice p { margin: 0; max-width: 90ch; font-size: 14px; line-height: 1.5; color: var(--ash); }
+.notice strong { color: var(--ink); font-weight: 600; }
+.notice-links { display: flex; flex-wrap: wrap; column-gap: 24px; }
+.notice-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  font-size: 14px;
+  color: var(--ink);
+  text-decoration: underline;
+  text-decoration-color: var(--ash);
+}
+.observed-text { text-align: right; }
+.observed-date { white-space: nowrap; }
+.bulletin-age { display: inline-block; }
+.bulletin-behind { color: var(--ink); font-weight: 600; }
+
+@media (max-width: 860px) {
+  .notice { padding: 10px 16px; }
+  .topbar { flex-wrap: wrap; row-gap: 6px; }
+}

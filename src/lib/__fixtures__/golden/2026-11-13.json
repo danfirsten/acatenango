@@ -1,0 +1,35 @@
+{
+  "date": "2026-11-13",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 3,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "NE",
+      "E"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "Alotenango"
+    ]
+  }
+}

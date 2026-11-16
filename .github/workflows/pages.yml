@@ -1,0 +1,109 @@
+name: Publish to GitHub Pages
+
+# Builds the static export under the project-site path (/acatenango) and
+# deploys it. Runs on every push to the default branch, by hand, and after each
+# bulletin collection: the collector pushes with GITHUB_TOKEN, and pushes made
+# with that token never start a push workflow, so workflow_run picks them up.
+#
+# This is a live workflow, kept out of session CI by `actionsKeep` in
+# .sasori/config.json. Until Pages is turned on (LAUNCH.md) it skips with a
+# notice instead of failing.
+on:
+  push:
+    branches: [claude/guatemala-volcano-portfolio-vyahmq]
+  workflow_dispatch:
+  workflow_run:
+    workflows: ['Collect Fuego bulletin']
+    types: [completed]
+
+permissions:
+  contents: read
+
+# One deployment at a time; a newer one waits rather than cancelling a live one.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  check:
+    # After a collection, only a successful one is worth publishing.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    permissions:
+      pages: read
+    outputs:
+      publish: ${{ steps.pages.outputs.publish }}
+    steps:
+      - name: Is GitHub Pages on, with GitHub Actions as its source?
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          EVENT: ${{ github.event_name }}
+          COLLECTED_SHA: ${{ github.event.workflow_run.head_sha }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          skip() {
+            echo "::notice title=Pages not published::$1"
+            echo "publish=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          }
+          if ! out=$(gh api "repos/$REPO/pages" --jq .build_type 2>&1); then
+            case "$out" in
+              *"Not Found"*|*"HTTP 404"*|*"HTTP 403"*)
+                skip "GitHub Pages is not enabled for this repository yet, so there is nothing to deploy to. To turn it on, see LAUNCH.md." ;;
+              *)
+                echo "::error title=Could not read the Pages settings::$out"
+                exit 1 ;;
+            esac
+          fi
+          if [ "$out" != "workflow" ]; then
+            skip "GitHub Pages is set to build from a branch ($out). Set Settings, Pages, Source to GitHub Actions (LAUNCH.md)."
+          fi
+          if [ "$EVENT" = "workflow_run" ] && [ "$COLLECTED_SHA" = "$HEAD_SHA" ]; then
+            skip "The collector found no new bulletin, so the published site is already current."
+          fi
+          echo "publish=true" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: check
+    if: needs.check.outputs.publish == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      # Gives the site's base path (/acatenango for the project site) and URL.
+      - name: Read the Pages site address
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - run: npm ci
+
+      - name: Build the static export
+        run: npm run build
+        env:
+          PAGES_BASE_PATH: ${{ steps.pages.outputs.base_path }}
+          SITE_URL: ${{ steps.pages.outputs.base_url }}
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: out
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

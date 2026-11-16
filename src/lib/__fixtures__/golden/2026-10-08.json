@@ -1,0 +1,41 @@
+{
+  "date": "2026-10-08",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "SE",
+      "E"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "El Rodeo"
+    ]
+  }
+}

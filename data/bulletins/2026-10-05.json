@@ -9,7 +9,10 @@
       "min": 6,
       "max": 8
     },
-    "ashColumnMasl": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
     "driftKm": 25,
     "driftDirections": [
       "NW",
@@ -38,8 +41,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
-  "warnings": [
-    "no-ash-column"
-  ]
+  "parserVersion": 8,
+  "warnings": []
 }

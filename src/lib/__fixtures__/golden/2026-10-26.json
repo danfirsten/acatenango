@@ -1,0 +1,42 @@
+{
+  "date": "2026-10-26",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "SW",
+      "S"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "La Rochela"
+    ]
+  }
+}

@@ -13,8 +13,7 @@
     "driftKm": 20,
     "driftDirections": [
       "SW",
-      "S",
-      "W"
+      "S"
     ],
     "drainages": [],
     "incandescenceM": null,
@@ -28,6 +27,6 @@
     "sky": "clear",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

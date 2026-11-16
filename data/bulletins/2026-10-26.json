@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-26",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-26.pdf",
+  "fetchedAt": "2026-11-16T20:32:52.775Z",
+  "raw": "YSN UM\nBOLETÍN VULCANOLÓGICO DIARIO (9%)\nA\nGUATEMALA\n26 de octubre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\nMEMES —ceocrárica:\nPAS o AA 14? 28' 54 Latitud N;\nAa 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n> at Loa ... Zo\n“ALA - Condiciones atmosféricas:\n> A\n, F . ED”. PAZ > Y Despejado\n- <= Viento:\n3 9\ny Del Norte\n0% Precipitación pluvial:\n0.0 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA e https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego (OVFGO), reporta explosiones en rangos de 4 a 7 por hora, de intensidad débil,\nmoderadas y fuertes, acompañadas de columnas de ceniza entre 4,200 y 4,700 msnm, dispersándose al sur,\nsuroeste aproximadamente a 20 km. Algunas explosiones generan retumbos con ondas de choque, avalanchas por\nlas barrancas, Seca, Ceniza y Lajas principalmente. Se reporta caída de ceniza en Panimaché, Morelia, Santa Sofía, La\nRochela, Ceílan y otras en esta zona. Por la noche y madrugada se observó el cráter con incandescencia. Tomar en\ncuenta que por la tarde y noche se presentan lluvias en el área del complejo volcánico que pueden ocasionar\ncorrentadas o lahares, por lo que se recomienda tomar las precauciones al paso de ríos y barrancas. Así mismo se\nrecomienda no permanecer en la meseta ni sus inmediaciones.\nsE, | Ministerio de\nEF y Comunicaciones, Ñ . . ' ' y . y\n3 : e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas | Vivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 20,
+    "driftDirections": [],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "La Rochela"
+    ]
+  },
+  "parserVersion": 7,
+  "warnings": []
+}

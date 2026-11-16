@@ -5,14 +5,18 @@
   "fetchedAt": "2026-09-13T01:16:57.106Z",
   "raw": "SVUMA\nBOLETIN VULCANOLOGICO DIARIO (633%\nGUATEMALA\n12 de septiembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nApe ¿EA 90252'54 Longitud W\nmE Altura: 3763 msnm\n(cua) eS Condiciones atmosféricas:\nVr Despejado\nDÉ Viento:\nsc pa O Del Sureste\nA o 0% Precipitación pluvial:\n% a S. Ps po AN o O\ne: o po E q E e E 0.0 mm\nMorfología: A dinos\nEstrato volcán compuesto cceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA Sl https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 300 metros sobre el cráter y se dispersaron hacia el noroeste. La\nactividad explosiva se mantuvo entre 6 y 9 explosiones débiles, moderadas y fuertes por hora,\ngenerando columnas de ceniza entre 4500 y 4800 msnm, que se desplazaron hacia el oeste y\nnoroeste.\nAlgunas explosiones estuvieron acompañadas de retumbos débiles y ondas de choque que\ngeneraron vibraciones en los techos de las viviendas aledañas. Se observaron pulsos\nincandescentes de hasta 200 metros sobre el cráter, acompañados de avalanchas débiles. Además,\nse registró caída de material incandescente alrededor del cráter, el cual se encauza hacia las\nbarrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en ocasiones descendiendo\nhasta el límite de la vegetación.\ne, | Ministerio de\nss y Comunicaciones, . . . y ' ' . '\n>: , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nemo | Vivien\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 9
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4800
     },
     "driftKm": null,
     "driftDirections": [
-      "NW"
+      "NW",
+      "W"
     ],
     "drainages": [
       "Seca",
@@ -37,8 +41,6 @@
     "sky": "clear",
     "ashfallCommunities": []
   },
-  "parserVersion": 7,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 8,
+  "warnings": []
 }

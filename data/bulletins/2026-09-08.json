@@ -15,7 +15,8 @@
     },
     "driftKm": null,
     "driftDirections": [
-      "W"
+      "W",
+      "NW"
     ],
     "drainages": [
       "Seca",
@@ -44,6 +45,6 @@
       "Santa Sofía"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

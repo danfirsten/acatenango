@@ -1,0 +1,40 @@
+{
+  "date": "2026-08-09",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 20,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 300
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  }
+}

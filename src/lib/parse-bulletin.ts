@@ -77,26 +77,39 @@ function matchRange(
  * short run of words in between. "km" is excluded so a wind speed in km/h can
  * never be read as an explosion rate.
  */
-const PER_HOUR_UNIT = String.raw`(?:explosion(?:es)?\s+)?(?:(?!km\b)[a-záéíóúñ]+\s+){0,6}?por\s+hora`;
+const PER_HOUR_UNIT = String.raw`(?:explosion(?:es)?\s+)?(?:(?!km\b)[a-záéíóúñ]+,?\s+){0,6}?por\s+hora`;
 /** Metres above sea level, in the several spellings the bulletins use. */
 const MASL_UNIT = String.raw`(?:msnm|m\.?\s?s\.?\s?n\.?\s?m\.?|metros\s+sobre\s+el\s+nivel\s+del\s+mar)`;
 
 export function parseExplosionsPerHour(text: string): Range | null {
-  const mention = /explosion\w*/i.exec(text);
-  if (!mention) return null;
-  const start = Math.max(0, mention.index - 120);
-  const window = text.slice(start, mention.index + 220);
-  return matchRange(window, PER_HOUR_UNIT);
+  // The first mention is often a description with no rate ("explosiones
+  // débiles a moderadas ... un promedio de 3 explosiones ... por hora"), so try
+  // each mention in turn and keep the first that yields a rate.
+  for (const mention of text.matchAll(/explosion[a-záéíóúñ]*/gi)) {
+    const start = Math.max(0, mention.index - 120);
+    const window = text.slice(start, mention.index + 220);
+    const range = matchRange(window, PER_HOUR_UNIT);
+    if (range) return range;
+  }
+  return null;
 }
 
 export function parseAshColumn(text: string): Range | null {
   // Anchor near the ash-column phrasing so we don't pick up an unrelated
   // altitude (e.g. the observatory's own elevation) elsewhere in the bulletin.
-  const context =
-    /(?:columnas?\s+de\s+(?:ceniza|gas(?:es)?(?:\s+y\s+ceniza)?)|ceniza)[\s\S]{0,160}/i.exec(
-      text,
-    );
-  return matchRange(context ? context[0] : text, MASL_UNIT);
+  const contexts = [
+    ...text.matchAll(
+      /(?:columnas?\s+de\s+(?:ceniza|gas(?:es)?(?:\s+y\s+ceniza)?)|ceniza)[\s\S]{0,160}/gi,
+    ),
+  ];
+  if (contexts.length === 0) return matchRange(text, MASL_UNIT);
+  // An early "ceniza" is not always the column ("avalanchas de bloques y
+  // ceniza que descendieron ..."), so use the first mention that reaches a height.
+  for (const c of contexts) {
+    const range = matchRange(c[0], MASL_UNIT);
+    if (range) return range;
+  }
+  return null;
 }
 
 /**
@@ -108,7 +121,7 @@ export function parseAshColumn(text: string): Range | null {
  */
 const DIRECTION_WORDS: Array<[RegExp, Direction]> = [
   [/\bnor(?:[-\s])?este\b|\bnordeste\b/i, 'NE'],
-  [/\bnor(?:[-\s])?oeste\b/i, 'NW'],
+  [/\bnor(?:[-\s])?o?oeste\b/i, 'NW'],
   [/\bsur(?:[-\s])?este\b|\bsud(?:[-\s])?este\b/i, 'SE'],
   [/\bsur(?:[-\s])?oeste\b|\bsud(?:[-\s])?oeste\b/i, 'SW'],
   [/\bnorte\b/i, 'N'],
@@ -129,30 +142,50 @@ const DIRECTION_ABBREVS: Array<[RegExp, Direction]> = [
 ];
 
 /** The clause naming where the plume went; directions appear elsewhere too. */
-const DISPERSAL_CLAUSE =
-  /(?:se\s+)?(?:dispers\w+|desplaz\w+|dirig\w+|traslad\w+|extiend\w+)[\s\S]{0,160}/i;
+const DISPERSAL_VERB =
+  /(?:se\s+)?(?:dispers|desplaz|dirig|traslad|transport|extiend|moviliz|mueven)[a-záéíóúñ]*/i;
+/** A conditional is a possibility, not a reading: "puede cambiar hacia el oeste". */
+const CONDITIONAL = /\b(?:pued\w+|podr\w+|posib\w+|probab\w+|se\s+espera)\b/i;
+
+/**
+ * Every dispersal clause, each cut at the end of its sentence so a following
+ * sentence about avalanche flanks ("flancos sur, oeste y suroeste") is never
+ * read as a plume direction. Conditional clauses are left out.
+ */
+function dispersalClauses(text: string): string[] {
+  const out: string[] = [];
+  // Match the verb alone and slice from it, so clauses that start inside an
+  // earlier clause's window are still found.
+  for (const m of text.matchAll(new RegExp(DISPERSAL_VERB.source, 'gi'))) {
+    const window = text.slice(m.index, m.index + m[0].length + 160);
+    const end = window.search(/\.\s+[A-ZÁÉÍÓÚÑ]/);
+    const clause = end === -1 ? window : window.slice(0, end + 1);
+    if (!CONDITIONAL.test(clause)) out.push(clause);
+  }
+  return out;
+}
 
 export function parseDriftDirections(text: string): Direction[] {
-  const clause = DISPERSAL_CLAUSE.exec(text);
-  if (!clause) return [];
-  const scope = clause[0];
-
   const found = new Set<Direction>();
-  for (const [re, dir] of DIRECTION_WORDS) {
-    if (re.test(scope)) found.add(dir);
-  }
-  for (const [re, dir] of DIRECTION_ABBREVS) {
-    if (re.test(scope)) found.add(dir);
+  for (const scope of dispersalClauses(text)) {
+    for (const [re, dir] of DIRECTION_WORDS) {
+      if (re.test(scope)) found.add(dir);
+    }
+    for (const [re, dir] of DIRECTION_ABBREVS) {
+      if (re.test(scope)) found.add(dir);
+    }
   }
   return [...found];
 }
 
 export function parseDriftKm(text: string): number | null {
-  const clause = DISPERSAL_CLAUSE.exec(text);
-  const scope = clause ? clause[0] : text;
+  const clauses = dispersalClauses(text);
   // Distance is often a range ("de 10 a 20 km"); the reach is the useful figure.
-  const range = matchRange(scope, String.raw`(?:km|kil[óo]metros?)`);
-  return range ? range.max : null;
+  for (const scope of clauses.length ? clauses : [text]) {
+    const range = matchRange(scope, String.raw`(?:km|kil[óo]metros?)`);
+    if (range) return range.max;
+  }
+  return null;
 }
 
 /**
@@ -239,7 +272,7 @@ const COMMUNITIES: Array<{ name: string; pattern: RegExp }> = [
 export function parseAshfallCommunities(text: string): string[] {
   // Scope to the ashfall clause: these names also appear in evacuation advice
   // and in lahar warnings, which are different statements about the same places.
-  const clauses = [...text.matchAll(/ca[íi]da\s+de\s+ceniza[\s\S]{0,240}/gi)].map((m) => m[0]);
+  const clauses = [...text.matchAll(/ca[íi]da\s+(?:[a-záéíóúñ]+\s+){0,3}?de\s+(?:[a-záéíóúñ]+\s+){0,2}?ceniza[\s\S]{0,240}/gi)].map((m) => m[0]);
   if (clauses.length === 0) return [];
   const scope = clauses.join(' ');
   return COMMUNITIES.filter((c) => c.pattern.test(scope)).map((c) => c.name);
@@ -250,7 +283,7 @@ const PHENOMENON_TERMS: Array<[RegExp, Phenomenon]> = [
   [/retumbos?/i, 'rumbling'],
   [/ondas?\s+de\s+choque/i, 'shockwaves'],
   [/avalanchas?/i, 'avalanches'],
-  [/ca[íi]da\s+de\s+ceniza|ceniza\s+en\s+suspensi[óo]n/i, 'ashfall'],
+  [/ca[íi]da\s+(?:[a-záéíóúñ]+\s+){0,3}?de\s+(?:[a-záéíóúñ]+\s+){0,2}?ceniza|ceniza\s+en\s+suspensi[óo]n/i, 'ashfall'],
   [/desgasificaci[óo]n/i, 'degassing'],
   [/lahares?/i, 'lahars'],
   [/flujos?\s+de\s+lava/i, 'lavaFlow'],
@@ -314,7 +347,7 @@ export function parseBulletin(raw: string): ParseResult {
   if (parsed.ashColumnMasl === null && /msnm|nivel del mar/i.test(text)) {
     warnings.push('no-ash-column');
   }
-  if (parsed.driftDirections.length === 0 && DISPERSAL_CLAUSE.test(text)) {
+  if (parsed.driftDirections.length === 0 && DISPERSAL_VERB.test(text)) {
     warnings.push('no-drift-direction');
   }
   // Fuego's summit is 3,763 m; a plume below that is a misparse, not a reading.

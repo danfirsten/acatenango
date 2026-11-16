@@ -1,0 +1,42 @@
+{
+  "date": "2026-08-02",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 10
+    },
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4700
+    },
+    "driftKm": 30,
+    "driftDirections": [
+      "SW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 700,
+      "max": 700
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "Morelia",
+      "Santa Sofía",
+      "El Porvenir",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
+  }
+}

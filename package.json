@@ -9,6 +9,7 @@
     "lint": "eslint",
     "typecheck": "next typegen && tsc --noEmit",
     "test": "node --import tsx --test 'src/**/*.test.ts'",
+    "test:e2e": "PAGES_BASE_PATH=/acatenango npm run build && node --import tsx --test 'e2e/*.test.ts'",
     "collect": "tsx scripts/collect.ts",
     "build:index": "tsx scripts/build-index.ts",
     "fetch:terrain": "tsx scripts/fetch-terrain.ts",

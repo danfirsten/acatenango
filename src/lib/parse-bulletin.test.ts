@@ -1,4 +1,6 @@
 import assert from 'node:assert/strict';
+import { readdirSync, readFileSync } from 'node:fs';
+import path from 'node:path';
 import { describe, it } from 'node:test';
 
 import {
@@ -8,6 +10,8 @@ import {
   TYPICAL,
 } from './__fixtures__/bulletins';
 import { BVD_2026_08_21_FUEGO } from './__fixtures__/bvd-2026-08-21-page2';
+import { cleanOcrText } from './ocr';
+import { PARSER_VERSION } from './bulletin';
 import { parseBulletin, parseSpanishNumber } from './parse-bulletin';
 
 describe('parseSpanishNumber', () => {
@@ -339,5 +343,113 @@ describe('named ashfall communities', () => {
         .parsed.ashfallCommunities,
       [],
     );
+  });
+});
+
+describe('golden archive', () => {
+  const root = path.resolve(import.meta.dirname, '..', '..');
+  const archive = path.join(root, 'data', 'bulletins');
+  const golden = path.join(import.meta.dirname, '__fixtures__', 'golden');
+  const days = readdirSync(archive).filter((f) => f.endsWith('.json')).sort();
+  const regen = 'run `node --import tsx scripts/golden.ts` and review the diff';
+
+  const snaps = readdirSync(golden).filter((f) => f.endsWith('.json')).sort();
+
+  /**
+   * A day the collector just archived has no snapshot yet and must not turn the
+   * base red (the collector runs this suite before it commits). A snapshot with
+   * no bulletin is still a failure: something was deleted from the archive.
+   */
+  const compare = (archived: string[], snapshots: string[]) => ({
+    orphans: snapshots.filter((f) => !archived.includes(f)),
+    unsnapped: archived.filter((f) => !snapshots.includes(f)),
+  });
+
+  it('has no orphan snapshots', () => {
+    const { orphans, unsnapped } = compare(days, snaps);
+    if (unsnapped.length) {
+      console.log(`[golden] ${unsnapped.length} archived day(s) have no snapshot yet; ${regen}`);
+    }
+    assert.deepEqual(orphans, [], `snapshots with no bulletin: ${regen}`);
+  });
+
+  it('lets a new day without a snapshot pass, but not an orphan', () => {
+    assert.deepEqual(compare(['a.json', 'b.json'], ['a.json']), { orphans: [], unsnapped: ['b.json'] });
+    assert.deepEqual(compare(['a.json'], ['a.json', 'gone.json']).orphans, ['gone.json']);
+  });
+
+  for (const file of days) {
+    if (!snaps.includes(file)) continue;
+    it(`${file.slice(0, -5)} parses to its snapshot`, () => {
+      const bulletin = JSON.parse(readFileSync(path.join(archive, file), 'utf8'));
+      const expected = JSON.parse(readFileSync(path.join(golden, file), 'utf8'));
+      const { parsed, warnings, parserVersion } = parseBulletin(bulletin.raw);
+      assert.equal(parserVersion, PARSER_VERSION);
+      assert.equal(expected.parserVersion, PARSER_VERSION, `stale snapshot: ${regen}`);
+      assert.deepEqual({ warnings, parsed }, { warnings: expected.warnings, parsed: expected.parsed },
+        `parser output changed for ${bulletin.date}: if on purpose, bump PARSER_VERSION, then ${regen}`);
+    });
+  }
+
+  // Days a person checked against the raw text; the snapshot alone could
+  // agree with a wrong parse, so these pin the values to what is printed.
+  const read = (date: string) =>
+    parseBulletin(JSON.parse(readFileSync(path.join(archive, `${date}.json`), 'utf8')).raw).parsed;
+
+  it('2026-06-09: "a un ritmo de 4 a 7 por hora" is 4 to 7', () => {
+    assert.deepEqual(read('2026-06-09').explosionsPerHour, { min: 4, max: 7 });
+  });
+  it('2026-08-25: a comma before "por hora" does not hide the rate', () => {
+    assert.deepEqual(read('2026-08-25').explosionsPerHour, { min: 6, max: 10 });
+  });
+  it('2026-11-02: "un promedio de 3 explosiones ... por hora" is 3', () => {
+    assert.deepEqual(read('2026-11-02').explosionsPerHour, { min: 3, max: 3 });
+  });
+  it('2026-10-05: the column is read even when "ceniza" appears earlier', () => {
+    assert.deepEqual(read('2026-10-05').ashColumnMasl, { min: 4200, max: 4700 });
+  });
+  it('2026-06-10: "transportadas en dirección suroeste" is SW', () => {
+    assert.deepEqual(read('2026-06-10').driftDirections, ['SW']);
+  });
+  it('2026-11-03: avalanche flanks are not plume directions', () => {
+    assert.deepEqual(read('2026-11-03').driftDirections.sort(), ['S', 'SW']);
+  });
+  it('2026-11-10: a conditional "puede cambiar hacia el oeste" is not a reading', () => {
+    assert.deepEqual(read('2026-11-10').driftDirections, ['SW']);
+  });
+  it('2026-08-30: "norooeste" (printed so) is read as north-west', () => {
+    assert.deepEqual(read('2026-08-30').driftDirections.sort(), ['NW', 'W']);
+  });
+  it('2026-06-20: "caída débil de ceniza fina sobre ..." names its communities', () => {
+    assert.deepEqual(read('2026-06-20').ashfallCommunities, ['Sangre de Cristo']);
+  });
+});
+
+describe('OCR noise', () => {
+  it('reads letter O for zero inside a figure: 4,5OO', () => {
+    assert.equal(cleanOcrText('alturas de 4,5OO msnm'), 'alturas de 4,500 msnm');
+    assert.deepEqual(parseBulletin('Actividad ' + 'x'.repeat(40) + ' columnas de ceniza de 4,2OO a 4,7OO msnm').parsed.ashColumnMasl,
+      { min: 4200, max: 4700 });
+  });
+
+  it('does not turn words or ordinals into numbers', () => {
+    assert.equal(cleanOcrText('el 1o de junio, Oeste, 3 o 4 veces'), 'el 1o de junio, Oeste, 3 o 4 veces');
+  });
+
+  it('survives line breaks inside a phrase', () => {
+    const { parsed } = parseBulletin('Actividad\nSe registran explosiones débiles, moderadas y fuertes, a un\nritmo de 4\na 7 por\nhora, con columna a 4800\nmsnm.');
+    assert.deepEqual(parsed.explosionsPerHour, { min: 4, max: 7 });
+    assert.deepEqual(parsed.ashColumnMasl, { min: 4800, max: 4800 });
+  });
+
+  it('survives stray characters from the page furniture', () => {
+    const { parsed } = parseBulletin('Actividad » | Se registran entre 6 y 9 explosiones por hora | ¿$, ceniza a 4,500 m s n m | se dispersa hacia el Oeste.');
+    assert.deepEqual(parsed.explosionsPerHour, { min: 6, max: 9 });
+    assert.deepEqual(parsed.ashColumnMasl, { min: 4500, max: 4500 });
+    assert.deepEqual(parsed.driftDirections, ['W']);
+  });
+
+  it('reads accented "Dispersándose" as a dispersal clause', () => {
+    assert.deepEqual(parseBulletin('Dispersándose al oeste y suroeste.').parsed.driftDirections.sort(), ['SW', 'W']);
   });
 });

@@ -1,0 +1,32 @@
+{
+  "date": "2026-08-06",
+  "parserVersion": 8,
+  "warnings": [],
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 10
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4500
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "W"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza"
+    ],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves"
+    ],
+    "sky": "partlyCloudy",
+    "ashfallCommunities": []
+  }
+}

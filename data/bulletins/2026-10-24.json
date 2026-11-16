@@ -1,0 +1,44 @@
+{
+  "date": "2026-10-24",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-24.pdf",
+  "fetchedAt": "2026-11-16T20:32:19.903Z",
+  "raw": "YSN UM\nBOLETIN VULCANOLOGICO DIARIO (633\nGUATEMALA\n24 de octubre de 2026 VO LC < N D E\n; LOCALIZACIÓN EAN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nAra 7,7 90252'54 Longitud W\nmE Altura: 3763 msnm\nE -. eS Condiciones atmosféricas:\nVr Despejado\n0 Viento:\no) Del Noroeste\n0% Precipitación pluvial:\n2.0 mm\nMorfología: dali dinos\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nZ la https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: seleanical\nVulcaniana\nActividad\nDurante la noche y la madrugada se registró desgasificación débil a moderada, con fumarolas que\nalcanzaron aproximadamente 500 metros sobre el cráter y se dispersaron hacia el sureste. La\nactividad explosiva se mantuvo entre 2 y 5 explosiones débiles y moderadas por hora, generando\ncolumnas de ceniza entre 4300 y 4800 msnm, que se desplazaron hacia el este y sureste.\nSe observaron pulsos incandescentes de hasta 200 metros sobre el cráter, acompañados de\navalanchas débiles. Además, se registró caída de material incandescente alrededor del cráter, el cual\nse encauza hacia las barrancas Ceniza, Taniluyá, Seca, Santa Teresa, Trinidad y Las Lajas, en\nocasiones descendiendo hasta el límite de la vegetación.\nDebido a la temporada de lluvias y al material acumulado en las barrancas, persiste el riesgo de\nlahares en horas de la tarde y noche. Se recomienda evitar las cercanías de las barrancas del volcán\ny seguir las indicaciones del boletín especial BEFG0-013-2026.\n¿fBy' comunicaciones, _—.\nAS : (eri Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nparos ivien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 5
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": null,
+    "driftDirections": [
+      "SE"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Trinidad",
+      "Las Lajas",
+      "Santa Teresa"
+    ],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches",
+      "degassing",
+      "lahars",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}

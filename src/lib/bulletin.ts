@@ -9,7 +9,7 @@
  * forever.
  */
 
-export const PARSER_VERSION = 7;
+export const PARSER_VERSION = 8;
 
 /** Compass directions INSIVUMEH uses for ash dispersal, normalised to English. */
 export type Direction =

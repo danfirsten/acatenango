@@ -14,7 +14,11 @@
       "max": 4700
     },
     "driftKm": 25,
-    "driftDirections": [],
+    "driftDirections": [
+      "NE",
+      "SE",
+      "E"
+    ],
     "drainages": [
       "Seca",
       "Ceniza",
@@ -36,6 +40,6 @@
       "Alotenango"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

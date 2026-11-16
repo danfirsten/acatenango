@@ -84,6 +84,7 @@ flagged as misparses, not readings.
 ```bash
 npm install
 npm test             # parser and library tests; no network needed
+node --import tsx scripts/golden.ts  # regenerate parser snapshots on purpose; review the diff
 npm run lint
 npm run typecheck    # next typegen, then tsc
 npm run dev

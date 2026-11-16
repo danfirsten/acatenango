@@ -1,0 +1,31 @@
+{
+  "date": "2026-10-16",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/10/BVD-2026-10-16.pdf",
+  "fetchedAt": "2026-11-16T20:29:56.885Z",
+  "raw": "YO UM\n» z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n16 de octubre de 2026 VO LC Á N DE\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nApe %, 7 90252'54 Longitud W\nmE Altura: 3763 msnm\nE eS Condiciones atmosféricas:\nVr Despejado\nViento:\nON 23 Del Oest\nLS RR e el Veste\nA A LS O % Precipitación pluvial:\nE 51.6 mm\nMorfología: , ON\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\na lá https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á ea a\n> volcanica/\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\neste y sureste del complejo volcánico hasta una distancia aproximada de 35 kilómetros. Asimismo, se observan\navalanchas por los flancos oeste, suroeste y sur, en las que algunos bloques alcanzan la vegetación. Debido a la\nactividad descrita, es peligroso permanecer en la meseta, por el riesgo de caída de material balístico. Las\ncondiciones atmosféricas favorecen bajas temperaturas y podrían ocasionar lluvias durante la tarde y la noche.\nsE, | Ministerio de\nss y Comunicaciones, . . . y ' y . '\n3 , o Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 35,
+    "driftDirections": [
+      "SE",
+      "E",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "avalanches"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 7,
+  "warnings": []
+}
