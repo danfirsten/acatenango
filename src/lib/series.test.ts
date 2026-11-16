@@ -7,6 +7,7 @@ import {
   paroxysmIndex,
   rateRuns,
   readoutRows,
+  runDays,
   summaryFigures,
 } from './readout';
 import { completeness } from './series';
@@ -45,19 +46,26 @@ describe('rateRuns', () => {
   it('splits the rate into reported runs and the gaps between them', () => {
     assert.deepEqual(rateRuns(SERIES), {
       reported: [{ start: 0, end: 1 }, { start: 4, end: 4 }],
-      missing: [{ start: 2, end: 3 }, { start: 5, end: 5 }],
+      missing: [{ start: 2, end: 2 }, { start: 5, end: 5 }],
+      continuous: [{ start: 3, end: 3 }],
     });
   });
 
   it('covers every day exactly once', () => {
-    const { reported, missing } = rateRuns(SERIES);
-    const covered = [...reported, ...missing].reduce((n, r) => n + r.end - r.start + 1, 0);
-    assert.equal(covered, SERIES.length);
+    const { reported, missing, continuous } = rateRuns(SERIES);
+    assert.equal(runDays(reported) + runDays(missing) + runDays(continuous), SERIES.length);
+  });
+
+  it('agrees with the footer: not reported excludes continuous days', () => {
+    const { missing, continuous } = rateRuns(SERIES);
+    const [rate] = completeness(SERIES);
+    assert.equal(runDays(missing), rate.total - rate.reported - (rate.continuous ?? 0));
+    assert.equal(runDays(continuous), rate.continuous);
   });
 
   it('handles a record with no reported days', () => {
     const none = [day('2026-11-01', gap), day('2026-11-02', gap)];
-    assert.deepEqual(rateRuns(none), { reported: [], missing: [{ start: 0, end: 1 }] });
+    assert.deepEqual(rateRuns(none), { reported: [], missing: [{ start: 0, end: 1 }], continuous: [] });
   });
 });
 
@@ -111,6 +119,10 @@ describe('lastReportedIndex', () => {
   it('falls back to the latest earlier day with a rate', () => {
     assert.equal(lastReportedIndex(SERIES, 3), 1);
     assert.equal(lastReportedIndex(SERIES, 5), 4);
+  });
+
+  it('holds any field it is given, such as the ash column', () => {
+    assert.equal(lastReportedIndex(SERIES, 2, (e) => e.ashMaxMasl), 1);
   });
 
   it('is -1 when nothing earlier reported one', () => {

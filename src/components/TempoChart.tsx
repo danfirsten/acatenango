@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from 'react';
 
-import { axisLabelIndices, rateRuns, rateText } from '@/lib/readout';
+import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 const W = 1000;
@@ -36,7 +36,7 @@ interface TempoChartProps {
 export default function TempoChart({ series, selected, onSelect }: TempoChartProps) {
   const [hover, setHover] = useState<number | null>(null);
 
-  const { runs, gaps, xs, ys, maxY, ticks, half } = useMemo(() => {
+  const { runs, gaps, continuous, xs, ys, maxY, ticks, half } = useMemo(() => {
     // Only reported days set the scale; a missing day is not a 0.
     const reported = series.flatMap((e) => (e.explosionsMax === null ? [] : [e.explosionsMax]));
     const top = reported.length > 0 ? Math.max(...reported) : 0;
@@ -46,7 +46,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
     const yOf = (v: number) => H - PAD.b - (v / maxY) * (H - PAD.t - PAD.b);
     // Null for a day with no rate: there is no point to draw.
     const ys = series.map((e) => (e.explosionsMax === null ? null : yOf(e.explosionsMax)));
-    const { reported: runs, missing: gaps } = rateRuns(series);
+    const { reported: runs, missing: gaps, continuous } = rateRuns(series);
     return {
       runs: runs.map((r) => {
         const pts = xs.slice(r.start, r.end + 1).map((x, k) => [x, ys[r.start + k] as number] as [number, number]);
@@ -59,6 +59,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         };
       }),
       gaps,
+      continuous,
       xs,
       ys,
       maxY,
@@ -67,7 +68,12 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
     };
   }, [series]);
 
-  const missingDays = gaps.reduce((n, g) => n + g.end - g.start + 1, 0);
+  const missingDays = runDays(gaps);
+  const continuousDays = runDays(continuous);
+  const band = (r: { start: number; end: number }) => {
+    const x0 = Math.max(0, xs[r.start] - half);
+    return { x: x0, width: Math.min(W, xs[r.end] + half) - x0, y: PAD.t, height: H - PAD.t - PAD.b };
+  };
 
   const active = hover === null ? null : series[hover];
 
@@ -94,7 +100,7 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`Explosions per hour over ${series.length} days; ${missingDays} of them gave no rate and are left as gaps`}
+        aria-label={`Explosions per hour over ${series.length} days; ${missingDays} gave no rate and are left as gaps${continuousDays ? `, and ${continuousDays} were continuous emission with no hourly count` : ''}`}
         onPointerMove={onMove}
         onPointerDown={(ev) => { ev.currentTarget.setPointerCapture(ev.pointerId); onSelect(indexAt(ev)); }}
         onPointerLeave={() => setHover(null)}
@@ -109,15 +115,11 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
           </pattern>
         </defs>
 
+        {/* Continuous emission: the volcano at its most active, with no hourly count. */}
+        {continuous.map((r) => <rect key={`c${r.start}`} className="tempo-continuous" {...band(r)} />)}
+
         {/* Days with no reported rate: a quiet hatch, never a line at 0. */}
-        {gaps.map((g) => {
-          const x0 = Math.max(0, xs[g.start] - half);
-          const x1 = Math.min(W, xs[g.end] + half);
-          return (
-            <rect key={g.start} className="tempo-gap" x={x0} y={PAD.t} width={x1 - x0}
-              height={H - PAD.t - PAD.b} fill="url(#tempoGap)" />
-          );
-        })}
+        {gaps.map((g) => <rect key={g.start} className="tempo-gap" fill="url(#tempoGap)" {...band(g)} />)}
 
         {ticks.map((v) => {
           const y = H - PAD.b - (v / maxY) * (H - PAD.t - PAD.b);
@@ -150,12 +152,9 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         <g className="tempo-selected">
           <line x1={xs[selected]} x2={xs[selected]} y1={PAD.t} y2={H - PAD.b}
             className="tempo-cross" strokeWidth={1.5} opacity={0.85} />
-          {ys[selected] === null ? (
-            <circle cx={xs[selected]} cy={PAD.t + 5} r={4.5}
-              className="tempo-ring" />
-          ) : (
-            <circle cx={xs[selected]} cy={ys[selected]!} r={5}
-              className="tempo-point" />
+          {/* A day with no rate gets the line alone: any point would sit on the scale. */}
+          {ys[selected] !== null && (
+            <circle cx={xs[selected]} cy={ys[selected]!} r={5} className="tempo-point" />
           )}
         </g>
 
@@ -190,10 +189,20 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
         )}
       </figcaption>
 
-      {missingDays > 0 && (
+      {(missingDays > 0 || continuousDays > 0) && (
         <p className="tempo-key">
-          <span className="tempo-key-swatch" aria-hidden="true" />
-          Not reported: {missingDays} of {series.length} days gave no explosion rate
+          {missingDays > 0 && (
+            <span>
+              <span className="tempo-key-swatch" aria-hidden="true" />
+              Not reported: {missingDays} of {series.length} days
+            </span>
+          )}
+          {continuousDays > 0 && (
+            <span>
+              <span className="tempo-key-swatch" data-kind="continuous" aria-hidden="true" />
+              Continuous emission, no hourly count: {continuousDays} days
+            </span>
+          )}
         </p>
       )}
     </figure>

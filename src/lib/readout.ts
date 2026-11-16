@@ -74,30 +74,44 @@ export interface DayRun {
 }
 
 /**
- * Splits the explosion-rate series into runs of reported days and the gaps
- * between them. The chart draws a line through each run and leaves each gap
- * visibly empty; a gap is never bridged and never drawn at 0.
+ * Splits the explosion-rate series into runs of reported days, gaps where the
+ * bulletin gave no rate, and continuous-emission stretches, which publish no
+ * hourly count by nature. The chart draws a line through each reported run and
+ * never bridges or zeroes the rest. Continuous days are kept apart from missing
+ * ones: they are the volcano at its most active, not a hole in the record.
  */
-export function rateRuns(series: IndexEntry[]): { reported: DayRun[]; missing: DayRun[] } {
+export function rateRuns(series: IndexEntry[]): { reported: DayRun[]; missing: DayRun[]; continuous: DayRun[] } {
   const reported: DayRun[] = [];
   const missing: DayRun[] = [];
+  const continuous: DayRun[] = [];
   series.forEach((e, i) => {
-    const runs = e.explosionsMax === null ? missing : reported;
+    const runs = e.explosionsMax !== null
+      ? reported
+      : e.phenomena.includes('continuousPhase') ? continuous : missing;
     const last = runs.at(-1);
     if (last && last.end === i - 1) last.end = i;
     else runs.push({ start: i, end: i });
   });
-  return { reported, missing };
+  return { reported, missing, continuous };
+}
+
+/** Days covered by a list of runs. */
+export function runDays(runs: DayRun[]): number {
+  return runs.reduce((n, r) => n + r.end - r.start + 1, 0);
 }
 
 /**
- * The day the mountain should show when day `i` gave no explosion rate: the
- * latest earlier day that did, or -1 if none did. Returns `i` itself when it
- * reported one.
+ * The latest day at or before `i` that reported a value for `pick` (by default
+ * the explosion rate), or -1 if none did. Returns `i` itself when it reported.
+ * The mountain uses it to hold a value the selected day left out.
  */
-export function lastReportedIndex(series: IndexEntry[], i: number): number {
+export function lastReportedIndex(
+  series: IndexEntry[],
+  i: number,
+  pick: (e: IndexEntry) => number | null = (e) => e.explosionsMax,
+): number {
   for (let j = Math.min(i, series.length - 1); j >= 0; j--) {
-    if (series[j].explosionsMax !== null) return j;
+    if (pick(series[j]) !== null) return j;
   }
   return -1;
 }

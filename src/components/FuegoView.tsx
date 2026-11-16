@@ -32,19 +32,34 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   const figures = useMemo(() => summaryFigures(series), [series]);
   const rows = useMemo(() => readoutRows(day), [day]);
 
-  // A day with no rate gives the plume's density nothing to follow, so the
-  // scene holds the rate of the last day that reported one, and the readout
-  // says which. The column height and drift are still that day's own.
-  const shownIndex = useMemo(
-    () => lastReportedIndex(series, Math.min(selected, series.length - 1)),
-    [series, selected],
-  );
+  // A day that left out its rate or column gives the plume nothing to follow,
+  // so the scene holds the value from the last day that reported it, and the
+  // readout says which. Whatever the day did report is drawn as its own.
+  const at = Math.min(selected, series.length - 1);
   const continuous = day.explosionsMax === null && day.phenomena.includes('continuousPhase');
-  const heldFrom = day.explosionsMax === null && !continuous && shownIndex !== -1 ? series[shownIndex] : null;
+  const rateIndex = useMemo(() => lastReportedIndex(series, at), [series, at]);
+  const columnIndex = useMemo(() => lastReportedIndex(series, at, (e) => e.ashMaxMasl), [series, at]);
+  const rateFrom = day.explosionsMax === null && !continuous && rateIndex !== -1 ? series[rateIndex] : null;
+  const columnFrom = day.ashMaxMasl === null && columnIndex !== -1 ? series[columnIndex] : null;
   const sceneDay = useMemo(
-    () => (heldFrom ? { ...day, explosionsMin: heldFrom.explosionsMin, explosionsMax: heldFrom.explosionsMax } : day),
-    [day, heldFrom],
+    () => ({
+      ...day,
+      ...(rateFrom && { explosionsMin: rateFrom.explosionsMin, explosionsMax: rateFrom.explosionsMax }),
+      ...(columnFrom && { ashMinMasl: columnFrom.ashMinMasl, ashMaxMasl: columnFrom.ashMaxMasl }),
+    }),
+    [day, rateFrom, columnFrom],
   );
+  const notes: string[] = [];
+  if (day.explosionsMax === null && !continuous) {
+    notes.push(rateFrom
+      ? `No explosion rate in this bulletin. The plume holds the rate of ${formatDate(rateFrom.date)}, the last day that reported one.`
+      : 'No explosion rate in this bulletin, or any before it, so the plume cannot follow one.');
+  }
+  if (day.ashMaxMasl === null) {
+    notes.push(columnFrom
+      ? `No ash column in this bulletin. The plume holds the height of ${formatDate(columnFrom.date)}.`
+      : 'No ash column in this bulletin, or any before it, so the plume cannot follow one.');
+  }
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
@@ -74,12 +89,8 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
               <span className="readout-v">{r.value}<small>{r.unit}</small></span>
             </div>
           ))}
-          {day.explosionsMax === null && !continuous && (
-            <p className="readout-note" role="status">
-              {heldFrom
-                ? <>No explosion rate in this bulletin. The plume holds the rate of {formatDate(heldFrom.date)}, the last day that reported one.</>
-                : <>No explosion rate in this bulletin, and none before it. The plume is drawn at a neutral rate.</>}
-            </p>
+          {notes.length > 0 && (
+            <p className="readout-note" role="status">{notes.join(' ')}</p>
           )}
         </aside>
 

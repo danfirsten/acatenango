@@ -325,15 +325,15 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .tempo-dot { fill: var(--ember); }
 .tempo-cross { stroke: var(--ember); }
 .tempo-point { fill: var(--ember); stroke: var(--ground); stroke-width: 2; }
-/* A selected day with no rate: a hollow ring at the top, not a point at 0. */
-.tempo-ring { fill: var(--ground); stroke: var(--ember); stroke-width: 1.5; }
 
 /* Missing days are hatched in ash, quiet enough not to read as activity. */
-.tempo-gap-hatch { stroke: var(--ash); stroke-width: 1; opacity: 0.22; }
+.tempo-gap-hatch { stroke: var(--ash); stroke-width: 1; opacity: 0.36; }
+/* Continuous emission is activity, so it takes a faint ember wash, not the hatch. */
+.tempo-continuous { fill: color-mix(in srgb, var(--ember) 18%, transparent); }
 .tempo-key {
   display: flex;
-  align-items: center;
-  gap: 8px;
+  flex-wrap: wrap;
+  gap: 6px 22px;
   margin: 10px 0 0;
   font-family: var(--label);
   text-transform: uppercase;
@@ -341,13 +341,15 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-size: 11px;
   color: var(--muted);
 }
+.tempo-key > span { display: inline-flex; align-items: center; gap: 8px; }
 .tempo-key-swatch {
   flex: none;
   width: 14px;
   height: 10px;
   border: 1px solid var(--line);
-  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--ash) 22%, transparent) 0 1px, transparent 1px 4px);
+  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--ash) 36%, transparent) 0 1px, transparent 1px 4px);
 }
+.tempo-key-swatch[data-kind="continuous"] { background: color-mix(in srgb, var(--ember) 18%, transparent); }
 
 .colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
 .colophon p { margin: 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
