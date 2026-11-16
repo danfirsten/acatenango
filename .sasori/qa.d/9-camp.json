@@ -1,0 +1,6 @@
+{
+  "routes": ["/"],
+  "routeFiles": {
+    "/": ["src/lib/camp.ts", "src/components/CampPanel.tsx"]
+  }
+}
