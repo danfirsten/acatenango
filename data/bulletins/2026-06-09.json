@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T01:52:46.869Z",
   "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\nCIÓN. VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\ne 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\nN L, sz o.\n¡On Condiciones atmosféricas:\nVr Despejado\n+ Viento:\n, 29\ny Y Del Noreste\n0% Precipitación pluvial:\n74.42 mm\nMorfología: Accad l E dcarñail 3\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\na Sa https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nSe observa desgasificación débil sobre el cráter, alcanzando alturas de 600 metros y dispersándose al Oeste. Se\nregistran explosiones débiles, moderadas y fuertes, a un ritmo de 4 a 7 por hora, generando columna de gas y\nceniza que alcanzan los 4800 msnm. La ceniza se dispersa de 10 a 20 km en dirección oeste. Caída de ceniza fina en\ncomunidades ubicadas en el flanco Oeste del volcán. También se observan balísticos y descenso de material\nvolcánico incandescente producto de las explosiones, hacia los flancos oeste, sur y suroeste, llegando incluso hasta\nla vegetación. Asimismo, la actividad explosiva genera retumbos, ondas de choque y sonidos similares a turbina de\navión debido al gas expulsado de forma continua. Durante al noche y madrugada es posible observar\nincandescencia que permanece en el cráter y que también se denota como pulsos incandescentes alcanzando\nalturas de 100 a 300 metros.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n3 : | Infraestructura y Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\narcas” | Vivienda\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 7
+    },
     "ashColumnMasl": {
       "min": 4800,
       "max": 4800
@@ -25,10 +28,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

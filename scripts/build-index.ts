@@ -91,14 +91,23 @@ export async function buildIndex(): Promise<FuegoIndex> {
   }
 
   const entries: IndexEntry[] = [];
+  let behind = 0;
   for (const file of files.sort()) {
     const full = path.join(BULLETIN_DIR, file);
     try {
       const bulletin = JSON.parse(await readFile(full, 'utf8')) as Bulletin;
+      if (bulletin.parserVersion !== PARSER_VERSION) behind += 1;
       entries.push(toEntry(bulletin));
     } catch (err) {
       console.warn(`[index] skipping unreadable ${file}: ${String(err)}`);
     }
+  }
+
+  if (behind > 0) {
+    console.warn(
+      `[index] ${behind} stored record${behind === 1 ? ' is' : 's are'} behind parser version ` +
+        `${PARSER_VERSION}; the index re-derives them from raw text, but the files on disk are stale`,
+    );
   }
 
   let gaps: Gap[] = [];

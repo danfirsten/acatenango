@@ -3,7 +3,9 @@
   "routes": [
     "/"
   ],
-  "public": [],
+  "public": [
+    "/"
+  ],
   "widths": [
     390,
     768,

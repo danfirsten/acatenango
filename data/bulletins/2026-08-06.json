@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:39:10.939Z",
   "raw": "YSN UM»\nBOLETIN VULCANOLOGICO DIARIO (637\n=Y\nGUATEMALA\nARAN VOLCÁN DE\n; LOCALIZACIÓN\nALLY GEOGRÁFICA:\nPAS ca 14? 28' 54 Latitud N;\na 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\na E En “a E po Af Condiciones atmosféricas:\n. — Vir Parcialmente nublado\ne Viento:\n| _D59\n'» ES un Del Este\n0% Precipitación pluvial:\n4.5 mm\nMorfología: , o\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\nA SES https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á oa a\n> volcanica/\nVulcaniana\nActividad\nEl volcán de Fuego registra explosiones de características débiles, moderadas y fuertes, a un ritmo de 5 a 10 por\nhora, acompañadas de retumbos y ondas de choque débiles y moderadas. Estas explosiones producen columnas de\ngas y ceniza que se elevan hasta 4500 msnm, que el viento desplaza hacia el oeste. Se ha reportado también el\ndesprendimiento de bloques de roca hacia las barrancas Ceniza y Seca. El viento puede remover el material recién\ndepositado por la erupción en las barrancas del volcán, levantando nubes de ceniza en los flancos sur y oeste. La\ncaída débil de partículas finas de ceniza puede continuar sobre el municipio de San Pedro Yepocapa y sus\ncomunidades rurales.\nsE, | Ministerio de\nF y Comunicaciones, . . . y ' y . '\n- A : lei Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\near | Vivien\nATEMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 5,
+      "max": 10
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4500
@@ -25,10 +28,9 @@
       "rumbling",
       "shockwaves"
     ],
-    "sky": "partlyCloudy"
+    "sky": "partlyCloudy",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

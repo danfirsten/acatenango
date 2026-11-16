@@ -25,10 +25,13 @@
       "ashfall",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "Sangre de Cristo",
+      "San Pedro Yepocapa"
+    ]
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }
