@@ -61,10 +61,12 @@ scripts/collect.ts        Fetches, OCRs and archives the day's bulletin
 scripts/backfill.ts       Archives past days by date
 scripts/ocr.ts            Rasterises the scanned PDF and reads it with tesseract
 scripts/build-index.ts    Rolls the archive into data/index.json
+scripts/gvp.ts            Fetches and archives the Smithsonian GVP weekly reports
 scripts/og.ts             Renders the social card from the static build
 src/lib/parse-bulletin.ts The parser: pure, tested, versioned
 src/lib/scene/massif.ts   Three.js terrain, ash plume and camera rig
 data/bulletins/*.json     One record per day, raw text kept
+data/gvp/*.json           One record per GVP week, raw text kept
 data/index.json           Generated; what the site reads at build time
 ```
 
@@ -112,8 +114,15 @@ live site above.
 - **Terrain** is from [AWS Terrain Tiles](https://registry.opendata.aws/terrain-tiles/),
   which is public domain.
 - **Cross-checks**: the [Smithsonian Global Volcanism Program](https://volcano.si.edu)
-  (Fuego is volcano `342090`) publishes weekly reports that are useful for
-  checking the archive.
+  (GVP; Fuego is volcano `342090`) publishes a weekly report built from
+  INSIVUMEH's own reporting. The collector (`scripts/gvp.ts`, run by
+  `collect.yml`) keeps each week's report text verbatim in `data/gvp/<week>.json`,
+  where `<week>` is the Wednesday the week starts, with the explosion rate and
+  plume altitude it states. `build:index` compares each week with that week's
+  bulletins and the page marks a week where the ranges clearly disagree. Neither
+  source is treated as the truth and nothing is corrected. GVP's reports are
+  credited on the site. Run `workflow_dispatch` on `collect.yml` with
+  `gvp_backfill` ticked to fetch every week since the first bulletin.
 
 ## Licence
 

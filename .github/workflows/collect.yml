@@ -13,6 +13,11 @@ on:
         description: 'Fetch this exact URL instead of discovering one'
         required: false
         type: string
+      gvp_backfill:
+        description: 'Fetch every Smithsonian GVP weekly report since the first bulletin, not just the last four weeks'
+        required: false
+        type: boolean
+        default: false
 
 # Only one collector at a time; concurrent runs would race on the commit.
 concurrency:
@@ -57,6 +62,17 @@ jobs:
           if [ -z "$(git status --porcelain data/bulletins/)" ]; then
             YESTERDAY=$(date -u -d '-30 hours' +%Y-%m-%d)
             npm run backfill -- --from "$YESTERDAY" --to "$YESTERDAY"
+          fi
+
+      # Smithsonian GVP's weekly report on Fuego, kept beside the bulletins as a
+      # cross-check. Idempotent: weeks already stored are skipped, and a week GVP
+      # has not published is a warning, never a failure.
+      - name: Collect Smithsonian GVP weekly reports
+        run: |
+          if [ "${{ inputs.gvp_backfill }}" = 'true' ]; then
+            npx tsx scripts/gvp.ts
+          else
+            npx tsx scripts/gvp.ts --recent
           fi
 
       - name: Commit archive
