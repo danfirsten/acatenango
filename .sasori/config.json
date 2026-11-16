@@ -4,6 +4,7 @@
     "npm run lint",
     "npm run typecheck",
     "CI=1 npm test",
+    "npm run test:e2e",
     "npm run build"
   ],
   "workflows": {
@@ -25,6 +26,7 @@
   "trainMode": "fast",
   "perRepoLanes": 5,
   "actionsKeep": [
-    "collect.yml"
+    "collect.yml",
+    "pages.yml"
   ]
 }

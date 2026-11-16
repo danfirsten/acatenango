@@ -2,6 +2,8 @@
 
 import { useEffect } from 'react';
 
+import { withBase } from '@/lib/base-path';
+
 /**
  * Registers the offline cache.
  *
@@ -14,7 +16,8 @@ export default function ServiceWorker() {
     if (!('serviceWorker' in navigator)) return;
     // Registration is best-effort: it fails on file:// and in private windows,
     // and the site works perfectly well without it.
-    navigator.serviceWorker.register('/sw.js').catch(() => {});
+    // The worker sits at the base path, so its default scope is the whole site.
+    navigator.serviceWorker.register(withBase('/sw.js'), { scope: withBase('/') }).catch(() => {});
   }, []);
   return null;
 }
