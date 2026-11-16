@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from 'react';
 
 import BulletinAge from '@/components/BulletinAge';
+import FieldLanes from '@/components/FieldLanes';
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
 import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
@@ -137,6 +138,7 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
         </div>
 
         <TempoChart series={series} selected={selected} onSelect={onSelect} />
+        <FieldLanes series={series} selected={selected} onSelect={onSelect} />
       </section>
     </>
   );

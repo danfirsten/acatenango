@@ -27,6 +27,9 @@ export interface IndexEntry {
   ashMaxMasl: number | null;
   driftKm: number | null;
   driftDirections: string[];
+  /** Height of incandescent pulses above the crater, in metres; null when not stated. */
+  incandescenceMinM: number | null;
+  incandescenceMaxM: number | null;
   drainages: string[];
   lavaFlowM: number | null;
   phenomena: string[];
@@ -74,6 +77,8 @@ function toEntry(b: Bulletin): IndexEntry {
     ashMaxMasl: parsed.ashColumnMasl?.max ?? null,
     driftKm: parsed.driftKm,
     driftDirections: parsed.driftDirections,
+    incandescenceMinM: parsed.incandescenceM?.min ?? null,
+    incandescenceMaxM: parsed.incandescenceM?.max ?? null,
     drainages: parsed.drainages,
     lavaFlowM: parsed.lavaFlowM,
     phenomena: parsed.phenomena,
