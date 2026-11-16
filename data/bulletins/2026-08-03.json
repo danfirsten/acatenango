@@ -25,11 +25,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate",
-    "no-ash-column"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

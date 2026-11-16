@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:42:04.089Z",
   "raw": "YSN UM\nz z STE IN\nBOLETIN VULCANOLOGICO DIARIO (6337\nGUATEMALA\n29 de julio de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(cua) o ¡Or Condiciones atmosféricas:\nA Despejado\nViento:\nHe Dn\ne > SR 9) Del este\nARAS URL\nPr E E NON\nA O) 9 Precipitación pluvial:\nA A AN 3.70 mm\nnz E O\nO A A\n4 e Acceda a las cámaras de vigilancia\nEstrato volcán compuesto Los a a\np volcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 6 a 8 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 4800 msnm (14,764 a 15,748 pies). Estas\nse desplazan hacia el oeste y noroeste debido a la acción del viento a distancias de 10 a 40 km.\nAlgunas de estas explosiones expulsan material incandescente a distancias de 200 metros sobre el\nnivel del cráter. Otras pueden ocasionar retumbos y ondas de choque débiles. De igual forma se\npresentan sonidos de desgasificación similares a los de una máquina locomotora. Se espera caída\ndébil de ceniza fina sobre Finca El Recreo, Montellano y sus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4800
@@ -28,10 +31,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

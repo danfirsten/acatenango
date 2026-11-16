@@ -1,4 +1,4 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { Barlow, Barlow_Condensed } from 'next/font/google';
 
 import ServiceWorker from '@/components/ServiceWorker';
@@ -19,13 +19,36 @@ const barlowCondensed = Barlow_Condensed({
   display: 'swap',
 });
 
+/** Where the site is served; the social card needs absolute URLs. */
+const SITE_URL = process.env.SITE_URL ?? 'https://danfirsten.github.io/acatenango/';
+const TITLE = 'Fuego: live from the Acatenango massif';
+const DESCRIPTION =
+  'An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.';
+
 export const metadata: Metadata = {
-  title: 'Fuego — live from the Acatenango massif',
-  description:
-    'A live monitor for Volcán de Fuego, Guatemala, rendered from real elevation data.',
+  metadataBase: new URL(SITE_URL),
+  title: TITLE,
+  description: DESCRIPTION,
   manifest: '/manifest.webmanifest',
-  themeColor: '#0B1016',
   icons: { icon: '/icon.svg' },
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: SITE_URL,
+    siteName: 'Fuego',
+    type: 'website',
+    images: [{ url: new URL('og.png', SITE_URL).href, width: 1200, height: 630, alt: 'Fuego erupting beside Acatenango' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [new URL('og.png', SITE_URL).href],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: '#0B1016',
 };
 
 export default function RootLayout({ children }: LayoutProps<'/'>) {
