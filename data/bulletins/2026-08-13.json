@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T00:36:50.163Z",
   "raw": "¡VUM\n- , SN\n«META\nBOLETIN VULCANOLOGICO DIARIO E\nGUATEMALA\n13 de agosto de 2026 VOLC s N DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(2) o ¡Or Condiciones atmosféricas:\nA Despejado\nViento:\nLES Dn 1\nii Ms e —3 Del noreste\nA Si DES SONS\nPo E A Precipitación pluvial:\nE a e O OS. AS OS p p uvial:\nMS an Y O\na A A h 5.8 mm\nAAA\n4 e Acceda a las cámaras de vigilancia\nEstrato volcán compuesto Los a a\nPp volcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 4 a 6 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 4800 msnm (14,764 a 15,748 pies). Estas\nse desplazan hacia el suroeste debido a la acción del viento a distancias de 10 a 40 km. Algunas de\nestas explosiones expulsan material incandescente a distancias de 100 metros sobre el nivel del\ncráter. Otras pueden ocasionar retumbos y ondas de choque débiles. Se espera caída débil de ceniza\nfina sobre Sangre de Cristo, El Porvenir y sus alrededores.\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 6
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4800
@@ -26,10 +29,9 @@
       "shockwaves",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }

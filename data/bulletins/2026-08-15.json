@@ -36,8 +36,12 @@
       "lahars",
       "incandescence"
     ],
-    "sky": "cloudy"
+    "sky": "cloudy",
+    "ashfallCommunities": [
+      "El Porvenir",
+      "San Pedro Yepocapa"
+    ]
   },
-  "parserVersion": 2,
+  "parserVersion": 7,
   "warnings": []
 }

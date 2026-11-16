@@ -5,7 +5,10 @@
   "fetchedAt": "2026-08-22T01:49:07.987Z",
   "raw": "VUM\nz z 220 A\nBOLETIN VULCANOLOGICO DIARIO (633\nEA:\n=Y4\nGUATEMALA\n20 de junio de 2026 VOLCÁN DE\n; LOCALIZACIÓN IN\ne Ed GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nApo 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(e) ¡Or Condiciones atmosféricas:\n7 Despejado\nViento:\nAs DO\nAE 2. —) Del este\nA. WT eN\nA NS\nA 09 Precipitación pluvial:\nSl 2957 0\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto E a\nvolcánica en el siguiente enlace:\nhttps: //insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 6 a 8 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 4800 msnm (14,764 a 15,748 pies). Estas\nse desplazan hacia el oeste debido a la acción del viento a distancias de 10 a 40 km. Algunas de\nestas explosiones expulsan material incandescente a distancias de 200 metros sobre el nivel del\ncráter. Otras pueden ocasionar retumbos y ondas de choque débiles. De igual forma se han\npresentado sonidos por la desgasificación, similares a los de una máquina locomotora. Se espera\ncaída débil de ceniza fina sobre Finca El Recreo, Sangre de Cristo y sus alrededores\nse 2 e, | Ministerio de\nq F y Comunicaciones, Ñ . . ' ' y . '\n3 : (e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEmMP\n",
   "parsed": {
-    "explosionsPerHour": null,
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 8
+    },
     "ashColumnMasl": {
       "min": 4500,
       "max": 4800
@@ -27,10 +30,9 @@
       "degassing",
       "incandescence"
     ],
-    "sky": "clear"
+    "sky": "clear",
+    "ashfallCommunities": []
   },
-  "parserVersion": 2,
-  "warnings": [
-    "no-explosion-rate"
-  ]
+  "parserVersion": 7,
+  "warnings": []
 }
