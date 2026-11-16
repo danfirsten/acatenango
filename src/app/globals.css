@@ -458,6 +458,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   text-underline-offset: 4px;
   white-space: nowrap;
 }
+.colophon .lang-switch { padding: 0; }
 .lang-switch:hover { text-decoration-color: var(--ink); }
 .lang-switch:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
 
@@ -475,14 +476,14 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .lost p { margin: 0 0 8px; color: var(--ash); }
 .lost p:has(a) { margin-bottom: 40px; }
 .lost .lost-h { margin: 0 0 6px; }
-.lost a { color: var(--ink); text-decoration-color: var(--ash); }
+.lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration-color: var(--ash); }
 
 @media (max-width: 860px) {
   .notice { padding: 10px 16px; }
   .topbar { flex-wrap: wrap; row-gap: 6px; }
   /* The switch shares the brand's row; the bulletin line gets its own row below,
      where it always sat, clear of the summit labels. */
-  .topbar .lang-switch { order: 1; margin-left: auto; min-height: 32px; }
+  .topbar .lang-switch { order: 1; margin-left: auto; margin-block: -11px; }
   .topbar .observed { order: 2; flex-basis: 100%; margin-left: 0; }
   .topbar .observed-text { text-align: left; }
 }

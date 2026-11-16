@@ -64,12 +64,12 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
 
-  // Arriving from the other language: open on the reader's chosen language if
-  // they chose one, and pick up where they were (the replayed day, the section).
+  // A reader who chose Spanish and opens the English address gets the Spanish
+  // page. Only that way: a shared /es/ link always stays Spanish. Then pick up
+  // where they were after a switch (the replayed day, the section).
   useEffect(() => {
-    const chosen = rememberedLanguage();
-    if (chosen !== null && chosen !== locale) {
-      window.location.replace(withBase(LOCALE_PATH[chosen]) + window.location.hash);
+    if (locale === 'en' && rememberedLanguage() === 'es') {
+      window.location.replace(withBase(LOCALE_PATH.es) + window.location.hash);
       return;
     }
     const place = takePlace();

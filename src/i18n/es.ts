@@ -61,7 +61,7 @@ export const es: Dict = {
   },
   topbar: {
     representative: 'Datos representativos',
-    unread: (n) => `${n} ${plural(n, 'campo sin leer', 'campos sin leer')}`,
+    unread: (n) => `${n} ${plural(n, 'campo no se pudo leer', 'campos no se pudieron leer')}`,
     latest: 'Último boletín',
     replaying: 'Día seleccionado',
   },
@@ -152,7 +152,7 @@ export const es: Dict = {
     commonDriftValue: (dirs, days) => `${capital(list(dirs.map((d) => COMPASS[d] ?? d)))} (${days} ${plural(days, 'día', 'días')})`,
     commonDriftNote: (n) => `de los ${n} días que indicaron uno`,
     drainagesNamed: 'Barrancas nombradas',
-    drainagesNote: (n) => `días en que se nombró, de los ${n} días que nombraron alguna`,
+    drainagesNote: (n) => `días en que se nombró, de los ${n} en que se nombró alguna`,
   },
   gvp: {
     sectionLabel: 'Cotejo con el reporte semanal del Smithsonian',

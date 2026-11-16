@@ -257,7 +257,13 @@ describe(`static build served under ${BASE}`, () => {
     assert.equal(await page.getAttribute('html', 'lang'), 'en');
     assert.equal(await page.evaluate(() => localStorage.getItem('fuego-lang')), 'en');
 
-    // The remembered choice opens the chosen page from the other address.
+    // Having chosen English, a shared Spanish link still opens in Spanish.
+    await page.goto(`${origin}${BASE}/es/`, { waitUntil: 'load' });
+    await page.locator('#camp-title').waitFor();
+    await page.waitForTimeout(500);
+    assert.equal(new URL(page.url()).pathname, `${BASE}/es/`);
+
+    // A remembered Spanish choice opens the Spanish page from the English address.
     await page.evaluate(() => localStorage.setItem('fuego-lang', 'es'));
     await page.goto(`${origin}${BASE}/`, { waitUntil: 'load' });
     await page.waitForURL(`${origin}${BASE}/es/`);

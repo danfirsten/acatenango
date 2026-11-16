@@ -121,6 +121,7 @@ describe('phone layout', () => {
           return [document.querySelector('.topbar .lang-switch')!.getBoundingClientRect(), ...range.getClientRects()]
             .map((b) => ({ left: b.left, right: b.right, top: b.top, bottom: b.bottom }));
         });
+        assert.ok(bar[0].bottom - bar[0].top >= 44, `the switch is a 44 px tap target (${bar[0].bottom - bar[0].top})`);
         for (const b of boxes) {
           assert.ok(b.left >= 0 && b.right <= b.vw, `${b.name} label inside the viewport (${b.left}..${b.right})`);
           const label = { left: b.left, right: b.right, top: b.top, bottom: b.bottom };

@@ -22,7 +22,7 @@ export default function GlobalNotFound() {
         <p>No page of the record is at this address.</p>
         <p><a href={withBase('/')}>Go to Fuego</a></p>
         <p lang="es" className="lost-h">Página no encontrada</p>
-        <p lang="es">Ninguna página del registro está en esta dirección.</p>
+        <p lang="es">No hay ninguna página del registro en esta dirección.</p>
         <p lang="es"><a href={withBase('/es/')}>Ir a Fuego en español</a></p>
       </main>
     </Document>
