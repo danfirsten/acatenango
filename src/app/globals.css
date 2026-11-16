@@ -121,7 +121,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-size: 11px;
   color: var(--ash);
   letter-spacing: 0.1em;
-  text-shadow: 0 1px 8px #0B1016;
+  text-shadow: 0 0 3px #0B1016, 0 1px 8px #0B1016;
 }
 .summit[data-active="true"] .summit-text i { color: var(--ember); }
 
@@ -216,6 +216,8 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   color: var(--muted);
   font-size: 11px;
   padding: 9px 15px;
+  min-height: 44px;
+  min-width: 44px;
   cursor: pointer;
   transition: color 0.2s ease, background 0.2s ease;
 }
@@ -388,7 +390,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .readout-row { border-bottom: 0; border-right: 1px solid var(--line); }
   .readout-row:nth-child(n + 4) { display: none; }
   .readout-note { grid-column: 1 / -1; }
-  .massif-views { left: 16px; bottom: 20px; }
+  .massif-views { left: 16px; bottom: 16px; }
   .scrollcue { display: none; }
   .record-head { grid-template-columns: 1fr; gap: 22px; }
 }
