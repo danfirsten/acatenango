@@ -15,6 +15,3 @@ export function getDict(locale: Locale): Dict {
 
 /** Each language's page, relative to the site root (before the base path). */
 export const LOCALE_PATH: Record<Locale, string> = { en: '/', es: '/es/' };
-
-/** localStorage key for the reader's chosen language. */
-export const LANG_KEY = 'fuego-lang';

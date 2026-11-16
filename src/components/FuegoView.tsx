@@ -1,6 +1,6 @@
 'use client';
 
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BulletinAge from '@/components/BulletinAge';
 import FieldLanes from '@/components/FieldLanes';
@@ -8,7 +8,9 @@ import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
-import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
+import { formatDate, formatNumber, getDict, LOCALE_PATH, type Locale } from '@/i18n';
+import { withBase } from '@/lib/base-path';
+import { rememberedLanguage, scrollToPlace, takePlace } from '@/lib/place';
 import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
@@ -62,14 +64,33 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
 
+  // Arriving from the other language: open on the reader's chosen language if
+  // they chose one, and pick up where they were (the replayed day, the section).
+  useEffect(() => {
+    const chosen = rememberedLanguage();
+    if (chosen !== null && chosen !== locale) {
+      window.location.replace(withBase(LOCALE_PATH[chosen]) + window.location.hash);
+      return;
+    }
+    const place = takePlace();
+    if (place === null) return;
+    const i = place.day === null ? -1 : series.findIndex((e) => e.date === place.day);
+    // Next frame, so the effect never sets state synchronously; the scroll waits
+    // one more frame for the selected day's layout.
+    requestAnimationFrame(() => {
+      if (i !== -1) onSelect(i);
+      requestAnimationFrame(() => scrollToPlace(place));
+    });
+  }, [locale, series, onSelect]);
+
   return (
     <>
       <section className="hero">
-        <Massif day={sceneDay} />
+        <Massif day={sceneDay} locale={locale} />
 
         <header className="topbar">
           <span className="brand">Fuego</span>
-          <span className="observed">
+          <span className="observed" data-selected-day={day.date}>
             {isRepresentative && <span className="badge">{t.topbar.representative}</span>}
             {day.warnings.length > 0 && (
               <span className="badge" data-warn="true">{t.topbar.unread(day.warnings.length)}</span>

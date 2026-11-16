@@ -147,7 +147,7 @@ export const es: Dict = {
     dayTowns: (names) => `Comunidades ${names ?? 'sin reporte'}`,
     key: 'Dato no indicado ese día',
     commonDrift: 'Desplazamiento más frecuente',
-    commonDriftValue: (dirs, days) => `${dirs} (${days} ${plural(days, 'día', 'días')})`,
+    commonDriftValue: (dirs, days) => `${list(dirs.map((d) => COMPASS[d] ?? d))} (${days} ${plural(days, 'día', 'días')})`,
     commonDriftNote: (n) => `de los ${n} días que indicaron uno`,
     drainagesNamed: 'Barrancas nombradas',
     drainagesNote: (n) => `días nombrada, de los ${n} días que nombraron alguna`,

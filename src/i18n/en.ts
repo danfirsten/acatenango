@@ -13,6 +13,8 @@ const COMPASS: Record<string, string> = {
   S: 'south', SW: 'south-west', W: 'west', NW: 'north-west',
 };
 
+const ABBR: Record<string, string> = { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SW', W: 'W', NW: 'NW' };
+
 const RELATION_FIRST: Record<DriftRelation, string> = {
   towards: 'towards Acatenango',
   away: 'away from Acatenango',
@@ -56,7 +58,7 @@ export const en: Dict = {
     behind: 'the record is behind',
   },
   compass: COMPASS,
-  compassAbbr: { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SW', W: 'W', NW: 'NW' },
+  compassAbbr: ABBR,
   list,
   readout: {
     notReported: 'Not reported',
@@ -135,7 +137,7 @@ export const en: Dict = {
     dayTowns: (names) => `Towns ${names ?? 'not reported'}`,
     key: 'Field not stated that day',
     commonDrift: 'Most common drift',
-    commonDriftValue: (dirs, days) => `${dirs} (${days} ${plural(days, 'day', 'days')})`,
+    commonDriftValue: (dirs, days) => `${dirs.map((d) => ABBR[d] ?? d).join(', ')} (${days} ${plural(days, 'day', 'days')})`,
     commonDriftNote: (n) => `of ${n} days that stated one`,
     drainagesNamed: 'Drainages named',
     drainagesNote: (n) => `days named, of ${n} days that named any`,

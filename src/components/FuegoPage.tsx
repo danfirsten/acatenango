@@ -1,5 +1,6 @@
 import CampPanel from '@/components/CampPanel';
 import FuegoView from '@/components/FuegoView';
+import LanguageSwitch from '@/components/LanguageSwitch';
 import Notice from '@/components/Notice';
 import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { rich } from '@/i18n/rich';
@@ -45,6 +46,7 @@ export default function FuegoPage({ locale }: { locale: Locale }) {
               </>
             )}
           </p>
+          <p className="colophon-lang"><LanguageSwitch locale={locale} /></p>
         </footer>
       </section>
     </main>

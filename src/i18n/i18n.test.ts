@@ -223,6 +223,12 @@ describe('completeness lines, both languages', () => {
 });
 
 describe('readout, both languages', () => {
+  test('the most common drift is spelled out in Spanish, where a lone O would read as zero', () => {
+    assert.equal(es.lanes.commonDriftValue(['W'], 107), 'oeste (107 días)');
+    assert.equal(es.lanes.commonDriftValue(['W', 'SW'], 1), 'oeste y suroeste (1 día)');
+    assert.equal(en.lanes.commonDriftValue(['W'], 107), 'W (107 days)');
+  });
+
   test('Spanish rows use INSIVUMEH terms and Spanish compass letters', () => {
     const rows = readoutRows(entry({ driftDirections: ['SW', 'W'], drainages: ['Las Lajas'] }), es);
     assert.deepEqual(rows.map((r) => r.key), ['Explosiones', 'Columna de ceniza', 'Sobre la cumbre', 'Desplazamiento', 'Barrancas']);

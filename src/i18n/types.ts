@@ -133,7 +133,8 @@ export interface Dict {
     dayTowns: (names: string | null) => string;
     key: string;
     commonDrift: string;
-    commonDriftValue: (dirs: string, days: number) => string;
+    /** Most common drift: bulletin compass codes, worded per language. */
+    commonDriftValue: (dirs: string[], days: number) => string;
     commonDriftNote: (n: number) => string;
     drainagesNamed: string;
     drainagesNote: (n: number) => string;

@@ -151,7 +151,7 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
 
   const drift = summary.driftReported === 0
     ? l10n.notReported
-    : l10n.commonDriftValue(list(abbr(summary.commonDrift)), summary.commonDriftDays);
+    : l10n.commonDriftValue(summary.commonDrift, summary.commonDriftDays);
 
   return (
     <figure className="lanes" id="lanes" aria-label={l10n.figureLabel}>
