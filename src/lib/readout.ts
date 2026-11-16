@@ -1,4 +1,7 @@
 import type { IndexEntry } from '../../scripts/build-index';
+import { en } from '../i18n/en';
+import { formatNumber } from '../i18n/format';
+import type { Dict } from '../i18n/types';
 
 /**
  * The numbers the page shows, derived in one place.
@@ -21,8 +24,6 @@ export interface ReadoutRow {
   /** The bulletin did not state this value. */
   missing?: boolean;
 }
-
-const NOT_REPORTED = 'Not reported';
 
 /** "6–11", or just "11" when the bulletin gave only an upper figure. */
 export function rateText(min: number | null, max: number): string {
@@ -116,41 +117,45 @@ export function lastReportedIndex(
   return -1;
 }
 
-export function readoutRows(day: IndexEntry): ReadoutRow[] {
+/** The readout beside the mountain, in the dictionary's language (English by default). */
+export function readoutRows(day: IndexEntry, t: Dict = en): ReadoutRow[] {
+  const r = t.readout;
+  const num = (n: number) => formatNumber(t.locale, n);
+  const dirs = day.driftDirections.map((d) => t.compassAbbr[d] ?? d).join('·');
   const continuous = day.phenomena.includes('continuousPhase');
   const aboveSummit = day.ashMaxMasl === null ? null : day.ashMaxMasl - SUMMIT_M;
 
   const rows: ReadoutRow[] = [
     day.explosionsMax === null
       ? continuous
-        ? { key: 'Explosions', value: 'continuous', unit: 'emission', lead: true }
-        : { key: 'Explosions', value: NOT_REPORTED, unit: '', lead: true, missing: true }
-      : { key: 'Explosions', value: rateText(day.explosionsMin, day.explosionsMax), unit: 'per hour', lead: true },
+        ? { key: r.explosions, value: r.continuous, unit: r.emission, lead: true }
+        : { key: r.explosions, value: r.notReported, unit: '', lead: true, missing: true }
+      : { key: r.explosions, value: rateText(day.explosionsMin, day.explosionsMax), unit: r.perHour, lead: true },
     day.ashMaxMasl === null
-      ? { key: 'Ash column', value: NOT_REPORTED, unit: '', missing: true }
-      : { key: 'Ash column', value: day.ashMaxMasl.toLocaleString('en-GB'), unit: 'm asl' },
+      ? { key: r.ashColumn, value: r.notReported, unit: '', missing: true }
+      : { key: r.ashColumn, value: num(day.ashMaxMasl), unit: r.mAsl },
     aboveSummit === null
-      ? { key: 'Above summit', value: NOT_REPORTED, unit: '', missing: true }
-      : { key: 'Above summit', value: aboveSummit.toLocaleString('en-GB'), unit: 'm' },
+      ? { key: r.aboveSummit, value: r.notReported, unit: '', missing: true }
+      : { key: r.aboveSummit, value: num(aboveSummit), unit: r.metres },
     day.driftKm === null
       ? day.driftDirections.length > 0
-        ? { key: 'Drift', value: NOT_REPORTED, unit: `heading ${day.driftDirections.join('·')}`, missing: true }
-        : { key: 'Drift', value: NOT_REPORTED, unit: '', missing: true }
-      : { key: 'Drift', value: String(day.driftKm), unit: `km ${day.driftDirections.join('·')}` },
+        ? { key: r.drift, value: r.notReported, unit: r.heading(dirs), missing: true }
+        : { key: r.drift, value: r.notReported, unit: '', missing: true }
+      : { key: r.drift, value: num(day.driftKm), unit: r.km(dirs) },
   ];
 
   // Named communities beat drainage counts when the observer gave us names.
   rows.push(
     day.ashfallCommunities.length > 0
       ? {
-          key: 'Ashfall named in',
+          key: r.ashfallIn,
           value: String(day.ashfallCommunities.length),
           unit: day.ashfallCommunities.join(', '),
         }
       : day.drainages.length > 0
-        ? { key: 'Drainages', value: String(day.drainages.length), unit: day.drainages.join(', ') }
+        ? { key: r.drainages, value: String(day.drainages.length), unit: day.drainages.join(', ') }
         // An empty list means the bulletin named none, not that there were 0.
-        : { key: 'Drainages', value: 'None named', unit: '', missing: true },
+        : { key: r.drainages, value: r.noneNamed, unit: '', missing: true },
   );
 
   return rows;

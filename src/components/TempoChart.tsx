@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
 import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
@@ -36,9 +37,11 @@ interface TempoChartProps {
   /** Index of the day currently driving the scene. */
   selected: number;
   onSelect: (index: number) => void;
+  locale: Locale;
 }
 
-export default function TempoChart({ series, selected, onSelect }: TempoChartProps) {
+export default function TempoChart({ series, selected, onSelect, locale }: TempoChartProps) {
+  const t = getDict(locale).tempo;
   const [hover, setHover] = useState<number | null>(null);
   const figRef = useRef<HTMLElement>(null);
   const tipRef = useRef<HTMLElement>(null);
@@ -120,17 +123,14 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
     if (ev.buttons === 1) onSelect(i);
   }
 
-  const fmt = (iso: string) =>
-    new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', {
-      day: 'numeric', month: 'short', timeZone: 'UTC',
-    });
+  const fmt = (iso: string) => formatShortDate(locale, iso);
 
   return (
     <figure className="tempo" ref={figRef}>
       <svg
         viewBox={`0 0 ${W} ${H}`}
         role="img"
-        aria-label={`Explosions per hour over ${series.length} days; ${missingDays} gave no rate and are left as gaps${continuousDays ? `, and ${continuousDays} were continuous emission with no hourly count` : ''}`}
+        aria-label={t.aria(series.length, missingDays, continuousDays)}
         onPointerMove={onMove}
         onPointerDown={(ev) => { ev.currentTarget.setPointerCapture(ev.pointerId); onSelect(indexAt(ev)); }}
         onPointerLeave={() => setHover(null)}
@@ -211,15 +211,15 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
             <b>{fmt(active.date)}</b>
             <span>
               {active.explosionsMax !== null
-                ? `${rateText(active.explosionsMin, active.explosionsMax)} explosions/hr`
+                ? t.rate(rateText(active.explosionsMin, active.explosionsMax))
                 : active.phenomena.includes('continuousPhase')
-                  ? 'Continuous emission, no hourly count'
-                  : 'Explosion rate not reported'}
+                  ? t.continuous
+                  : t.rateMissing}
             </span>
             <span>
-              {active.ashMaxMasl !== null ? `ash ${active.ashMaxMasl.toLocaleString('en-GB')} m` : 'ash not reported'}
+              {active.ashMaxMasl !== null ? t.ash(formatNumber(locale, active.ashMaxMasl)) : t.ashMissing}
               {' · '}
-              {active.driftKm !== null ? `drift ${active.driftKm} km` : 'drift not reported'}
+              {active.driftKm !== null ? t.drift(formatNumber(locale, active.driftKm)) : t.driftMissing}
             </span>
           </>
         )}
@@ -230,13 +230,13 @@ export default function TempoChart({ series, selected, onSelect }: TempoChartPro
           {missingDays > 0 && (
             <span>
               <span className="tempo-key-swatch" aria-hidden="true" />
-              Not reported: {missingDays} of {series.length} days
+              {t.keyMissing(missingDays, series.length)}
             </span>
           )}
           {continuousDays > 0 && (
             <span>
               <span className="tempo-key-swatch" data-kind="continuous" aria-hidden="true" />
-              Continuous emission, no hourly count: {continuousDays} days
+              {t.keyContinuous(continuousDays)}
             </span>
           )}
         </p>

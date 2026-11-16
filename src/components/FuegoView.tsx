@@ -5,35 +5,32 @@ import { useCallback, useMemo, useState } from 'react';
 import BulletinAge from '@/components/BulletinAge';
 import FieldLanes from '@/components/FieldLanes';
 import GvpWeeks from '@/components/GvpWeeks';
+import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
+import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface FuegoViewProps {
   series: IndexEntry[];
   isRepresentative: boolean;
-}
-
-const DATE = new Intl.DateTimeFormat('en-GB', {
-  day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC',
-});
-
-function formatDate(iso: string): string {
-  return DATE.format(new Date(`${iso}T00:00:00Z`));
+  locale: Locale;
 }
 
 /**
  * Holds the selected day. Scrubbing the record drives both the readout and the
  * 3D plume, so the chart and the volcano are two views of the same number.
  */
-export default function FuegoView({ series, isRepresentative }: FuegoViewProps) {
+export default function FuegoView({ series, isRepresentative, locale }: FuegoViewProps) {
+  const t = getDict(locale);
+  const date = (iso: string) => formatDate(locale, iso);
   const [selected, setSelected] = useState(series.length - 1);
   const day = series[Math.min(selected, series.length - 1)];
   const isToday = selected === series.length - 1;
 
   const figures = useMemo(() => summaryFigures(series), [series]);
-  const rows = useMemo(() => readoutRows(day), [day]);
+  const rows = useMemo(() => readoutRows(day, t), [day, t]);
 
   // A day that left out its rate or column gives the plume nothing to follow,
   // so the scene holds the value from the last day that reported it, and the
@@ -56,18 +53,10 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   const rateMissing = day.explosionsMax === null && !continuous;
   const columnMissing = day.ashMaxMasl === null;
   if (rateMissing && columnMissing && rateFrom && columnFrom && rateFrom === columnFrom) {
-    notes.push(`No rate or ash column in this bulletin; the plume holds the rate and column of ${formatDate(rateFrom.date)}.`);
+    notes.push(t.notes.bothHeld(date(rateFrom.date)));
   } else {
-    if (rateMissing) {
-      notes.push(rateFrom
-        ? `No explosion rate in this bulletin; the plume holds the rate of ${formatDate(rateFrom.date)}.`
-        : 'No explosion rate in this bulletin or any before it.');
-    }
-    if (columnMissing) {
-      notes.push(columnFrom
-        ? `No ash column in this bulletin; the plume holds the height of ${formatDate(columnFrom.date)}.`
-        : 'No ash column in this bulletin or any before it.');
-    }
+    if (rateMissing) notes.push(rateFrom ? t.notes.rateHeld(date(rateFrom.date)) : t.notes.rateNone);
+    if (columnMissing) notes.push(columnFrom ? t.notes.columnHeld(date(columnFrom.date)) : t.notes.columnNone);
   }
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
@@ -81,18 +70,17 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
         <header className="topbar">
           <span className="brand">Fuego</span>
           <span className="observed">
-            {isRepresentative && <span className="badge">Representative data</span>}
+            {isRepresentative && <span className="badge">{t.topbar.representative}</span>}
             {day.warnings.length > 0 && (
-              <span className="badge" data-warn="true">
-                {day.warnings.length} field{day.warnings.length > 1 ? 's' : ''} unread
-              </span>
+              <span className="badge" data-warn="true">{t.topbar.unread(day.warnings.length)}</span>
             )}
             <span className="observed-text">
               <span className="observed-date">
-                {isToday ? 'Latest bulletin' : 'Replaying'} · {formatDate(day.date)}
+                {isToday ? t.topbar.latest : t.topbar.replaying} · {date(day.date)}
               </span>
-              {isToday && <BulletinAge date={day.date} />}
+              {isToday && <BulletinAge date={day.date} locale={locale} />}
             </span>
+            <LanguageSwitch locale={locale} />
           </span>
         </header>
 
@@ -109,38 +97,34 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
         </aside>
 
         <div className="scrollcue" aria-hidden="true">
-          <span>The record below drives the mountain</span>
+          <span>{t.scrollcue}</span>
         </div>
       </section>
 
-      <section className="record">
+      <section className="record" id="record">
         <div className="record-head">
           <div>
-            <h2>Explosion tempo</h2>
-            <p>
-              Scrub the record and the mountain follows: the plume climbs to the ash column that
-              day&rsquo;s bulletin reported, and leans the way the observer wrote down. The chart
-              and the volcano are the same number, drawn twice.
-            </p>
+            <h2>{t.record.title}</h2>
+            <p>{t.record.intro}</p>
           </div>
           <dl className="figures">
-            <div><dt>Days</dt><dd>{series.length}</dd></div>
+            <div><dt>{t.record.days}</dt><dd>{series.length}</dd></div>
             <div>
-              <dt>Tallest column</dt>
-              <dd>{figures.tallestColumn.value === null ? 'Not reported' : `${figures.tallestColumn.value.toLocaleString('en-GB')} m`}</dd>
-              <dd className="figures-note">{figures.tallestColumn.days} of {series.length} days</dd>
+              <dt>{t.record.tallest}</dt>
+              <dd>{figures.tallestColumn.value === null ? t.record.notReported : `${formatNumber(locale, figures.tallestColumn.value)} m`}</dd>
+              <dd className="figures-note">{t.record.daysOf(figures.tallestColumn.days, series.length)}</dd>
             </div>
             <div>
-              <dt>Peak rate</dt>
-              <dd>{figures.peakRate.value === null ? 'Not reported' : `${figures.peakRate.value} /hr`}</dd>
-              <dd className="figures-note">{figures.peakRate.days} of {series.length} days</dd>
+              <dt>{t.record.peakRate}</dt>
+              <dd>{figures.peakRate.value === null ? t.record.notReported : t.record.perHour(formatNumber(locale, figures.peakRate.value))}</dd>
+              <dd className="figures-note">{t.record.daysOf(figures.peakRate.days, series.length)}</dd>
             </div>
           </dl>
         </div>
 
-        <TempoChart series={series} selected={selected} onSelect={onSelect} />
-        <FieldLanes series={series} selected={selected} onSelect={onSelect} />
-        <GvpWeeks series={series} selected={selected} />
+        <TempoChart series={series} selected={selected} onSelect={onSelect} locale={locale} />
+        <FieldLanes series={series} selected={selected} onSelect={onSelect} locale={locale} />
+        <GvpWeeks series={series} selected={selected} locale={locale} />
       </section>
     </>
   );

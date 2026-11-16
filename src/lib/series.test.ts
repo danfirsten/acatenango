@@ -74,9 +74,9 @@ describe('rateRuns', () => {
 describe('completeness', () => {
   it('counts reported days per field from the entries', () => {
     assert.deepEqual(completeness(SERIES), [
-      { field: 'explosion rate', reported: 3, total: 6, continuous: 1 },
-      { field: 'ash column height', reported: 5, total: 6 },
-      { field: 'drift distance', reported: 4, total: 6 },
+      { field: 'rate', reported: 3, total: 6, continuous: 1 },
+      { field: 'column', reported: 5, total: 6 },
+      { field: 'drift', reported: 4, total: 6 },
     ]);
   });
 
