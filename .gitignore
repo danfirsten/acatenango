@@ -44,3 +44,6 @@ dist/
 
 # Generated from data/bulletins/ by `npm run build:index`.
 data/index.json
+
+# QA output
+qa-report/

@@ -2,6 +2,7 @@
 
 import { useCallback, useMemo, useState } from 'react';
 
+import BulletinAge from '@/components/BulletinAge';
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
 import { paroxysmIndex, readoutRows } from '@/lib/readout';
@@ -49,7 +50,12 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
                 {day.warnings.length} field{day.warnings.length > 1 ? 's' : ''} unread
               </span>
             )}
-            {isToday ? 'Latest bulletin' : 'Replaying'} · {formatDate(day.date)}
+            <span className="observed-text">
+              <span className="observed-date">
+                {isToday ? 'Latest bulletin' : 'Replaying'} · {formatDate(day.date)}
+              </span>
+              {isToday && <BulletinAge date={day.date} />}
+            </span>
           </span>
         </header>
 
