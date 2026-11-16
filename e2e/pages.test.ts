@@ -1,0 +1,158 @@
+/**
+ * The GitHub Pages build, served the way Pages serves it: from a subfolder.
+ *
+ * Proves that with PAGES_BASE_PATH set, every asset the page asks for resolves
+ * under the base path (no console errors, no failed requests), and that one
+ * visit is enough for the service worker to bring the whole page back offline.
+ *
+ *   npm run test:e2e   (builds out/ with PAGES_BASE_PATH=/acatenango first)
+ *
+ * Set PLAYWRIGHT_CHROMIUM to use a Chromium other than Playwright's own.
+ */
+
+import assert from 'node:assert/strict';
+import { readFile, stat } from 'node:fs/promises';
+import { type AddressInfo } from 'node:net';
+import { type Server, createServer } from 'node:http';
+import path from 'node:path';
+import { after, before, describe, it } from 'node:test';
+
+import { type Browser, chromium } from 'playwright';
+
+const BASE = '/acatenango';
+const OUT = path.join(process.cwd(), 'out');
+
+const TYPES: Record<string, string> = {
+  '.html': 'text/html; charset=utf-8',
+  '.js': 'text/javascript; charset=utf-8',
+  '.css': 'text/css; charset=utf-8',
+  '.json': 'application/json',
+  '.webmanifest': 'application/manifest+json',
+  '.png': 'image/png',
+  '.svg': 'image/svg+xml',
+  '.woff2': 'font/woff2',
+  '.txt': 'text/plain; charset=utf-8',
+};
+
+async function isFile(p: string): Promise<boolean> {
+  try {
+    return (await stat(p)).isFile();
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * A static host that, like GitHub Pages, serves out/ only under BASE: a
+ * directory gives its index.html, `/x` gives `x.html`, and anything outside
+ * BASE is a 404. A path the build forgot to prefix fails here as it would live.
+ */
+function subfolderServer(): Server {
+  return createServer(async (req, res) => {
+    const { pathname } = new URL(req.url ?? '/', 'http://localhost');
+    if (pathname === BASE) {
+      res.writeHead(301, { location: `${BASE}/` }).end();
+      return;
+    }
+    if (!pathname.startsWith(`${BASE}/`)) {
+      res.writeHead(404).end('outside the base path');
+      return;
+    }
+    const rel = decodeURIComponent(pathname.slice(BASE.length));
+    const file = path.join(OUT, rel);
+    if (!file.startsWith(OUT)) {
+      res.writeHead(400).end();
+      return;
+    }
+    for (const candidate of rel.endsWith('/') ? [path.join(file, 'index.html')] : [file, `${file}.html`]) {
+      if (await isFile(candidate)) {
+        res.writeHead(200, { 'content-type': TYPES[path.extname(candidate)] ?? 'application/octet-stream' });
+        res.end(await readFile(candidate));
+        return;
+      }
+    }
+    res.writeHead(404).end('not found');
+  });
+}
+
+describe(`static build served under ${BASE}`, () => {
+  let server: Server;
+  let browser: Browser;
+  let origin: string;
+
+  before(async () => {
+    assert.ok(await isFile(path.join(OUT, 'sw.js')), 'out/ has no sw.js: run `npm run test:e2e`, which builds first');
+    server = subfolderServer();
+    await new Promise<void>((resolve) => server.listen(0, '127.0.0.1', resolve));
+    origin = `http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+    browser = await chromium.launch({
+      executablePath: process.env.PLAYWRIGHT_CHROMIUM,
+      // Software WebGL, so the terrain scene really starts in a headless run.
+      args: ['--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'],
+    });
+  });
+
+  after(async () => {
+    await browser?.close();
+    await new Promise((resolve) => server?.close(resolve));
+  });
+
+  it('loads with no console errors, works offline after one visit', async () => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const problems: string[] = [];
+    page.on('console', (m) => { if (m.type() === 'error') problems.push(`console: ${m.text()}`); });
+    page.on('pageerror', (e) => problems.push(`page error: ${e.message}`));
+    page.on('response', (r) => { if (r.status() >= 400) problems.push(`${r.status()} ${r.url()}`); });
+    page.on('requestfailed', (r) => problems.push(`failed ${r.url()}: ${r.failure()?.errorText}`));
+
+    // Online, first visit.
+    await page.goto(`${origin}${BASE}/`, { waitUntil: 'load' });
+    await page.locator('.brand').waitFor();
+    // The terrain loaded from under the base path: the scene leaves no state message.
+    await page.locator('.massif-canvas').waitFor();
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+
+    // Every link the head points at resolves under the base path.
+    const heads = await page.evaluate(() => ({
+      manifest: document.querySelector<HTMLLinkElement>('link[rel="manifest"]')?.href ?? '',
+      icon: document.querySelector<HTMLLinkElement>('link[rel="icon"]')?.href ?? '',
+      og: document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.content ?? '',
+    }));
+    const manifestUrl = new URL(heads.manifest);
+    assert.equal(manifestUrl.pathname, `${BASE}/manifest.webmanifest`);
+    assert.equal(new URL(heads.icon).pathname, `${BASE}/icon.svg`);
+    assert.equal(new URL(heads.og).pathname, `${BASE}/og.png`, 'og:image must sit under the base path');
+    const manifest = await (await fetch(manifestUrl)).json() as { start_url: string; scope: string; icons: { src: string }[] };
+    assert.equal(new URL(manifest.start_url, manifestUrl).pathname, `${BASE}/`);
+    assert.equal(new URL(manifest.scope, manifestUrl).pathname, `${BASE}/`);
+    for (const p of [new URL(heads.icon).pathname, new URL(heads.og).pathname,
+      ...manifest.icons.map((i) => new URL(i.src, manifestUrl).pathname)]) {
+      assert.equal((await fetch(`${origin}${p}`)).status, 200, `${p} should be served`);
+    }
+
+    // The worker is registered at the base path and has cached the site.
+    const scope = await page.evaluate(async () => (await navigator.serviceWorker.ready).scope);
+    assert.equal(new URL(scope).pathname, `${BASE}/`);
+    const cached = await page.evaluate(async () => {
+      const keys = await caches.keys();
+      const cache = await caches.open(keys[0]);
+      return (await cache.keys()).map((r) => new URL(r.url).pathname);
+    });
+    for (const p of [`${BASE}/`, `${BASE}/index.html`, `${BASE}/terrain/massif.png`, `${BASE}/terrain/massif.json`]) {
+      assert.ok(cached.includes(p), `${p} should be precached`);
+    }
+    assert.ok(!cached.some((p) => !p.startsWith(`${BASE}/`)), 'nothing precached outside the base path');
+
+    assert.deepEqual(problems, [], 'online visit should be clean');
+
+    // Offline: the same page, terrain and all, from the cache alone.
+    await context.setOffline(true);
+    await page.reload({ waitUntil: 'load' });
+    await page.locator('.brand').waitFor();
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+    assert.deepEqual(problems, [], 'offline visit should be clean');
+
+    await context.close();
+  });
+});
