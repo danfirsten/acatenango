@@ -4,7 +4,7 @@ import { useCallback, useMemo, useState } from 'react';
 
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
-import { paroxysmIndex, readoutRows } from '@/lib/readout';
+import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface FuegoViewProps {
@@ -29,8 +29,22 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   const day = series[Math.min(selected, series.length - 1)];
   const isToday = selected === series.length - 1;
 
-  const paroxysm = useMemo(() => paroxysmIndex(series), [series]);
+  const figures = useMemo(() => summaryFigures(series), [series]);
   const rows = useMemo(() => readoutRows(day), [day]);
+
+  // A day with no rate gives the plume's density nothing to follow, so the
+  // scene holds the rate of the last day that reported one, and the readout
+  // says which. The column height and drift are still that day's own.
+  const shownIndex = useMemo(
+    () => lastReportedIndex(series, Math.min(selected, series.length - 1)),
+    [series, selected],
+  );
+  const continuous = day.explosionsMax === null && day.phenomena.includes('continuousPhase');
+  const heldFrom = day.explosionsMax === null && !continuous && shownIndex !== -1 ? series[shownIndex] : null;
+  const sceneDay = useMemo(
+    () => (heldFrom ? { ...day, explosionsMin: heldFrom.explosionsMin, explosionsMax: heldFrom.explosionsMax } : day),
+    [day, heldFrom],
+  );
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
@@ -38,7 +52,7 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
   return (
     <>
       <section className="hero">
-        <Massif day={day} />
+        <Massif day={sceneDay} />
 
         <header className="topbar">
           <span className="brand">Fuego</span>
@@ -55,11 +69,18 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
 
         <aside className="readout">
           {rows.map((r) => (
-            <div className="readout-row" key={r.key} data-lead={r.lead}>
+            <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
               <span className="readout-k">{r.key}</span>
               <span className="readout-v">{r.value}<small>{r.unit}</small></span>
             </div>
           ))}
+          {day.explosionsMax === null && !continuous && (
+            <p className="readout-note" role="status">
+              {heldFrom
+                ? <>No explosion rate in this bulletin. The plume holds the rate of {formatDate(heldFrom.date)}, the last day that reported one.</>
+                : <>No explosion rate in this bulletin, and none before it. The plume is drawn at a neutral rate.</>}
+            </p>
+          )}
         </aside>
 
         <div className="scrollcue" aria-hidden="true">
@@ -79,8 +100,20 @@ export default function FuegoView({ series, isRepresentative }: FuegoViewProps) 
           </div>
           <dl className="figures">
             <div><dt>Days</dt><dd>{series.length}</dd></div>
-            <div><dt>Tallest column</dt><dd>{series[paroxysm].ashMaxMasl?.toLocaleString() ?? '—'} m</dd></div>
-            <div><dt>Peak rate</dt><dd>{Math.max(...series.map((e) => e.explosionsMax ?? 0))} /hr</dd></div>
+            <div>
+              <dt>Tallest column</dt>
+              <dd>
+                {figures.tallestColumn.value === null ? 'Not reported' : `${figures.tallestColumn.value.toLocaleString('en-GB')} m`}
+                <small>over {figures.tallestColumn.days} of {series.length} days</small>
+              </dd>
+            </div>
+            <div>
+              <dt>Peak rate</dt>
+              <dd>
+                {figures.peakRate.value === null ? 'Not reported' : `${figures.peakRate.value} /hr`}
+                <small>over {figures.peakRate.days} of {series.length} days</small>
+              </dd>
+            </div>
           </dl>
         </div>
 

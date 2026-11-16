@@ -24,8 +24,45 @@ export interface SeriesResult {
   isRepresentative: boolean;
   /** Days the parser could not fully read. */
   daysWithWarnings: number;
+  /** How many days stated each field the page draws. */
+  completeness: FieldCompleteness[];
   firstDate: string | null;
   lastDate: string | null;
+}
+
+export interface FieldCompleteness {
+  /** Plain name for the footer, e.g. "explosion rate". */
+  field: string;
+  /** Days whose bulletin stated a value. */
+  reported: number;
+  /** Days in the record. */
+  total: number;
+  /**
+   * Of the days without a value, those in a continuous eruptive phase, which
+   * publish no hourly count by nature. Only set for the explosion rate.
+   */
+  continuous?: number;
+}
+
+/**
+ * Per-field completeness of a record, counted from the entries themselves so
+ * the footer can never drift from the data. A null is a day not reported; it
+ * is counted as missing, never as a reading of 0.
+ */
+export function completeness(entries: IndexEntry[]): FieldCompleteness[] {
+  const count = (pick: (e: IndexEntry) => unknown) => entries.filter((e) => pick(e) !== null).length;
+  return [
+    {
+      field: 'explosion rate',
+      reported: count((e) => e.explosionsMax),
+      total: entries.length,
+      continuous: entries.filter(
+        (e) => e.explosionsMax === null && e.phenomena.includes('continuousPhase'),
+      ).length,
+    },
+    { field: 'ash column height', reported: count((e) => e.ashMaxMasl), total: entries.length },
+    { field: 'drift distance', reported: count((e) => e.driftKm), total: entries.length },
+  ];
 }
 
 export function loadSeries(): SeriesResult {
@@ -38,6 +75,7 @@ export function loadSeries(): SeriesResult {
         series: index.entries,
         isRepresentative: false,
         daysWithWarnings: index.stats.daysWithWarnings,
+        completeness: completeness(index.entries),
         firstDate: index.stats.firstDate,
         lastDate: index.stats.lastDate,
       };
@@ -51,6 +89,7 @@ export function loadSeries(): SeriesResult {
     series,
     isRepresentative: true,
     daysWithWarnings: 0,
+    completeness: completeness(series),
     firstDate: series[0]?.date ?? null,
     lastDate: series.at(-1)?.date ?? null,
   };
