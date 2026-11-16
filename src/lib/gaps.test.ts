@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 
-import { dateRange, mergeGaps, missingDates, parseGaps, resolveRange, serializeGaps } from './gaps';
+import { dateRange, isDefinitelyAbsent, mergeGaps, missingDates, parseGaps, resolveRange, serializeGaps } from './gaps';
 
 const g = (date: string, lastTried = '2026-11-16T00:00:00Z') => ({ date, reason: 'not served', lastTried });
 
@@ -46,4 +46,13 @@ test('resolveRange reads flags, a day count, or defaults to the first record', (
   assert.deepEqual(resolveRange(['--from', '2026-10-12'], '2026-11-16', null), { from: '2026-10-12', to: '2026-11-16' });
   assert.deepEqual(resolveRange(['3'], '2026-11-16', null), { from: '2026-11-14', to: '2026-11-16' });
   assert.deepEqual(resolveRange([], '2026-11-16', '2026-06-08'), { from: '2026-06-08', to: '2026-11-16' });
+});
+
+test('only a 404 or 410 counts as a day INSIVUMEH does not serve', () => {
+  assert.equal(isDefinitelyAbsent(new Error('https://x/a.pdf returned 404')), true);
+  assert.equal(isDefinitelyAbsent(new Error('https://x/a.pdf returned 410')), true);
+  assert.equal(isDefinitelyAbsent(new Error('https://x/a.pdf returned 503')), false);
+  assert.equal(isDefinitelyAbsent(new Error('https://x/a.pdf returned 429')), false);
+  assert.equal(isDefinitelyAbsent(new TypeError('fetch failed')), false);
+  assert.equal(isDefinitelyAbsent('returned 404'), false);
 });

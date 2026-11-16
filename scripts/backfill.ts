@@ -9,6 +9,7 @@
  *   npm run backfill                              first record to today
  *   npm run backfill -- 90                        the last 90 days
  *   npm run backfill -- --from 2026-10-12 --to 2026-10-30
+ *   npm run backfill -- --recheck                 also retry recorded gaps
  */
 
 import { mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
@@ -18,7 +19,7 @@ import type { Bulletin } from '../src/lib/bulletin';
 import { bvdUrl } from '../src/lib/bvd';
 import { guatemalaDate } from '../src/lib/date';
 import { fetchWithRetry } from '../src/lib/fetch-text';
-import { type Gap, mergeGaps, missingDates, parseGaps, resolveRange, serializeGaps } from '../src/lib/gaps';
+import { type Gap, isDefinitelyAbsent, mergeGaps, missingDates, parseGaps, resolveRange, serializeGaps } from '../src/lib/gaps';
 import { parseBulletin } from '../src/lib/parse-bulletin';
 import { documentMentionsDate } from '../src/lib/ocr';
 import { ocrAvailable, ocrBulletin } from './ocr';
@@ -49,7 +50,12 @@ async function main(): Promise<void> {
   const today = guatemalaDate();
   const held = await heldDates();
   const { from, to } = resolveRange(process.argv.slice(2), today, held[0] ?? null);
-  const todo = missingDates(held, from, to);
+  let existing: Gap[] = [];
+  try { existing = parseGaps(await readFile(GAPS_PATH, 'utf8')); } catch { /* none yet */ }
+  // Known gaps are not retried on every run (it would rewrite the file for
+  // nothing); pass --recheck to try them again.
+  const known = process.argv.includes('--recheck') ? [] : existing.map((g) => g.date);
+  const todo = missingDates([...held, ...known], from, to);
   await mkdir(DATA_DIR, { recursive: true });
   console.log(`[backfill] ${from} → ${to}: ${todo.length} days to try`);
 
@@ -67,8 +73,9 @@ async function main(): Promise<void> {
     let pdf: Buffer;
     try {
       pdf = Buffer.from(await (await fetchWithRetry(url, 2)).arrayBuffer());
-    } catch {
-      gap(date, 'INSIVUMEH no longer serves a bulletin for this date');
+    } catch (err) {
+      if (isDefinitelyAbsent(err)) gap(date, 'INSIVUMEH no longer serves a bulletin for this date');
+      else console.warn(`[backfill] ${date}: fetch failed (${String(err)}); not recorded, will retry next run`);
       continue;
     }
     try {
@@ -104,10 +111,8 @@ async function main(): Promise<void> {
     }
   }
 
-  let existing: Gap[] = [];
-  try { existing = parseGaps(await readFile(GAPS_PATH, 'utf8')); } catch { /* none yet */ }
   const gaps = mergeGaps(existing, found, [...held, ...recovered]);
-  if (gaps.length > 0 || existing.length > 0) await writeFile(GAPS_PATH, serializeGaps(gaps), 'utf8');
+  if (found.length > 0 || recovered.length > 0) await writeFile(GAPS_PATH, serializeGaps(gaps), 'utf8');
 
   console.log(`[backfill] ${written} written, ${found.length} recorded as gaps, ${gaps.length} gaps in total`);
 }

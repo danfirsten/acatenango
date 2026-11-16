@@ -95,3 +95,12 @@ function shiftDays(date: string, delta: number): string {
   d.setUTCDate(d.getUTCDate() + delta);
   return d.toISOString().slice(0, 10);
 }
+
+/**
+ * True only when INSIVUMEH answered that the file does not exist (404 or 410,
+ * as `fetchWithRetry` words it). Timeouts, DNS errors, 429 and 5xx say nothing
+ * about the day, so they are retried later, never recorded as a gap.
+ */
+export function isDefinitelyAbsent(err: unknown): boolean {
+  return err instanceof Error && /returned (404|410)$/.test(err.message);
+}
