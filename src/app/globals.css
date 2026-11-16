@@ -591,10 +591,9 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   gap: 10px;
 }
 .camp-foot p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 76ch; }
-.camp-advice { color: var(--ash); }
+.camp-foot .camp-advice { color: var(--ash); }
 
 @media (max-width: 860px) {
-  .camp-head { padding-top: 56px; }
   .camp-body { grid-template-columns: 1fr; gap: 24px; }
 }
 @media (max-width: 560px) {

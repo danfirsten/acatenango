@@ -180,20 +180,20 @@ export function describeCamp(entry: IndexEntry): CampDescription {
   const km = entry.driftKm;
   let driftLine: CampLine;
   if (where !== null && km !== null) {
-    driftLine = { key: 'drift', label: 'Drift from camp', text: `Ash drifting ${km}${NBSP}km ${where}.`, missing: false };
+    driftLine = { key: 'drift', label: 'Drift relative to camp', text: `Ash drifting ${km}${NBSP}km ${where}.`, missing: false };
   } else if (where !== null) {
     driftLine = {
-      key: 'drift', label: 'Drift from camp',
+      key: 'drift', label: 'Drift relative to camp',
       text: `Ash drifting ${where}. The bulletin gave no drift distance.`, missing: true,
     };
   } else if (km !== null) {
     driftLine = {
-      key: 'drift', label: 'Drift from camp',
+      key: 'drift', label: 'Drift relative to camp',
       text: `Ash drifting ${km}${NBSP}km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.`,
       missing: true,
     };
   } else {
-    driftLine = { key: 'drift', label: 'Drift from camp', text: 'The bulletin gave no drift distance or direction.', missing: true };
+    driftLine = { key: 'drift', label: 'Drift relative to camp', text: 'The bulletin gave no drift distance or direction.', missing: true };
   }
 
   // Ash fall.
