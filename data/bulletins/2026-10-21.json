@@ -15,7 +15,8 @@
     },
     "driftKm": null,
     "driftDirections": [
-      "NW"
+      "NW",
+      "W"
     ],
     "drainages": [
       "Seca",
@@ -42,6 +43,6 @@
       "San Pedro Yepocapa"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

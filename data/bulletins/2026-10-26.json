@@ -14,7 +14,10 @@
       "max": 4700
     },
     "driftKm": 20,
-    "driftDirections": [],
+    "driftDirections": [
+      "SW",
+      "S"
+    ],
     "drainages": [
       "Seca",
       "Ceniza",
@@ -38,6 +41,6 @@
       "La Rochela"
     ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

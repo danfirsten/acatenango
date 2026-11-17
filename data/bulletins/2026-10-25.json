@@ -27,11 +27,14 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "El Rodeo"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }
