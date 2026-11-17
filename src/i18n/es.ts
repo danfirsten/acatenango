@@ -46,7 +46,7 @@ export const es: Dict = {
   meta: {
     title: 'Fuego: el registro diario del Volcán de Fuego',
     description: 'Un archivo no oficial del Volcán de Fuego, Guatemala, representado con datos reales de elevación.',
-    ogAlt: 'El macizo del Fuego y el Acatenango dibujado como un grabado en tinta, junto al último boletín en una frase',
+    ogAlt: 'El macizo del Fuego y el Acatenango dibujado como un grabado en tinta, junto al título: el registro diario del Volcán de Fuego',
     ogLocale: 'es_GT',
   },
   languageName: 'Español',

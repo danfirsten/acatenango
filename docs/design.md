@@ -125,7 +125,7 @@ What the build settled that the canvas left open, so a later change keeps it:
 - **Hoop on the chart** wears its eyes just above the lens rather than inside it, so the bold line inside the lens stays clear. This is on purpose.
 - **Held in the readout.** On a day with no rate whose plume the scene holds from an earlier day, the readout's explosions figure carries the dotted ring and names that day ("plume shows 9 Jun"); the chart and the lanes show the same day as hatched, not reported. Never a 0 in either.
 - **The 404** carries the wordmark and says the same thing in both languages, the Spanish marked `lang="es"`, with a link home in each.
-- **Social cards** are taken from the real first screen on paper, one per language (`public/og.png`, `public/og-es.png`, `npm run og` after a build).
+- **Social cards** are taken from the real first screen on paper, one per language (`public/og.png`, `public/og-es.png`, `npm run og` after a build). They are timeless: nothing re-renders them when a bulletin lands, so they carry no day, no age pill and no figures, only the engraved massif, the notice, the wordmark and the title.
 - **The title** is "Fuego: the daily record of Volcán de Fuego" ("el registro diario"), never "live": the site is an archive that lags the observatory.
 
 ## Checked against the generic defaults

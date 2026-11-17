@@ -34,7 +34,7 @@ export const en: Dict = {
   meta: {
     title: 'Fuego: the daily record of Volcán de Fuego',
     description: 'An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.',
-    ogAlt: 'The Fuego and Acatenango massif drawn as an ink engraving, beside the latest bulletin in one sentence',
+    ogAlt: 'The Fuego and Acatenango massif drawn as an ink engraving, beside the title: the daily record of Volcán de Fuego',
     ogLocale: 'en_GB',
   },
   languageName: 'English',
