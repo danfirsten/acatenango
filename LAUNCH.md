@@ -53,14 +53,14 @@ done in the repository or is a click only the owner can make.
 
 | Check | Status |
 |---|---|
-| History secret scan | SCAN_STATUS |
+| History secret scan | Clean. A full mirror clone (every branch and pull request ref, 244 commits) was scanned with gitleaks 8.24.3 and for secret-looking file names, token shapes (AWS, GitHub, Anthropic, OpenAI, Slack, Google, JWT, private keys) and key, secret, token or password assignments. Nothing found. |
 | Licence | Done. The code is MIT (`LICENSE`); the README says the bulletin text belongs to INSIVUMEH and is not covered by it. |
 | README | Done. It names the live address, says plainly that this is an unofficial archive and not a warning service, and points to INSIVUMEH and CONRED. |
 | Pages workflow | Done. `pages.yml` builds under `/acatenango` and deploys; until Pages is on it skips with a notice. |
 | Collector | Done. `collect.yml` runs on its schedule twice a day and commits each bulletin. |
 | Stored records | Done. Every record in `data/bulletins` is at the current parser version, and a unit test keeps it so. |
 | Page tests | Done. `npm run test:e2e` covers the subfolder build online and offline, both languages, the phone layout, accessibility (axe), the keyboard, and missing days never shown as zero. |
-| Security review | SECURITY_STATUS |
+| Security review | Done, nothing blocking. Fixed: the collector's write token is used only to push, downloads time out and have a size limit, `BULLETIN_URL` must be an https address on insivumeh.gob.gt, CI's token is read-only, the offline cache ignores query strings. Filed as #32: pin actions by SHA, remove the unused pdfjs path. `npm audit --omit=dev` finds nothing; the high findings in the full audit are lint tooling only and are not in the site. |
 | Repository public | Not yet: the owner's click, below. |
 | Pages on | Not yet: the owner's click, below. |
 
