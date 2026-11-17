@@ -32,9 +32,9 @@ export const en: Dict = {
   locale: 'en',
   htmlLang: 'en',
   meta: {
-    title: 'Fuego: live from the Acatenango massif',
+    title: 'Fuego: the daily record of Volcán de Fuego',
     description: 'An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.',
-    ogAlt: 'Fuego erupting beside Acatenango',
+    ogAlt: 'The Fuego and Acatenango massif drawn as an ink engraving, beside the latest bulletin in one sentence',
     ogLocale: 'en_GB',
   },
   languageName: 'English',

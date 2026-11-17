@@ -195,6 +195,14 @@ describe(`static build served under ${BASE}`, () => {
     assert.equal(alternates.en, `${BASE}/`);
     assert.equal(alternates.es, `${BASE}/es/`);
     assert.equal(alternates['x-default'], `${BASE}/`);
+    // Its own social card, taken from the Spanish page, with the Spanish description.
+    const card = await page.evaluate(() => ({
+      image: document.querySelector<HTMLMetaElement>('meta[property="og:image"]')?.content ?? '',
+      alt: document.querySelector<HTMLMetaElement>('meta[property="og:image:alt"]')?.content ?? '',
+    }));
+    assert.equal(new URL(card.image).pathname, `${BASE}/og-es.png`);
+    assert.equal(card.alt, es.meta.ogAlt);
+    assert.equal((await fetch(`${origin}${BASE}/og-es.png`)).status, 200, 'the Spanish card is served');
 
     // The notice, word for word.
     assert.equal((await page.locator('#notice p').innerText()).trim(), `${es.notice.lead} ${es.notice.body}`);

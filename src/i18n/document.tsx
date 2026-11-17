@@ -24,6 +24,9 @@ import { getDict, LOCALE_PATH, LOCALES, type Locale } from './index';
  */
 const SITE_URL = siteUrl(process.env.SITE_URL, 'https://danfirsten.github.io/acatenango/');
 
+/** Each language's social card, in public/. */
+export const OG_IMAGE: Record<Locale, string> = { en: 'og.png', es: 'og-es.png' };
+
 /** The absolute URL of a language's page. */
 export function pageUrl(locale: Locale): string {
   return new URL(LOCALE_PATH[locale].slice(1), SITE_URL).href;
@@ -32,7 +35,8 @@ export function pageUrl(locale: Locale): string {
 export function buildMetadata(locale: Locale): Metadata {
   const { meta } = getDict(locale);
   const url = pageUrl(locale);
-  const og = new URL('og.png', SITE_URL).href;
+  // Each language has its own card, taken from its own page (npm run og).
+  const og = new URL(OG_IMAGE[locale], SITE_URL).href;
   return {
     metadataBase: new URL(SITE_URL),
     title: meta.title,
