@@ -1,7 +1,0 @@
-{
-  "routes": [],
-  "routeFiles": {
-    "/": ["src/components/TempoChart.tsx", "src/components/FieldLanes.tsx", "src/components/GvpWeeks.tsx", "src/components/CampPanel.tsx", "src/components/ReplayBar.tsx", "src/lib/readout.ts"],
-    "/es/": ["src/components/TempoChart.tsx", "src/components/FieldLanes.tsx", "src/components/ReplayBar.tsx", "src/i18n/es.ts"]
-  }
-}

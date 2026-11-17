@@ -9,11 +9,10 @@ import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import Mark from '@/components/ink/Mark';
-import ReplayBar from '@/components/ReplayBar';
 import TempoChart from '@/components/TempoChart';
-import { formatDate, formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
+import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { scrollToPlace, takePlace } from '@/lib/place';
-import { lastReportedIndex, readoutRows, STATE_MARK, summaryFigures } from '@/lib/readout';
+import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface FuegoViewProps {
@@ -34,7 +33,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
   const isToday = selected === series.length - 1;
 
   const figures = useMemo(() => summaryFigures(series), [series]);
-  const dates = useMemo(() => series.map((e) => e.date), [series]);
+  const rows = useMemo(() => readoutRows(day, t), [day, t]);
 
   // A day that left out its rate or column gives the plume nothing to follow,
   // so the scene holds the value from the last day that reported it, and the
@@ -52,12 +51,6 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
       ...(columnFrom && { ashMinMasl: columnFrom.ashMinMasl, ashMaxMasl: columnFrom.ashMaxMasl }),
     }),
     [day, rateFrom, columnFrom],
-  );
-  const heldRate = rateFrom ? formatShortDate(locale, rateFrom.date) : null;
-  const heldColumn = columnFrom ? formatShortDate(locale, columnFrom.date) : null;
-  const rows = useMemo(
-    () => readoutRows(day, t, { rate: heldRate, column: heldColumn }),
-    [day, t, heldRate, heldColumn],
   );
   const notes: string[] = [];
   const rateMissing = day.explosionsMax === null && !continuous;
@@ -100,10 +93,8 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
               <span className="badge" data-warn="true">{t.topbar.unread(day.warnings.length)}</span>
             )}
             <span className="observed-text">
-              {/* While replaying, the age pill is the dotted ring (the "held" mark):
-                  the `replay-ring` class is the hook the first screen restyles from. */}
-              <span className={isToday ? 'observed-date' : 'observed-date replay-ring'} data-replaying={!isToday || undefined}>
-                {isToday ? `${t.topbar.latest} · ${date(day.date)}` : t.topbar.replayingOn(formatShortDate(locale, day.date))}
+              <span className="observed-date">
+                {isToday ? t.topbar.latest : t.topbar.replaying} · {date(day.date)}
               </span>
               {isToday && <BulletinAge date={day.date} locale={locale} />}
             </span>
@@ -117,7 +108,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
           {rows.map((r) => (
             <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
               <span className="readout-k">{r.key}</span>
-              <span className="readout-v" data-state={r.state}><Mark kind={STATE_MARK[r.state]} />{r.value}<small>{r.unit}</small></span>
+              <span className="readout-v">{r.missing && <Mark kind="hatched" />}{r.value}<small>{r.unit}</small></span>
             </div>
           ))}
           {notes.length > 0 && (
@@ -157,7 +148,6 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
       </section>
 
       <CampPanel entry={day ?? null} isLatest={isToday} isRepresentative={isRepresentative} locale={locale} />
-      <ReplayBar dates={dates} selected={at} onSelect={onSelect} locale={locale} />
     </>
   );
 }

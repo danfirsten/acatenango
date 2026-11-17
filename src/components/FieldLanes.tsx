@@ -1,12 +1,10 @@
 'use client';
 
-import { useId, useMemo, useRef, useState } from 'react';
+import { useId, useMemo, useState } from 'react';
 
-import { StateMark, useWidth } from '@/components/TempoChart';
+import Mark from '@/components/ink/Mark';
 import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
-import { CAMP_BEARING_DEG, compassPoint } from '@/lib/camp';
-import { fieldSummary, incandescenceTop } from '@/lib/fields';
-import { fieldState, PLOT_GUTTER, plotDayAt, plotX, type ValueState } from '@/lib/readout';
+import { AXIS_W as W, bearing, dayAt, dayX, fieldSummary, incandescenceTop } from '@/lib/fields';
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface FieldLanesProps {
@@ -17,27 +15,18 @@ interface FieldLanesProps {
   locale: Locale;
 }
 
-/** Each compass row of the drift lane, in pixels: roomier on a phone. */
-const rowFor = (w: number) => (w < 600 ? 10 : 7);
+const ROW = 15;
 const BAR_H = 30;
-const MARK_H = 24;
+const MARK_H = 26;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
-/** The rows labelled in the gutter. */
-const LABELLED = ['N', 'E', 'S', 'W'];
-/** Camp's row: the compass point ash drifts towards to reach Acatenango. */
-const CAMP_POINT = compassPoint(CAMP_BEARING_DEG);
 
 const list = (names: string[]) => names.join(', ');
 
 /**
  * Compact lanes under the tempo chart on the same time axis: where the ash
- * drifted (one row per compass point, camp's row dashed), how high the glow
- * reached, which drainages were named and which towns had ash. A day that did
- * not state a field is a hatched cell, never a short bar or an empty mark that
- * could pass for a zero; ash fall with no town named is a ring.
- *
- * Drawn in pixels at the measured width, so lanes keep their height on a phone.
- * Dragging here scrubs too; the keyboard scrub is the chart above.
+ * drifted, how high the glow reached, which drainages were named and which
+ * towns had ash. A day that did not state a field is a hatched cell, never a
+ * short bar or an empty mark that could pass for a zero.
  */
 export default function FieldLanes({ series, selected, onSelect, locale }: FieldLanesProps) {
   const t = getDict(locale);
@@ -45,105 +34,124 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
   const fmt = (iso: string) => formatShortDate(locale, iso);
   const abbr = (dirs: string[]) => dirs.map((dir) => t.compassAbbr[dir] ?? dir);
   const [hover, setHover] = useState<number | null>(null);
-  const figRef = useRef<HTMLElement>(null);
-  const W = useWidth(figRef);
-  const ROW = rowFor(W);
   const uid = useId();
   const hatch = `${uid}-hatch`;
   const n = series.length;
-  const x = (i: number) => plotX(i, n, W);
-  const step = n > 1 ? x(1) - x(0) : W - PLOT_GUTTER;
-  const cell = Math.max(step * 0.7, 1.5);
+  const step = n > 1 ? W / (n - 1) : W;
+  const cell = Math.max(step * 0.8, 1.4);
 
   const summary = useMemo(() => fieldSummary(series), [series]);
   const top = useMemo(() => incandescenceTop(series), [series]);
+  const rows = Math.max(1, Math.min(3, Math.max(0, ...series.map((e) => e.driftDirections.length))));
   const maxDrain = Math.max(1, ...series.map((e) => e.drainages.length));
   const maxTowns = Math.max(1, ...series.map((e) => e.ashfallCommunities.length));
 
-  const at = Math.min(selected, n - 1);
-  const shown = hover ?? at;
+  const shown = hover ?? selected;
   const d = series[Math.min(shown, n - 1)];
 
   function indexAt(ev: React.PointerEvent<HTMLElement>): number {
     const r = ev.currentTarget.getBoundingClientRect();
-    return plotDayAt(((ev.clientX - r.left) / r.width) * W, n, W);
+    return dayAt(((ev.clientX - r.left) / r.width) * W, n);
   }
 
-  /** The selected-day line and the hover line, shared by every lane. */
+  function onKey(ev: React.KeyboardEvent) {
+    // The slider pattern: arrows step a day, Home and End jump to the first and latest.
+    const to = ev.key === 'ArrowLeft' ? selected - 1
+      : ev.key === 'ArrowRight' ? selected + 1
+      : ev.key === 'Home' ? 0
+      : ev.key === 'End' ? n - 1
+      : null;
+    if (to === null) return;
+    ev.preventDefault();
+    onSelect(Math.max(0, Math.min(n - 1, to)));
+  }
+
+  /** The day's column, the selected-day line, and the hover line, shared by every lane. */
   const marker = (h: number) => (
     <>
-      <line x1={x(at)} x2={x(at)} y1={0} y2={h} className="lane-sel" />
-      {hover !== null && hover !== at && <line x1={x(hover)} x2={x(hover)} y1={0} y2={h} className="lane-hover" />}
+      <line x1={dayX(selected, n)} x2={dayX(selected, n)} y1={0} y2={h} className="lane-sel" />
+      {hover !== null && hover !== selected && (
+        <line x1={dayX(hover, n)} x2={dayX(hover, n)} y1={0} y2={h} className="lane-hover" />
+      )}
     </>
   );
 
-  const missing = (i: number, h: number) => (
-    <rect key={`m${i}`} className="lane-missing" fill={`url(#${hatch})`}
-      x={x(i) - cell / 2} width={cell} y={2} height={h - 4} />
+  const missing = (id: string, i: number, h: number) => (
+    <rect key={`m${i}`} className="lane-missing" fill={`url(#${hatch}-${id})`}
+      x={dayX(i, n) - cell / 2} width={cell} y={2} height={h - 4} />
   );
 
-  const bar = (i: number, value: number, max: number, h: number, min: number, cls: string) => {
-    const height = Math.max(min, (value / max) * (h - 4));
-    return <rect key={i} className={cls} x={x(i) - cell / 2} width={cell} y={h - 2 - height} height={height} />;
-  };
-
-  const driftH = COMPASS.length * ROW + 4;
-  const rowY = (k: number) => 2 + k * ROW + ROW / 2;
-  const campRow = COMPASS.indexOf(CAMP_POINT);
-
-  const lanes: Array<{ id: string; title: string; note: string; h: number; gutter?: React.ReactNode; body: React.ReactNode }> = [
+  const lanes: Array<{ id: string; title: string; note: string; h: number; body: React.ReactNode }> = [
     {
-      id: 'compass',
+      id: 'drift',
       title: l10n.driftTitle,
-      note: `${l10n.daysOf(summary.driftReported, n)} · ${l10n.campRow}`,
-      h: driftH,
-      gutter: (
-        <>
-          {LABELLED.map((p) => (
-            <text key={p} x={0} y={rowY(COMPASS.indexOf(p)) + 4} className="lane-tick"
-              data-camp={p === CAMP_POINT || undefined}>{t.compassAbbr[p] ?? p}</text>
-          ))}
-          <line x1={PLOT_GUTTER} x2={W} y1={rowY(campRow)} y2={rowY(campRow)} className="lane-camp" />
-        </>
+      note: l10n.daysOf(summary.driftReported, n),
+      h: rows * ROW + 6,
+      body: series.map((e, i) =>
+        e.driftDirections.length === 0
+          ? missing('drift', i, rows * ROW + 6)
+          : e.driftDirections.slice(0, rows).map((dir, k) => {
+              const a = bearing(dir);
+              if (a === null) return null;
+              const s = Math.min(Math.max(step * 0.45, 1.6), 4.5);
+              return (
+                <path key={`${i}-${k}`} className="lane-arrow"
+                  transform={`translate(${dayX(i, n)} ${3 + ROW * k + ROW / 2}) rotate(${a})`}
+                  d={`M0,${s * 1.5}L0,${-s * 1.5}M${-s},${-s * 0.5}L0,${-s * 1.5}L${s},${-s * 0.5}`} />
+              );
+            }),
       ),
+    },
+    {
+      id: 'driftdots',
+      title: l10n.driftTitle,
+      note: `${l10n.daysOf(summary.driftReported, n)} · ${l10n.firstNamed}`,
+      h: COMPASS.length * 6 + 6,
       body: series.map((e, i) => {
-        const rows = e.driftDirections.map((dir) => COMPASS.indexOf(dir)).filter((k) => k !== -1);
-        return rows.length === 0
-          ? missing(i, driftH)
-          : rows.map((k) => (
-            <rect key={`${i}-${k}`} className="lane-mark" x={x(i) - cell / 2} width={cell} y={rowY(k) - ROW / 2 + 1} height={ROW - 2} />
-          ));
+        const row = COMPASS.indexOf(e.driftDirections[0]);
+        return e.driftDirections.length === 0 || row === -1
+          ? missing('driftdots', i, COMPASS.length * 6 + 6)
+          : <rect key={i} className="lane-mark" x={dayX(i, n) - cell / 2} width={cell} y={3 + row * 6} height={4} />;
       }),
     },
     {
       id: 'glow',
       title: l10n.glowTitle,
       note: l10n.glowNote(top === null ? null : formatNumber(locale, top)),
-      h: BAR_H + 4,
+      h: BAR_H + 6,
       body: series.map((e, i) =>
-        e.incandescenceMaxM === null ? missing(i, BAR_H + 4) : bar(i, e.incandescenceMaxM, top as number, BAR_H + 4, 1.5, 'lane-bar')),
+        e.incandescenceMaxM === null ? missing('glow', i, BAR_H + 6) : (
+          <rect key={i} className="lane-bar" x={dayX(i, n) - cell / 2} width={cell}
+            y={BAR_H + 3 - Math.max(1.5, (e.incandescenceMaxM / (top as number)) * BAR_H)}
+            height={Math.max(1.5, (e.incandescenceMaxM / (top as number)) * BAR_H)} />
+        ),
+      ),
     },
     {
       id: 'drainages',
       title: l10n.drainagesTitle,
       note: l10n.daysOf(summary.drainagesReported, n),
-      h: MARK_H + 4,
+      h: MARK_H + 6,
       body: series.map((e, i) =>
-        e.drainages.length === 0 ? missing(i, MARK_H + 4) : bar(i, e.drainages.length, maxDrain, MARK_H + 4, 4, 'lane-mark')),
+        e.drainages.length === 0 ? missing('drainages', i, MARK_H + 6) : (
+          <rect key={i} className="lane-mark" x={dayX(i, n) - cell / 2} width={cell}
+            y={MARK_H + 3 - Math.max(4, (e.drainages.length / maxDrain) * MARK_H)}
+            height={Math.max(4, (e.drainages.length / maxDrain) * MARK_H)} />
+        ),
+      ),
     },
     {
       id: 'towns',
       title: l10n.townsTitle,
       note: l10n.daysOf(summary.townsReported, n),
-      h: MARK_H + 4,
-      body: series.map((e, i) => {
-        const state = fieldState(e, 'towns');
-        return state === 'reported' ? bar(i, e.ashfallCommunities.length, maxTowns, MARK_H + 4, 4, 'lane-mark')
-          : state === 'saidNone'
-            // Ash fall with no town named: the ring, a statement and not a gap.
-            ? <circle key={i} className="lane-none" data-state={state} cx={x(i)} cy={(MARK_H + 4) / 2} r={Math.min(3, Math.max(2, step / 2))} />
-            : missing(i, MARK_H + 4);
-      }),
+      h: MARK_H + 6,
+      body: series.map((e, i) =>
+        e.ashfallCommunities.length === 0 ? missing('towns', i, MARK_H + 6) : (
+          <rect key={i} className="lane-mark" x={dayX(i, n) - cell / 2} width={cell}
+            y={MARK_H + 3 - Math.max(4, (e.ashfallCommunities.length / maxTowns) * MARK_H)}
+            height={Math.max(4, (e.ashfallCommunities.length / maxTowns) * MARK_H)} />
+        ),
+      ),
     },
   ];
 
@@ -151,46 +159,50 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
     ? l10n.notReported
     : l10n.commonDriftValue(summary.commonDrift, summary.commonDriftDays);
 
-  const drawn = (state: ValueState, text: string) => (
-    <span className="marked" data-state={state}><StateMark state={state} />{text}</span>
-  );
-  const towns = fieldState(d, 'towns');
-
   return (
-    <figure className="lanes" id="lanes" aria-label={l10n.figureLabel} ref={figRef}>
+    <figure className="lanes" id="lanes" aria-label={l10n.figureLabel}>
       <div
         className="lanes-plot"
+        tabIndex={0}
+        role="slider"
+        aria-label={l10n.sliderLabel}
+        aria-valuemin={0}
+        aria-valuemax={n - 1}
+        aria-valuenow={selected}
+        aria-valuetext={d ? fmt(series[selected].date) : undefined}
+        onKeyDown={onKey}
         onPointerMove={(ev) => { const i = indexAt(ev); setHover(i); if (ev.buttons === 1) onSelect(i); }}
         onPointerDown={(ev) => { ev.currentTarget.setPointerCapture(ev.pointerId); onSelect(indexAt(ev)); }}
         onPointerLeave={() => setHover(null)}
       >
-        <svg width="0" height="0" className="lane-defs" aria-hidden="true">
-          <defs>
-            <pattern id={hatch} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-              <line x1="0" y1="0" x2="0" y2="4" className="tempo-gap-hatch" />
-            </pattern>
-          </defs>
-        </svg>
         {lanes.map((l) => (
           <div className="lane" key={l.id} data-lane={l.id}>
             <p className="lane-head"><span>{l.title}</span><span className="lane-note">{l.note}</span></p>
-            <svg viewBox={`0 0 ${W} ${l.h}`} width={W} height={l.h} role="img" aria-label={`${l.title}: ${l.note}`}>
-              {l.gutter}
+            <svg viewBox={`0 0 ${W} ${l.h}`} preserveAspectRatio="none" style={{ aspectRatio: `${W} / ${l.h}` }}
+              role="img" aria-label={`${l.title}: ${l.note}`}>
+              <defs>
+                <pattern id={`${hatch}-${l.id}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                  <line x1="0" y1="0" x2="0" y2="6" className="tempo-gap-hatch" />
+                </pattern>
+              </defs>
               {l.body}
-              <line x1={PLOT_GUTTER} x2={W} y1={l.h - 0.5} y2={l.h - 0.5} className="lane-base" />
               {marker(l.h)}
             </svg>
           </div>
         ))}
       </div>
 
-      <figcaption className="lanes-day">
+      <figcaption className="lanes-day" >
         <b>{fmt(d.date)}</b>
-        {drawn(fieldState(d, 'drift'), l10n.dayDrift(d.driftDirections.length > 0 ? abbr(d.driftDirections).join(' · ') : null))}
-        {drawn(fieldState(d, 'glow'), l10n.dayGlow(d.incandescenceMaxM !== null ? formatNumber(locale, d.incandescenceMaxM) : null))}
-        {drawn(fieldState(d, 'drainages'), l10n.dayDrainages(d.drainages.length > 0 ? list(d.drainages) : null))}
-        {drawn(towns, towns === 'saidNone' ? l10n.dayTownsNone : l10n.dayTowns(d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : null))}
+        <span>{l10n.dayDrift(d.driftDirections.length > 0 ? abbr(d.driftDirections).join(' · ') : null)}</span>
+        <span>{l10n.dayGlow(d.incandescenceMaxM !== null ? formatNumber(locale, d.incandescenceMaxM) : null)}</span>
+        <span>{l10n.dayDrainages(d.drainages.length > 0 ? list(d.drainages) : null)}</span>
+        <span>{l10n.dayTowns(d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : null)}</span>
       </figcaption>
+
+      <p className="tempo-key">
+        <span><Mark kind="hatched" />{l10n.key}</span>
+      </p>
 
       <dl className="lanes-summary">
         <div>

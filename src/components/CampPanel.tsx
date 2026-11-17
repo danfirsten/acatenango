@@ -1,9 +1,7 @@
 import BulletinAge from '@/components/BulletinAge';
-import { StateMark } from '@/components/TempoChart';
 import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { rich } from '@/i18n/rich';
-import { CAMP_BEARING_DEG, CAMP_DISTANCE_KM, type CampLineKey, compassPoint, describeCamp } from '@/lib/camp';
-import { type DayField, fieldState } from '@/lib/readout';
+import { CAMP_BEARING_DEG, CAMP_DISTANCE_KM, compassPoint, describeCamp } from '@/lib/camp';
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface CampPanelProps {
@@ -61,9 +59,6 @@ export default function CampPanel({ entry, isLatest, isRepresentative, locale }:
   );
 }
 
-/** The field each line's mark follows, so the panel marks a value as the record does. */
-const LINE_FIELD: Record<CampLineKey, DayField> = { rate: 'rate', column: 'column', drift: 'drift', ashfall: 'towns' };
-
 function CampBody({ entry, locale }: { entry: IndexEntry; locale: Locale }) {
   const { summary, lines } = describeCamp(entry, getDict(locale));
   return (
@@ -71,9 +66,9 @@ function CampBody({ entry, locale }: { entry: IndexEntry; locale: Locale }) {
       <p className="camp-summary">{summary}</p>
       <dl className="camp-lines">
         {lines.map((l) => (
-          <div className="camp-line" key={l.key} data-missing={l.missing} data-state={fieldState(entry, LINE_FIELD[l.key])}>
+          <div className="camp-line" key={l.key} data-missing={l.missing}>
             <dt>{l.label}</dt>
-            <dd><StateMark state={fieldState(entry, LINE_FIELD[l.key])} /><span>{l.text}</span></dd>
+            <dd>{l.text}</dd>
           </div>
         ))}
       </dl>
