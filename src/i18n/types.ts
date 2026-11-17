@@ -107,10 +107,9 @@ export interface Dict {
     erupting: string;
     yourCamp: string;
     viewsLabel: string;
-    orbit: string;
     fromCamp: string;
-    /** The image tag on the scene: "Orbit · 16 Nov". */
-    tag: (view: string, date: string) => string;
+    /** The image tag on the scene, short enough for one line beside the switch: "Orbit · 16 Nov". */
+    tag: (view: 'orbit' | 'camp', date: string) => string;
     loading: string;
     unsupported: string;
     failed: string;

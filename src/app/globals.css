@@ -257,7 +257,7 @@
   letter-spacing: 0.04em;
   color: var(--soft);
 }
-.readout-v small { font-size: var(--text-label); letter-spacing: 0.04em; }
+.readout-v small { font-size: var(--text-label); letter-spacing: 0.04em; white-space: nowrap; }
 /* The mark sits centred on the value's first line, however the unit wraps. */
 .readout-v .mark { align-self: flex-start; margin-top: calc((1.15em - 12px) / 2); }
 .readout-note {
@@ -305,7 +305,7 @@
 /* Pressed: solid, and Hoop turns with it (it is always the opposite of what is under it). */
 .massif-views button[aria-pressed="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); }
 .massif-views button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
-.first-scene .chip-tag { max-width: calc(100% - 200px); overflow-wrap: anywhere; }
+.first-scene .chip-tag { white-space: nowrap; }
 
 .massif-state {
   position: absolute;
@@ -690,11 +690,14 @@
     column-gap: var(--space-6);
   }
   .topbar { padding: var(--space-4) 0; }
+  /* A fixed shape the camera is framed for (both summits and the plume in
+     the upper half), not a column stretched to the screen's height. */
   .first-scene {
     position: sticky;
     top: var(--space-4);
     align-self: start;
-    height: clamp(420px, calc(100svh - 170px), 820px);
+    height: auto;
+    aspect-ratio: 3 / 4;
   }
   .first-day { padding-top: 0; }
 }
@@ -715,6 +718,7 @@
 }
 @media (min-width: 1100px) {
   .first { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); }
+  .first-scene { aspect-ratio: 4 / 3; max-height: calc(100svh - 2 * var(--space-4)); }
   .day-sentence { font-size: 32px; }
 }
 

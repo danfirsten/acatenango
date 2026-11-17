@@ -206,7 +206,8 @@ export interface MassifHandle {
 /**
  * How the camera adapts to the canvas shape. Fitted by aspect ratio, not by
  * user agent: a tall canvas needs a wider lens and a longer orbit to keep both
- * summits in frame, and room below for the readout.
+ * summits in frame. Nothing overlays the scene but the tag and the switch
+ * along its bottom edge, which the summit labels keep clear of themselves.
  */
 export interface CameraFit {
   /** Vertical field of view in degrees for the view from camp. */
@@ -215,8 +216,6 @@ export interface CameraFit {
   orbitScale: number;
   /** Multiplier on how far behind the camp the camera stands. */
   campBack: number;
-  /** Fraction of the canvas height the picture is lifted, to clear the readout. */
-  lift: number;
 }
 
 const BASE_FOV = 42;
@@ -238,8 +237,6 @@ export function fitCamera(aspect: number, summitGapKm = 0, orbitDistanceKm = 1):
       ),
     ),
     campBack: 1 + Math.min(0.6, tallness * 0.5),
-    // The readout is a strip along the bottom on anything narrower than wide.
-    lift: a < 1.2 ? Math.min(0.17, 0.06 + tallness * 0.14) : 0,
   };
 }
 
@@ -573,8 +570,6 @@ export function createMassifScene(
     fit = fitCamera(w / h, summitGapKm, orbitDistance);
     wake();
     applyLens();
-    // Lift the picture so the summits sit above the readout, not behind it.
-    camera.setViewOffset(w, h, 0, h * fit.lift, w, h);
   }
   function applyLens() {
     const next = view === 'camp' ? fit.campFov : BASE_FOV;
@@ -698,9 +693,8 @@ export function createMassifScene(
           key: s.key, name: s.name, elevation: s.elevation,
           x: (projected.x * 0.5 + 0.5) * w,
           roomRight: w - (projected.x * 0.5 + 0.5) * w,
-          // Keep the label clear of the top bar without moving the dot off the
-          // peak for every other label on screen.
-          y: Math.max((-projected.y * 0.5 + 0.5) * h, 64),
+          // Room above the dot for the label's words when they hang above it.
+          y: Math.max((-projected.y * 0.5 + 0.5) * h, 40),
           visible: !behind && !blocked,
         };
       }));

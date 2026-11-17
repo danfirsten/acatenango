@@ -171,7 +171,7 @@ export default function Massif({ day, locale }: MassifProps) {
       {/* The scene's own controls sit inside it: the image tag names the view and
           the day bottom-left, and the one switch (Hoop, the watcher) bottom-right
           flips between the orbit and the view from camp. */}
-      <ImageTag>{t.tag(view === 'camp' ? t.fromCamp : t.orbit, formatShortDate(locale, day.date))}</ImageTag>
+      <ImageTag>{t.tag(view, formatShortDate(locale, day.date))}</ImageTag>
       <div className="massif-views" role="group" aria-label={t.viewsLabel}>
         <button type="button" className="press" aria-pressed={view === 'camp'}
           onClick={() => setView((v) => (v === 'camp' ? 'orbit' : 'camp'))}>

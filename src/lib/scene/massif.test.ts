@@ -12,7 +12,6 @@ describe('fitCamera', () => {
     const fit = fitCamera(1.6, GAP, DISTANCE);
     assert.equal(fit.orbitScale, 1);
     assert.equal(fit.campBack, 1);
-    assert.equal(fit.lift, 0);
   });
 
   it('stands further back and widens the lens as the canvas gets taller', () => {
@@ -31,8 +30,7 @@ describe('fitCamera', () => {
     assert.ok(halfWidth >= (GAP / 2) * 1.5, `half width ${halfWidth} must hold the summits`);
   });
 
-  it('lifts the picture on narrow screens so the readout sits below the summits', () => {
-    assert.ok(fitCamera(390 / 844, GAP, DISTANCE).lift > 0);
-    assert.ok(fitCamera(768 / 1024, GAP, DISTANCE).lift > 0);
+  it('no longer lifts the picture: nothing overlays the scene but its own controls', () => {
+    assert.ok(!('lift' in fitCamera(768 / 1024, GAP, DISTANCE)));
   });
 });

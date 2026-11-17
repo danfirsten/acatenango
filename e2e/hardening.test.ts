@@ -264,10 +264,11 @@ describe('launch checks', () => {
     await camp.focus();
     await page.keyboard.press('Enter');
     assert.equal(await camp.getAttribute('aria-pressed'), 'true');
-    assert.match(await page.locator('.first-scene .chip-tag').innerText(), new RegExp(`^${en.massif.fromCamp} · `, 'i'));
+    const tag = () => page.locator('.first-scene .chip-tag').textContent();
+    assert.ok((await tag())?.startsWith(en.massif.tag('camp', '')), 'the image tag names the view from camp');
     await page.keyboard.press('Space');
     assert.equal(await camp.getAttribute('aria-pressed'), 'false');
-    assert.match(await page.locator('.first-scene .chip-tag').innerText(), new RegExp(`^${en.massif.orbit} · `, 'i'));
+    assert.ok((await tag())?.startsWith(en.massif.tag('orbit', '')), 'the image tag names the orbit');
 
     // The record scrub: arrows step a day, Home and End jump to the ends.
     const dates = index.entries.map((e) => e.date);
