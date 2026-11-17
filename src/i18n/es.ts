@@ -90,7 +90,7 @@ export const es: Dict = {
     drainages: 'Barrancas',
     ashfall: 'Caída de ceniza',
     noneNamed: 'Ninguna nombrada',
-    plumeShows: (d) => `la columna muestra el ${d}`,
+    plumeShows: (d) => `la pluma muestra el ${d.replace(/ /g, NBSP)}`,
   },
   marks: {
     label: 'Cómo se marca cada dato',
@@ -104,8 +104,8 @@ export const es: Dict = {
     hint: {
       reported: 'La cifra tal como la escribió el boletín.',
       saidNone: 'El boletín lo menciona pero no nombra ninguno.',
-      notReported: 'El boletín no lo indica. Nunca se dibuja como 0.',
-      held: 'La columna muestra un día anterior, que se nombra.',
+      notReported: `El boletín no lo indica. Nunca se dibuja como${NBSP}0.`,
+      held: 'La pluma muestra un día anterior, que se nombra.',
       continuous: 'Emisión sin conteo por hora.',
     },
   },

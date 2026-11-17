@@ -78,7 +78,7 @@ export const en: Dict = {
     drainages: 'Drainages',
     ashfall: 'Ash fall',
     noneNamed: 'None named',
-    plumeShows: (d) => `plume shows ${d}`,
+    plumeShows: (d) => `plume shows ${d.replace(/ /g, NBSP)}`,
   },
   marks: {
     label: 'How each value is marked',
@@ -92,7 +92,7 @@ export const en: Dict = {
     hint: {
       reported: 'The figure as the bulletin wrote it.',
       saidNone: 'The bulletin speaks to it but names none.',
-      notReported: 'Left out of the bulletin. Never drawn as 0.',
+      notReported: `Left out of the bulletin. Never drawn as${NBSP}0.`,
       held: 'The plume shows an earlier day, which is named.',
       continuous: 'Emission with no hourly count.',
     },

@@ -92,11 +92,11 @@ describe('readoutRows marks', () => {
   it('marks a held rate and column with the dotted ring and names the day the plume shows', () => {
     const rows = readoutRows(EMPTY, en, { rate: '26 Jul', column: '25 Jul' });
     assert.deepEqual(rows.slice(0, 3).map((r) => [r.state, r.value, r.unit]), [
-      ['held', 'Held', 'plume shows 26 Jul'],
-      ['held', 'Held', 'plume shows 25 Jul'],
-      ['held', 'Held', 'plume shows 25 Jul'],
+      ['held', 'Held', 'plume shows 26\u00a0Jul'],
+      ['held', 'Held', 'plume shows 25\u00a0Jul'],
+      ['held', 'Held', 'plume shows 25\u00a0Jul'],
     ]);
-    assert.equal(readoutRows(EMPTY, es, { rate: '26 jul' })[0].unit, 'la columna muestra el 26 jul');
+    assert.equal(readoutRows(EMPTY, es, { rate: '26 jul' })[0].unit, 'la pluma muestra el 26\u00a0jul');
   });
 
   it('marks a left-out value as not reported when nothing is held', () => {
