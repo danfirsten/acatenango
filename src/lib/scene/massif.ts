@@ -1,6 +1,8 @@
 import * as THREE from 'three';
 
+import { TERRAIN_FRAG, TERRAIN_VERT } from './engraving';
 import { FramePacer } from './pacer';
+import { type SceneTheme, readPageTheme, watchPageTheme } from './theme';
 
 /**
  * The Acatenango–Fuego massif, rendered from real elevation data.
@@ -30,6 +32,8 @@ export interface LabelPosition {
   elevation: number;
   x: number;
   y: number;
+  /** Free canvas to the right of the dot, in CSS pixels. */
+  roomRight: number;
   visible: boolean;
 }
 
@@ -39,6 +43,11 @@ export interface MassifOptions {
   /** Explosions per hour — drives plume density and ember rate. */
   activity?: number;
   reducedMotion?: boolean;
+  /**
+   * The engraving's theme. Left out, the scene reads it from the page and
+   * follows it live as `data-theme` or the system setting changes.
+   */
+  theme?: SceneTheme;
 }
 
 /** Relief is real but subtle at true scale; stretch it to match perception. */
@@ -128,125 +137,7 @@ export function lonLatToGrid(
 
 /* ── shaders ───────────────────────────────────────────────────────────── */
 
-const TERRAIN_VERT = /* glsl */ `
-  varying float vElevation;
-  varying vec3 vNormalW;
-  varying vec3 vWorld;
-
-  void main() {
-    vElevation = position.y;
-    vNormalW = normalize(normalMatrix * normal);
-    vec4 world = modelMatrix * vec4(position, 1.0);
-    vWorld = world.xyz;
-    gl_Position = projectionMatrix * viewMatrix * world;
-  }
-`;
-
-/**
- * Elevation-banded rock with survey contour lines. The contours are the whole
- * point of the look: they encode real altitude at a fixed interval, so the
- * terrain reads as a chart rather than as scenery.
- */
-const TERRAIN_FRAG = /* glsl */ `
-  precision highp float;
-
-  uniform vec3  uSun;
-  uniform vec3  uSunColor;
-  uniform vec3  uSkyColor;
-  uniform vec3  uHazeColor;
-  uniform float uMinElev;
-  uniform float uMaxElev;
-  uniform float uExaggeration;
-  uniform float uContourInterval;
-  uniform vec3  uCameraPos;
-  uniform float uCraterGlow;
-  uniform vec3  uCraterPos;
-  uniform float uSpan;
-
-  varying float vElevation;
-  varying vec3  vNormalW;
-  varying vec3  vWorld;
-
-  vec3 elevationRamp(float t) {
-    // Cloud forest on the lower flanks up through bare volcanic rock.
-    vec3 forest = vec3(0.055, 0.094, 0.075);
-    vec3 scrub  = vec3(0.094, 0.113, 0.106);
-    vec3 rock   = vec3(0.145, 0.149, 0.152);
-    vec3 ash    = vec3(0.203, 0.196, 0.188);
-    vec3 c = mix(forest, scrub, smoothstep(0.00, 0.34, t));
-    c = mix(c, rock, smoothstep(0.30, 0.68, t));
-    c = mix(c, ash,  smoothstep(0.66, 1.00, t));
-    return c;
-  }
-
-  void main() {
-    // Recover true metres from the exaggerated scene height.
-    float metres = (vElevation / uExaggeration) * 1000.0;
-    float t = clamp((metres - uMinElev) / (uMaxElev - uMinElev), 0.0, 1.0);
-
-    vec3 base = elevationRamp(t);
-
-    vec3 n = normalize(vNormalW);
-    float lambert = max(dot(n, uSun), 0.0);
-    // Sky fill from above keeps shadowed faces readable rather than black.
-    float sky = 0.5 + 0.5 * n.y;
-    vec3 lit = base * (uSunColor * lambert * 0.92 + uSkyColor * sky * 0.30);
-
-    // Survey contours every uContourInterval metres, width-corrected so the
-    // lines stay one pixel thick at any distance.
-    float band = metres / uContourInterval;
-    float w = fwidth(band);
-    float line = 1.0 - smoothstep(0.0, w * 1.4, abs(fract(band) - 0.5) - 0.5 + w * 1.4);
-    // Fade contours out where they would alias into moire.
-    line *= 1.0 - smoothstep(0.18, 0.55, w);
-    lit += vec3(0.46, 0.56, 0.66) * line * 0.42;
-
-    // Ember wash near the crater, strongest on slopes facing it.
-    float craterDist = distance(vWorld, uCraterPos);
-    float glow = exp(-craterDist * 9.0) * uCraterGlow;
-    lit += vec3(1.0, 0.34, 0.10) * glow * 0.85;
-
-    // Distance haze — the valley fills with it at dawn.
-    float depth = distance(vWorld, uCameraPos);
-    float haze = 1.0 - exp(-depth * 0.048);
-    haze *= smoothstep(1.0, 0.15, (metres - uMinElev) / (uMaxElev - uMinElev));
-    vec3 color = mix(lit, uHazeColor, clamp(haze, 0.0, 0.86));
-
-    // The heightmap is a square tile; fade its border into atmosphere rather
-    // than letting the camera catch a straight cut across the landscape.
-    float edge = max(abs(vWorld.x), abs(vWorld.z)) / (uSpan * 0.5);
-    color = mix(color, uHazeColor, smoothstep(0.62, 0.99, edge));
-
-    gl_FragColor = vec4(color, 1.0);
-  }
-`;
-
-const SKY_VERT = /* glsl */ `
-  varying vec3 vDir;
-  void main() {
-    vDir = position;
-    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-  }
-`;
-
-const SKY_FRAG = /* glsl */ `
-  precision highp float;
-  uniform vec3 uHorizon;
-  uniform vec3 uZenith;
-  uniform vec3 uGlow;
-  uniform vec3 uSun;
-  varying vec3 vDir;
-
-  void main() {
-    vec3 d = normalize(vDir);
-    float h = clamp(d.y * 0.5 + 0.5, 0.0, 1.0);
-    vec3 c = mix(uHorizon, uZenith, pow(h, 0.40));
-    // Pre-dawn light bleeding up from behind the ridge.
-    float sun = pow(max(dot(d, normalize(uSun)), 0.0), 3.2);
-    c += uGlow * sun * 0.85;
-    gl_FragColor = vec4(c, 1.0);
-  }
-`;
+// The terrain's engraving lives in ./engraving.ts and its themes in ./theme.ts.
 
 const PLUME_VERT = /* glsl */ `
   attribute float aSize;
@@ -267,6 +158,7 @@ const PLUME_FRAG = /* glsl */ `
   precision highp float;
   uniform vec3 uAsh;
   uniform vec3 uEmber;
+  uniform float uOpacity;
   varying float vLife;
   varying float vSeed;
 
@@ -280,8 +172,9 @@ const PLUME_FRAG = /* glsl */ `
     vec3 c = mix(uEmber, uAsh, smoothstep(0.0, 0.10, vLife));
     // Fade in at the vent, then thin out as the parcel cools and disperses.
     float fade = smoothstep(0.0, 0.04, vLife) * (1.0 - smoothstep(0.62, 1.0, vLife));
-    alpha *= fade * (0.46 + 0.34 * vSeed);
+    alpha *= fade * (0.46 + 0.34 * vSeed) * uOpacity;
     gl_FragColor = vec4(c, alpha);
+    #include <colorspace_fragment>
   }
 `;
 
@@ -366,7 +259,6 @@ export function createMassifScene(
   const renderer = new THREE.WebGLRenderer({
     canvas, antialias: true, alpha: false, powerPreference: 'high-performance',
   });
-  renderer.setClearColor(0x080c11, 1);
 
   const scene = new THREE.Scene();
   const camera = new THREE.PerspectiveCamera(BASE_FOV, 1, 0.05, 200);
@@ -403,21 +295,6 @@ export function createMassifScene(
   const orbitRadius = spanKm * 0.92;
   const orbitDistance = Math.hypot(orbitRadius, spanKm * 0.40);
 
-  /* ── sky ─────────────────────────────────────────────────────────────── */
-  const sky = new THREE.Mesh(
-    new THREE.SphereGeometry(90, 32, 20),
-    new THREE.ShaderMaterial({
-      vertexShader: SKY_VERT, fragmentShader: SKY_FRAG, side: THREE.BackSide, depthWrite: false,
-      uniforms: {
-        uHorizon: { value: new THREE.Color(0x38506b) },
-        uZenith: { value: new THREE.Color(0x080d16) },
-        uGlow: { value: new THREE.Color(0xe89a56) },
-        uSun: { value: SUN_DIRECTION.clone() },
-      },
-    }),
-  );
-  scene.add(sky);
-
   /* ── terrain ─────────────────────────────────────────────────────────── */
   // Fewer segments on small screens; this is the only real cost in the scene.
   const segments = window.innerWidth < 760 ? 224 : 384;
@@ -439,16 +316,24 @@ export function createMassifScene(
     fragmentShader: TERRAIN_FRAG,
     uniforms: {
       uSun: { value: SUN_DIRECTION.clone() },
-      uSunColor: { value: new THREE.Color(0xffc79b) },
-      uSkyColor: { value: new THREE.Color(0x5d7ea6) },
-      uHazeColor: { value: new THREE.Color(0x23324a) },
+      uBackground: { value: new THREE.Color() },
+      uLine: { value: new THREE.Color() },
+      uInkOnLight: { value: 1 },
+      uHatchWidth: { value: 0.6 },
+      uContourWidth: { value: 0.6 },
+      uLineStrength: { value: 0.85 },
+      uPixelRatio: { value: 1 },
+      uPxAngle: { value: 0.001 },
       uMinElev: { value: meta.minElevation },
       uMaxElev: { value: meta.maxElevation },
       uExaggeration: { value: EXAGGERATION },
-      uContourInterval: { value: 100 },
       uCameraPos: { value: new THREE.Vector3() },
+      // The drawing thins out past the far side of the massif from the orbit.
+      uFadeNear: { value: spanKm * 0.9 },
+      uFadeFar: { value: spanKm * 1.75 },
       uCraterGlow: { value: 0.5 },
       uCraterPos: { value: craterPos },
+      uEmber: { value: new THREE.Color(0xff6a24) },
       uSpan: { value: spanKm },
     },
   });
@@ -500,8 +385,9 @@ export function createMassifScene(
       vertexShader: PLUME_VERT, fragmentShader: PLUME_FRAG,
       transparent: true, depthWrite: false, blending: THREE.NormalBlending,
       uniforms: {
-        uAsh: { value: new THREE.Color(0xa4b6c6) },
-        uEmber: { value: new THREE.Color(0xff7a33) },
+        uAsh: { value: new THREE.Color() },
+        uEmber: { value: new THREE.Color() },
+        uOpacity: { value: 1 },
       },
     }),
   );
@@ -546,10 +432,49 @@ export function createMassifScene(
       uniforms: {
         uAsh: { value: new THREE.Color(0xff9d4a) },
         uEmber: { value: new THREE.Color(0xfff0d0) },
+        uOpacity: { value: 1 },
       },
     }),
   );
   scene.add(embers);
+
+  /* ── theme ───────────────────────────────────────────────────────────── */
+  // Frames still to draw after a change, for the reduced-motion idle below.
+  let redraw = 3;
+
+  function applyTheme(theme: SceneTheme) {
+    // The sky is the page's own background: no gradient, no haze.
+    renderer.setClearColor(theme.background, 1);
+    const u = terrainMaterial.uniforms;
+    u.uBackground.value.setHex(theme.background);
+    u.uLine.value.setHex(theme.line);
+    u.uInkOnLight.value = theme.mode === 'paper' ? 1 : 0;
+    u.uHatchWidth.value = theme.hatchWidth;
+    u.uContourWidth.value = theme.contourWidth;
+    u.uLineStrength.value = theme.lineStrength;
+
+    const plumeU = (plume.material as THREE.ShaderMaterial).uniforms;
+    plumeU.uAsh.value.setHex(theme.ash);
+    plumeU.uEmber.value.setHex(theme.ember);
+    plumeU.uOpacity.value = theme.plumeOpacity;
+
+    // Embers add light on ink. On paper adding light only washes out to
+    // white, so they are laid down as solid orange instead.
+    const emberMaterial = embers.material as THREE.ShaderMaterial;
+    emberMaterial.blending = theme.emberAdditive ? THREE.AdditiveBlending : THREE.NormalBlending;
+    emberMaterial.uniforms.uAsh.value.setHex(theme.emberAdditive ? 0xff9d4a : 0xe2531a);
+    emberMaterial.uniforms.uEmber.value.setHex(theme.emberAdditive ? 0xfff0d0 : 0xff8a3d);
+    redraw = 3;
+  }
+  applyTheme(options.theme ?? readPageTheme(canvas));
+  // A later theme change also wakes the loop, which may have stopped once the
+  // reduced-motion picture settled.
+  const stopWatchingTheme = options.theme
+    ? () => {}
+    : watchPageTheme((theme) => {
+      applyTheme(theme);
+      wake();
+    }, canvas);
 
   /* ── camera rig ──────────────────────────────────────────────────────── */
   let view: 'orbit' | 'camp' = 'orbit';
@@ -637,13 +562,12 @@ export function createMassifScene(
     schedule();
   }
 
-  // Frames still to draw after a change, for the reduced-motion idle below.
-  let redraw = 3;
-
   function resize() {
     const w = canvas.clientWidth || 1;
     const h = canvas.clientHeight || 1;
-    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+    const ratio = Math.min(window.devicePixelRatio, 2);
+    renderer.setPixelRatio(ratio);
+    terrainMaterial.uniforms.uPixelRatio.value = ratio;
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     fit = fitCamera(w / h, summitGapKm, orbitDistance);
@@ -656,6 +580,9 @@ export function createMassifScene(
     const next = view === 'camp' ? fit.campFov : BASE_FOV;
     if (camera.fov !== next) camera.fov = next;
     camera.updateProjectionMatrix();
+    // Ground one device pixel covers at unit distance, for the hatch scale.
+    const devicePx = (canvas.clientHeight || 1) * terrainMaterial.uniforms.uPixelRatio.value;
+    terrainMaterial.uniforms.uPxAngle.value = (2 * Math.tan((camera.fov * Math.PI) / 360)) / devicePx;
   }
   resize();
   const observer = new ResizeObserver(resize);
@@ -770,6 +697,7 @@ export function createMassifScene(
         return {
           key: s.key, name: s.name, elevation: s.elevation,
           x: (projected.x * 0.5 + 0.5) * w,
+          roomRight: w - (projected.x * 0.5 + 0.5) * w,
           // Keep the label clear of the top bar without moving the dot off the
           // peak for every other label on screen.
           y: Math.max((-projected.y * 0.5 + 0.5) * h, 64),
@@ -808,8 +736,7 @@ export function createMassifScene(
       emberGeo.dispose();
       (plume.material as THREE.Material).dispose();
       (embers.material as THREE.Material).dispose();
-      sky.geometry.dispose();
-      (sky.material as THREE.Material).dispose();
+      stopWatchingTheme();
       renderer.dispose();
     },
     setActivity(explosionsPerHour: number) { activity = explosionsPerHour; wake(); },

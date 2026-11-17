@@ -46,8 +46,8 @@
 
 /* ── hero ─────────────────────────────────────────────────────────────── */
 
-/* The scene keeps its night sky until the engraving lands (#35), so the hero is
-   an ink section in both themes: the system's .dark switches only this part. */
+/* The hero follows the page's theme: the engraved scene draws on paper by day
+   and on ink after dark, with the page's own --bg as its sky. */
 .hero {
   position: relative;
   height: 100svh;
@@ -132,22 +132,40 @@
   flex: none;
 }
 .summit[data-active="true"] .summit-dot { background: var(--fg); }
-.summit-text { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
+.summit-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  white-space: nowrap;
+  /* The system's label style. */
+  font-family: var(--mono);
+  letter-spacing: 0.06em;
+}
+.summit-text b, .summit-text i, .observed-text, .scrollcue {
+  /* The scene runs behind these: a tight outline in the page's own --bg
+     knocks each glyph out of the lines and the plume, with no plate, so the
+     plume carries on behind the text. */
+  text-shadow:
+    1px 0 0 var(--bg), -1px 0 0 var(--bg), 0 1px 0 var(--bg), 0 -1px 0 var(--bg),
+    1px 1px 0 var(--bg), -1px -1px 0 var(--bg), 1px -1px 0 var(--bg), -1px 1px 0 var(--bg),
+    0 0 4px var(--bg);
+}
 .summit-text b {
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: -0.02em;
   color: var(--fg);
-  text-shadow: 0 1px 8px var(--bg);
 }
 .summit-text i {
-  /* Geist, not the mono: the labels must fit beside each summit on a phone. */
   font-style: normal;
   font-size: var(--text-label);
-  letter-spacing: -0.015em;
+  /* --soft rather than --muted: the line sits on the drawing. */
   color: var(--soft);
-  text-shadow: 0 0 3px var(--bg), 0 1px 8px var(--bg);
 }
+/* Near the right edge the label hangs to the left of its dot: the element is
+   shifted back by its own width, so the dot stays on the summit. */
+.summit[data-flip="true"] { flex-direction: row-reverse; margin-left: 3px; }
+.summit[data-flip="true"] .summit-text { align-items: flex-end; }
+.summits { position: absolute; inset: 0; pointer-events: none; }
 
 .readout {
   position: absolute;

@@ -19,6 +19,9 @@ interface MassifProps {
   locale: Locale;
 }
 
+/** Room a summit label needs to the right of its dot, in CSS pixels. */
+const LABEL_ROOM = 176;
+
 type Status = 'loading' | 'ready' | 'unsupported' | 'failed';
 
 function prefersReducedMotion(): boolean {
@@ -99,23 +102,27 @@ export default function Massif({ day, locale }: MassifProps) {
     <div className="massif">
       <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 
-      {labels.map((l) => (
-        <div
-          key={l.key}
-          className="summit"
-          data-active={l.key === 'fuego'}
-          style={{
-            transform: `translate(${l.x}px, ${l.y}px)`,
-            opacity: status === 'ready' && l.visible ? 1 : 0,
-          }}
-        >
-          <span className="summit-dot" />
-          <span className="summit-text">
-            <b>{l.name}</b>
-            <i>{formatNumber(locale, l.elevation)} m · {l.key === 'fuego' ? t.erupting : t.yourCamp}</i>
-          </span>
-        </div>
-      ))}
+      <div className="summits">
+        {labels.map((l) => (
+          <div
+            key={l.key}
+            className="summit"
+            data-active={l.key === 'fuego'}
+            // Near the right edge the label hangs to the left of its dot.
+            data-flip={l.roomRight < LABEL_ROOM}
+            style={{
+              transform: `translate(${l.x}px, ${l.y}px)${l.roomRight < LABEL_ROOM ? ' translateX(-100%)' : ''}`,
+              opacity: status === 'ready' && l.visible ? 1 : 0,
+            }}
+          >
+            <span className="summit-dot" />
+            <span className="summit-text">
+              <b>{l.name}</b>
+              <i>{formatNumber(locale, l.elevation)} m · {l.key === 'fuego' ? t.erupting : t.yourCamp}</i>
+            </span>
+          </div>
+        ))}
+      </div>
 
       <div className="massif-views" role="group" aria-label={t.viewsLabel}>
         <button type="button" onClick={() => setView('orbit')} aria-pressed={view === 'orbit'}>{t.orbit}</button>

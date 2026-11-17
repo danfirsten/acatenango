@@ -1,0 +1,6 @@
+{
+  "routes": ["/"],
+  "routeFiles": {
+    "/": ["src/lib/scene/massif.ts", "src/lib/scene/engraving.ts", "src/lib/scene/theme.ts", "src/components/Massif.tsx", "src/app/globals.css"]
+  }
+}
