@@ -12,9 +12,5 @@
     1440
   ],
   "interactions": [],
-  "motion": {
-    "allow": [
-      ".scrollcue"
-    ]
-  }
+  "motion": {}
 }

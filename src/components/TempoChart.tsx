@@ -243,7 +243,7 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
             </g>
             {/* A tick on the baseline marks the exact day under the lens. */}
             <line x1={hoop.x} x2={hoop.x} y1={base - 4} y2={base + 4} className="tempo-tick-day" />
-            <g className="tempo-hoop" transform={`translate(${hoop.x} ${hoop.y})`}>
+            <g className="tempo-hoop" style={{ transform: `translate(${hoop.x}px, ${hoop.y}px)` }}>
               <circle r={HOOP_R} className="tempo-hoop-lens" />
               <path d={HOOP_BODY} transform={`scale(${HOOP_R / 14.25})`} className="tempo-hoop-body" />
               <path d={HOOP_EYES} transform={`translate(0 ${-HOOP_R - 7}) scale(0.7)`} className="tempo-hoop-eyes" />

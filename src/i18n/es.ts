@@ -131,6 +131,9 @@ export const es: Dict = {
     unsupported: 'Esta vista necesita WebGL. Las cifras del boletín y el registro funcionan sin ella.',
     failed: 'Terreno no disponible. Las cifras del boletín y el registro no se ven afectados.',
   },
+  offline: {
+    chip: (newest) => `Sin conexión · copia guardada · ${newest}`,
+  },
   first: {
     seeRecord: (days) => `Ver el registro de ${days} días`,
   },

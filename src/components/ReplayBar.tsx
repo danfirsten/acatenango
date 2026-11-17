@@ -1,5 +1,7 @@
 'use client';
 
+import { useEffect, useState } from 'react';
+
 import Pill from '@/components/ink/Pill';
 import { formatDate, formatShortDate, getDict, type Locale } from '@/i18n';
 
@@ -24,9 +26,22 @@ function focusScrub() {
  */
 export default function ReplayBar({ dates, selected, onSelect, locale }: ReplayBarProps) {
   const latest = dates.length - 1;
-  if (latest < 0 || selected >= latest) return null;
+  const open = latest >= 0 && selected < latest;
+  // The bar stays in the page while its drawer closes, then goes.
+  const [mounted, setMounted] = useState(open);
+  if (open && !mounted) setMounted(true);
+  // While the drawer closes the bar keeps the last day it showed.
+  const [held, setHeld] = useState(selected);
+  if (open && held !== selected) setHeld(selected);
+  useEffect(() => {
+    if (open || !mounted) return;
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const id = setTimeout(() => setMounted(false), reduced ? 0 : 320);
+    return () => clearTimeout(id);
+  }, [open, mounted]);
+  if (!mounted) return null;
   const t = getDict(locale).replay;
-  const day = dates[selected];
+  const day = dates[Math.min(held, latest)];
 
   const go = (i: number) => {
     onSelect(i);
@@ -35,9 +50,9 @@ export default function ReplayBar({ dates, selected, onSelect, locale }: ReplayB
   };
 
   return (
-    <div className="replay-bar" role="region" aria-label={t.label}>
+    <div className="replay-bar" role="region" aria-label={t.label} data-open={open} inert={!open}>
       <button type="button" className="pill pill-line press replay-step" aria-label={t.previous}
-        disabled={selected === 0} onClick={() => go(selected - 1)}>
+        disabled={held === 0} onClick={() => go(held - 1)}>
         <span aria-hidden="true">‹</span>
       </button>
       <time className="replay-date num" dateTime={day} aria-live="polite">
@@ -45,7 +60,7 @@ export default function ReplayBar({ dates, selected, onSelect, locale }: ReplayB
         <span className="sr-only">{formatDate(locale, day)}</span>
       </time>
       <button type="button" className="pill pill-line press replay-step" aria-label={t.next}
-        onClick={() => go(selected + 1)}>
+        onClick={() => go(held + 1)}>
         <span aria-hidden="true">›</span>
       </button>
       <Pill onClick={() => go(latest)}>{t.back(formatShortDate(locale, dates[latest]))}</Pill>
