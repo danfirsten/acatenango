@@ -173,8 +173,12 @@ describe('launch checks', () => {
     }), 'Hoop sits over the hatched band');
     const lead = page.locator('.readout-row[data-lead="true"]');
     assert.equal(await lead.getAttribute('data-missing'), 'true');
-    assert.equal((await lead.locator('.readout-v').textContent())?.trim(), en.readout.notReported);
-    assert.match(await lead.locator('.readout-v').getAttribute('data-state') ?? '', /^(notReported|held)$/);
+    // Not reported, and when the scene holds an earlier day's rate, the row names that day.
+    const v = lead.locator('.readout-v');
+    const state = await v.getAttribute('data-state');
+    assert.match(state ?? '', /^(notReported|held)$/);
+    assert.equal((await v.evaluate((el) => el.firstChild?.nextSibling?.textContent ?? ''))?.trim(), en.readout.notReported);
+    if (state === 'held') assert.match(await v.locator('small').innerText(), /^plume shows /);
     const rate = page.locator('.camp-line', { hasText: en.camp.labels.rate });
     assert.equal(await rate.getAttribute('data-missing'), 'true');
     assert.equal((await rate.locator('dd').textContent())?.trim(), en.camp.rateMissing);
