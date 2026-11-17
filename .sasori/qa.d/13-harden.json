@@ -1,0 +1,10 @@
+{
+  "routes": [],
+  "interactions": [
+    { "route": "/", "selector": ".lanes-plot", "action": "focus", "label": "record scrub focus" }
+  ],
+  "routeFiles": {
+    "/": ["src/components/FuegoView.tsx", "src/components/FieldLanes.tsx", "src/components/CampPanel.tsx", "src/i18n/document.tsx"],
+    "/no-such-page/": ["src/app/global-not-found.tsx"]
+  }
+}

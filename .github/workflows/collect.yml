@@ -27,10 +27,16 @@ concurrency:
 jobs:
   collect:
     runs-on: ubuntu-latest
+    # A stalled download should not hold a runner for the 6-hour default.
+    timeout-minutes: 30
     permissions:
       contents: write
     steps:
+      # The token is not left in .git/config while third-party PDFs are read
+      # and dependencies install; only the commit step below uses it.
       - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -68,15 +74,22 @@ jobs:
       # cross-check. Idempotent: weeks already stored are skipped, and a week GVP
       # has not published is a warning, never a failure.
       - name: Collect Smithsonian GVP weekly reports
+        env:
+          GVP_BACKFILL: ${{ inputs.gvp_backfill }}
         run: |
-          if [ "${{ inputs.gvp_backfill }}" = 'true' ]; then
+          if [ "$GVP_BACKFILL" = 'true' ]; then
             npx tsx scripts/gvp.ts
           else
             npx tsx scripts/gvp.ts --recent
           fi
 
       - name: Commit archive
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
         run: |
+          remote="https://x-access-token:${GH_TOKEN}@github.com/${REPO}.git"
+          branch="$(git rev-parse --abbrev-ref HEAD)"
           git config user.name  'fuego-collector[bot]'
           git config user.email 'fuego-collector[bot]@users.noreply.github.com'
           git add data/
@@ -87,12 +100,12 @@ jobs:
           git commit -m "data: Fuego bulletin $(date -u -d '-6 hours' +%Y-%m-%d)"
           # The scheduled run may race with a push to the branch; rebase and retry.
           for attempt in 1 2 3 4; do
-            if git push; then
+            if git push "$remote" "HEAD:$branch"; then
               exit 0
             fi
             echo "Push failed (attempt $attempt), rebasing..."
             sleep $((2 ** attempt))
-            git pull --rebase --autostash || true
+            git pull --rebase --autostash "$remote" "$branch" || true
           done
           echo 'Could not push collected data.'
           exit 1

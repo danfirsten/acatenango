@@ -54,10 +54,15 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
   }
 
   function onKey(ev: React.KeyboardEvent) {
-    const move = ev.key === 'ArrowLeft' ? -1 : ev.key === 'ArrowRight' ? 1 : 0;
-    if (move === 0) return;
+    // The slider pattern: arrows step a day, Home and End jump to the first and latest.
+    const to = ev.key === 'ArrowLeft' ? selected - 1
+      : ev.key === 'ArrowRight' ? selected + 1
+      : ev.key === 'Home' ? 0
+      : ev.key === 'End' ? n - 1
+      : null;
+    if (to === null) return;
     ev.preventDefault();
-    onSelect(Math.max(0, Math.min(n - 1, selected + move)));
+    onSelect(Math.max(0, Math.min(n - 1, to)));
   }
 
   /** The day's column, the selected-day line, and the hover line, shared by every lane. */

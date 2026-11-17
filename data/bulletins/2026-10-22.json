@@ -27,11 +27,14 @@
       "explosions",
       "rumbling",
       "shockwaves",
+      "ashfall",
       "incandescence"
     ],
     "sky": "clear",
-    "ashfallCommunities": []
+    "ashfallCommunities": [
+      "Morelia"
+    ]
   },
-  "parserVersion": 7,
+  "parserVersion": 8,
   "warnings": []
 }

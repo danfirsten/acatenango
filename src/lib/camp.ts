@@ -6,7 +6,7 @@ import { formatDate, formatNumber } from '../i18n/format';
 import type { Dict, DriftGroup, DriftRelation, Locale } from '../i18n/types';
 
 /**
- * The latest bulletin, described as it reads from camp on Acatenango.
+ * A bulletin, described as it reads from camp on Acatenango.
  *
  * Every sentence is assembled from the parsed fields; nothing is guessed. A
  * field the bulletin left out is said to be missing, never read as 0. The words

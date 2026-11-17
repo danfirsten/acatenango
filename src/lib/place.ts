@@ -36,11 +36,6 @@ function set(storage: () => Storage, key: string, value: string | null): void {
   }
 }
 
-export function rememberedLanguage(): Locale | null {
-  const v = get(() => localStorage, LANG_KEY);
-  return v === 'en' || v === 'es' ? v : null;
-}
-
 export function rememberLanguage(locale: Locale): void {
   set(() => localStorage, LANG_KEY, locale);
 }

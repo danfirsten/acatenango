@@ -69,6 +69,8 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   /* Keeps the type legible over a bright sky without a hard band. */
   background: linear-gradient(#0B1016CC, #0B101600);
   pointer-events: none;
+  /* First in the DOM for keyboard order, so it lifts itself over the scene. */
+  z-index: 1;
 }
 
 .brand { color: var(--ink); letter-spacing: 0.3em; font-size: 14px; font-weight: 500; }
@@ -187,6 +189,12 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-weight: 400;
 }
 
+/* A replayed day is not live data, so its badge stays out of the ember. */
+.badge[data-replaying="true"] {
+  color: var(--ash);
+  border-color: var(--line);
+  background: transparent;
+}
 .badge[data-warn="true"] {
   color: #C9A227;
   border-color: #4A4020;
@@ -474,6 +482,13 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   color: var(--ink);
 }
 .lost p { margin: 0 0 8px; color: var(--ash); }
+/* The same wordmark the top bar carries, so a lost reader knows whose 404 this is. */
+.lost .lost-brand {
+  margin: 0 0 40px;
+  font-family: var(--label);
+  text-transform: uppercase;
+  color: var(--ink);
+}
 .lost p:has(a) { margin-bottom: 40px; }
 .lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration-color: var(--ash); }
 

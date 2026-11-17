@@ -75,7 +75,6 @@ export const en: Dict = {
     km: (dirs) => `km ${dirs}`,
     ashfallIn: 'Ashfall named in',
     drainages: 'Drainages',
-    noneNamed: 'None named',
   },
   notes: {
     bothHeld: (d) => `No rate or ash column in this bulletin; the plume holds the rate and column of ${d}.`,

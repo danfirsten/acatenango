@@ -5,18 +5,24 @@ import { CAMP_BEARING_DEG, CAMP_DISTANCE_KM, compassPoint, describeCamp } from '
 import type { IndexEntry } from '../../scripts/build-index';
 
 interface CampPanelProps {
-  /** The latest bulletin: the day the mountain above opens on. */
+  /** The selected day: the latest bulletin unless the reader is replaying an earlier one. */
   entry: IndexEntry | null;
+  /** Whether `entry` is the latest bulletin. */
+  isLatest: boolean;
   isRepresentative: boolean;
   locale: Locale;
 }
 
 /**
- * The latest bulletin in hikers' terms: how often, how high, which way the ash
+ * The selected bulletin in hikers' terms: how often, how high, which way the ash
  * went relative to camp, and which towns took ash. Words come from the parsed
  * fields alone (src/lib/camp.ts); a field left out is said to be left out.
+ *
+ * It follows the day the record and the mountain show, so the page never
+ * describes two days at once. That is the latest bulletin until the reader
+ * scrubs back, and then the panel says it is replaying.
  */
-export default function CampPanel({ entry, isRepresentative, locale }: CampPanelProps) {
+export default function CampPanel({ entry, isLatest, isRepresentative, locale }: CampPanelProps) {
   const t = getDict(locale);
   const c = t.camp;
   const bearing = Math.round(CAMP_BEARING_DEG);
@@ -30,8 +36,9 @@ export default function CampPanel({ entry, isRepresentative, locale }: CampPanel
         {entry ? (
           <p className="camp-date">
             {isRepresentative && <span className="badge">{c.representative}</span>}{' '}
+            {!isLatest && <><span className="badge" data-replaying="true">{t.topbar.replaying}</span>{' '}</>}
             {rich(c.bulletinOf, { date: <time dateTime={entry.date}>{formatDate(locale, entry.date)}</time> })}
-            <BulletinAge date={entry.date} locale={locale} />
+            {isLatest && <BulletinAge date={entry.date} locale={locale} />}
           </p>
         ) : null}
       </div>

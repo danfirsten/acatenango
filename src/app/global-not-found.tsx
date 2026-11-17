@@ -18,6 +18,7 @@ export default function GlobalNotFound() {
   return (
     <Document locale="en">
       <main className="lost">
+        <p className="brand lost-brand">Fuego</p>
         <h1>Page not found</h1>
         <p>No page of the record is at this address.</p>
         <p><a href={withBase('/')}>Go to Fuego</a></p>
