@@ -168,6 +168,27 @@ describe('phone layout', () => {
     });
   }
 
+  it('keeps the record legible at 390 wide: a short chart, roomy lanes, the drift lane marking camp', async () => {
+    const page = await open(390, 844, true);
+    const m = await page.evaluate(() => {
+      const box = (s: string) => document.querySelector(s)!.getBoundingClientRect();
+      return {
+        chart: box('.tempo svg').height,
+        lanes: [...document.querySelectorAll('.lane svg')].map((l) => l.getBoundingClientRect().height),
+        plot: box('.lanes-plot').height,
+        camp: document.querySelectorAll('.lane[data-lane="compass"] .lane-camp').length,
+        campTick: document.querySelector('.lane[data-lane="compass"] .lane-tick[data-camp]')?.textContent,
+      };
+    });
+    assert.ok(m.chart <= 160, `a shorter chart on a phone (${m.chart})`);
+    assert.ok(m.lanes.length >= 4);
+    for (const h of m.lanes) assert.ok(h >= 20, `each lane keeps its height (${h})`);
+    assert.ok(m.plot >= 44, 'the lanes are a target of at least 44 px');
+    assert.equal(m.camp, 1, 'camp’s bearing is marked on the drift lane');
+    assert.equal(m.campTick, 'N');
+    await page.context().close();
+  });
+
   it('shows the three figures with no empty cell at 390 wide', async () => {
     const page = await open(390, 844);
     const cells = await page.evaluate(() =>

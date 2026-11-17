@@ -6,6 +6,8 @@
  * Text with a link in it uses `{name}` placeholders, filled by `rich()`.
  */
 
+import type { ValueState } from '../lib/readout';
+
 export type Locale = 'en' | 'es';
 
 export type DriftRelation = 'towards' | 'away' | 'side';
@@ -47,6 +49,8 @@ export interface Dict {
     unread: (n: number) => string;
     latest: string;
     replaying: string;
+    /** The age pill while an earlier day is shown: "Replaying 29 Jul". */
+    replayingOn: (date: string) => string;
   };
   age: {
     label: (days: number) => string;
@@ -73,6 +77,23 @@ export interface Dict {
     km: (dirs: string) => string;
     ashfallIn: string;
     drainages: string;
+    ashfall: string;
+    /** Ash fall described with no town named. */
+    noneNamed: string;
+    /** A left-out value the scene holds from an earlier day. */
+    plumeShows: (date: string) => string;
+  };
+  /** The five marks' words, the same everywhere a value's state is shown. */
+  marks: {
+    label: string;
+    word: Record<ValueState, string>;
+    hint: Record<ValueState, string>;
+  };
+  replay: {
+    label: string;
+    previous: string;
+    next: string;
+    back: (date: string) => string;
   };
   notes: {
     bothHeld: (date: string) => string;
@@ -112,8 +133,9 @@ export interface Dict {
     ashMissing: string;
     drift: (km: string) => string;
     driftMissing: string;
-    keyMissing: (n: number, total: number) => string;
-    keyContinuous: (n: number) => string;
+    /** Read out as the scrub moves: the day and its rate. */
+    valueText: (date: string, rate: string) => string;
+    keyDays: (n: number, total: number) => string;
   };
   lanes: {
     figureLabel: string;
@@ -123,14 +145,15 @@ export interface Dict {
     drainagesTitle: string;
     townsTitle: string;
     daysOf: (n: number, total: number) => string;
-    firstNamed: string;
+    /** The dashed row on the drift lane: camp's bearing. */
+    campRow: string;
     glowNote: (m: string | null) => string;
     notReported: string;
     dayDrift: (dirs: string | null) => string;
     dayGlow: (m: string | null) => string;
     dayDrainages: (names: string | null) => string;
     dayTowns: (names: string | null) => string;
-    key: string;
+    dayTownsNone: string;
     commonDrift: string;
     /** Most common drift: bulletin compass codes, worded per language. */
     commonDriftValue: (dirs: string[], days: number) => string;
@@ -152,7 +175,6 @@ export interface Dict {
     read: (weeks: number, differ: number) => string;
     keyMissing: string;
     keyDiffer: string;
-    empty: string;
     agree: string;
     differIntro: string;
     week: (from: string, to: string) => string;

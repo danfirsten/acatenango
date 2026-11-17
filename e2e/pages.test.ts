@@ -230,7 +230,7 @@ describe(`static build served under ${BASE}`, () => {
     await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
 
     // Replay an earlier day, then switch from the top bar: the day comes along.
-    await page.locator('.lanes-plot').focus();
+    await page.locator('.tempo-plot').focus();
     for (let k = 0; k < 3; k++) await page.keyboard.press('ArrowLeft');
     const day = await page.locator('[data-selected-day]').getAttribute('data-selected-day');
     assert.ok(day, 'a day is selected');

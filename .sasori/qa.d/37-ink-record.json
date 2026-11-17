@@ -1,0 +1,11 @@
+{
+  "routes": [],
+  "interactions": [
+    { "route": "/", "selector": ".tempo-plot", "action": "click", "label": "scrub to a day: Hoop moves, the replay bar comes up" },
+    { "route": "/es/", "selector": ".tempo-plot", "action": "click", "label": "scrub to a day, Spanish" }
+  ],
+  "routeFiles": {
+    "/": ["src/components/TempoChart.tsx", "src/components/FieldLanes.tsx", "src/components/GvpWeeks.tsx", "src/components/CampPanel.tsx", "src/components/ReplayBar.tsx", "src/lib/readout.ts"],
+    "/es/": ["src/components/TempoChart.tsx", "src/components/FieldLanes.tsx", "src/components/ReplayBar.tsx", "src/i18n/es.ts"]
+  }
+}

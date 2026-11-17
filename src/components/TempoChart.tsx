@@ -1,36 +1,72 @@
 'use client';
 
-import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+import { type RefObject, useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import { HOOP_BODY, HOOP_EYES } from '@/components/ink/Hoop';
 import Mark from '@/components/ink/Mark';
-import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
-import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
+import { type Dict, formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
+import {
+  axisLabelIndices, fieldState, PLOT_GUTTER, plotDayAt, plotX, rateRuns, rateText, runDays, STATE_MARK,
+  type ValueState, VALUE_STATES,
+} from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
 /** Drawn width before the chart has been measured. */
 const DEFAULT_W = 1000;
-/**
- * One user unit is one CSS pixel, so type is the size the stylesheet says on
- * every screen. Narrow screens get a taller plot so the line stays readable.
- */
-const heightFor = (w: number) => (w < 600 ? 260 : 220);
-const PAD = { t: 14, b: 28 };
+/** Below this width the chart is a phone's: shorter, with only its first and last dates. */
+const NARROW = 600;
+/** One user unit is one CSS pixel, so type and strokes are the size the stylesheet says. */
+const heightFor = (w: number) => (w < NARROW ? 136 : 200);
+/** Room above for Hoop's eyes, and below for the dates. */
+const PAD = { t: 30, b: 24 };
+/** Hoop's radius on the chart, in pixels. */
+const HOOP_R = 15;
 
-/** Smooths a polyline into a bezier path, so the tempo reads as a ridgeline. */
-function smooth(pts: Array<[number, number]>, tension = 0.45): string {
-  if (pts.length < 2) return '';
-  let d = `M${pts[0][0]},${pts[0][1]}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const p0 = pts[i - 1] ?? pts[i];
-    const p1 = pts[i];
-    const p2 = pts[i + 1];
-    const p3 = pts[i + 2] ?? p2;
-    d +=
-      `C${p1[0] + ((p2[0] - p0[0]) / 6) * tension},${p1[1] + ((p2[1] - p0[1]) / 6) * tension},` +
-      `${p2[0] - ((p3[0] - p1[0]) / 6) * tension},${p2[1] - ((p3[1] - p1[1]) / 6) * tension},` +
-      `${p2[0]},${p2[1]}`;
-  }
-  return d;
+/** The element's width in CSS pixels, kept up to date as it resizes. */
+export function useWidth(ref: RefObject<HTMLElement | null>, fallback = DEFAULT_W): number {
+  const [w, setW] = useState(fallback);
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const measure = () => setW(Math.max(260, Math.round(el.clientWidth)) || fallback);
+    measure();
+    const observer = new ResizeObserver(measure);
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [ref, fallback]);
+  return w;
+}
+
+/**
+ * The mark for a value's state. It always sits beside words that say the same,
+ * so it is hidden from screen readers; `data-state` names it for tests.
+ */
+export function StateMark({ state }: { state: ValueState }) {
+  return <span className="state-mark" data-state={state}><Mark kind={STATE_MARK[state]} /></span>;
+}
+
+/**
+ * The key to the five marks, in the system's order, each with its word and
+ * what it means. `counts` adds how many days are in a state.
+ */
+export function MarkKey({ t, counts = {} }: { t: Dict; counts?: Partial<Record<ValueState, string>> }) {
+  return (
+    <dl className="mark-key" aria-label={t.marks.label}>
+      {VALUE_STATES.map((s) => (
+        <div key={s} data-state={s}>
+          <dt><Mark kind={STATE_MARK[s]} />{t.marks.word[s]}</dt>
+          <dd>{t.marks.hint[s]}{counts[s] && <span className="mark-key-count"> {counts[s]}</span>}</dd>
+        </div>
+      ))}
+    </dl>
+  );
+}
+
+/** How the day's rate reads, in words. */
+export function rateWords(e: IndexEntry, t: Dict): string {
+  const state = fieldState(e, 'rate');
+  return state === 'reported' ? t.tempo.rate(rateText(e.explosionsMin, e.explosionsMax as number))
+    : state === 'continuous' ? t.tempo.continuous : t.tempo.rateMissing;
 }
 
 interface TempoChartProps {
@@ -41,67 +77,69 @@ interface TempoChartProps {
   locale: Locale;
 }
 
+/**
+ * The explosion rate as schematic ink: a 1 px line through each run of
+ * reported days, a 1 px baseline, a faint mid rule, and hatched bands where the
+ * bulletin gave no rate, with no line across them. Hoop sits over the selected
+ * day like a lens, and the line inside it is drawn bold.
+ *
+ * The plot is the record's scrub: drag it, or focus it and use the arrows,
+ * Home and End. Every other part of the page follows the same day.
+ */
 export default function TempoChart({ series, selected, onSelect, locale }: TempoChartProps) {
-  const t = getDict(locale).tempo;
+  const dict = getDict(locale);
+  const t = dict.tempo;
+  const uid = useId();
   const [hover, setHover] = useState<number | null>(null);
   const figRef = useRef<HTMLElement>(null);
   const tipRef = useRef<HTMLElement>(null);
-  const [W, setW] = useState(DEFAULT_W);
+  const W = useWidth(figRef);
   const H = heightFor(W);
+  const n = series.length;
+  const base = H - PAD.b;
 
-  useEffect(() => {
-    const fig = figRef.current;
-    if (!fig) return;
-    const measure = () => setW(Math.max(260, Math.round(fig.clientWidth)) || DEFAULT_W);
-    measure();
-    const observer = new ResizeObserver(measure);
-    observer.observe(fig);
-    return () => observer.disconnect();
-  }, []);
-
-  const { runs, gaps, continuous, xs, ys, maxY, ticks, half } = useMemo(() => {
+  const { runs, gaps, continuous, xs, ys, maxY, half } = useMemo(() => {
     // Only reported days set the scale; a missing day is not a 0.
     const reported = series.flatMap((e) => (e.explosionsMax === null ? [] : [e.explosionsMax]));
     const top = reported.length > 0 ? Math.max(...reported) : 0;
-    const maxY = Math.max(20, Math.ceil((top * 1.12) / 10) * 10);
-    const step = series.length > 1 ? W / (series.length - 1) : W;
-    const xs = series.map((_, i) => (series.length > 1 ? i * step : W / 2));
-    const yOf = (v: number) => H - PAD.b - (v / maxY) * (H - PAD.t - PAD.b);
+    const maxY = Math.max(20, Math.ceil((top * 1.1) / 10) * 10);
+    const xs = series.map((_, i) => plotX(i, n, W));
+    const yOf = (v: number) => base - (v / maxY) * (base - PAD.t);
     // Null for a day with no rate: there is no point to draw.
     const ys = series.map((e) => (e.explosionsMax === null ? null : yOf(e.explosionsMax)));
     const { reported: runs, missing: gaps, continuous } = rateRuns(series);
     return {
-      runs: runs.map((r) => {
-        const pts = xs.slice(r.start, r.end + 1).map((x, k) => [x, ys[r.start + k] as number] as [number, number]);
-        const line = smooth(pts);
-        return {
-          key: r.start,
-          pts,
-          line,
-          area: line && `${line}L${pts.at(-1)![0]},${H - PAD.b}L${pts[0][0]},${H - PAD.b}Z`,
-        };
-      }),
+      runs: runs.map((r) => ({
+        key: r.start,
+        pts: xs.slice(r.start, r.end + 1).map((x, k) => `${x},${ys[r.start + k]}`).join(' '),
+        single: r.start === r.end ? { x: xs[r.start], y: ys[r.start] as number } : null,
+      })),
       gaps,
       continuous,
       xs,
       ys,
       maxY,
-      ticks: Array.from({ length: Math.floor(maxY / 10) }, (_, i) => (i + 1) * 10),
-      half: step / 2,
+      half: n > 1 ? (xs[1] - xs[0]) / 2 : (W - PLOT_GUTTER) / 2,
     };
-  }, [series, W, H]);
+  }, [series, n, W, base]);
 
   const missingDays = runDays(gaps);
   const continuousDays = runDays(continuous);
   const band = (r: { start: number; end: number }) => {
-    const x0 = Math.max(0, xs[r.start] - half);
-    return { x: x0, width: Math.min(W, xs[r.end] + half) - x0, y: PAD.t, height: H - PAD.t - PAD.b };
+    const x0 = Math.max(PLOT_GUTTER, xs[r.start] - half);
+    return { x: x0, width: Math.min(W, xs[r.end] + half) - x0, y: PAD.t, height: base - PAD.t };
   };
+  const midY = base - (base - PAD.t) / 2;
 
+  const at = Math.min(selected, n - 1);
+  const day = series[at];
+  // On a day with no rate Hoop rests on the band at mid height: any point would sit on the scale.
+  const hoop = { x: xs[at], y: ys[at] ?? midY };
   const active = hover === null ? null : series[hover];
+  const fmt = (iso: string) => formatShortDate(locale, iso);
+  const labels = W < NARROW ? [0, n - 1].filter((v, i, a) => a.indexOf(v) === i) : axisLabelIndices(n);
 
-  // Centre the tip over the hovered day, but keep it inside the chart: on a
-  // phone the chart is narrower than a fixed edge rule can allow for.
+  // Centre the tip over the hovered day, but keep it inside the chart.
   useLayoutEffect(() => {
     const fig = figRef.current;
     const tip = tipRef.current;
@@ -111,112 +149,112 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
     tip.style.left = `${Math.max(0, Math.min(width - tip.offsetWidth, x))}px`;
   }, [hover, xs, W]);
 
-  function indexAt(ev: React.PointerEvent<SVGSVGElement>): number {
+  function indexAt(ev: React.PointerEvent<HTMLElement>): number {
     const r = ev.currentTarget.getBoundingClientRect();
-    const x = ((ev.clientX - r.left) / r.width) * W;
-    return Math.max(0, Math.min(series.length - 1, Math.round((x / W) * (series.length - 1))));
+    return plotDayAt(((ev.clientX - r.left) / r.width) * W, n, W);
   }
 
-  function onMove(ev: React.PointerEvent<SVGSVGElement>) {
-    const i = indexAt(ev);
-    setHover(i);
-    // Dragging scrubs the scene; a plain hover only moves the crosshair.
-    if (ev.buttons === 1) onSelect(i);
+  function onKey(ev: React.KeyboardEvent) {
+    // The slider pattern: arrows step a day, Home and End jump to the first and latest.
+    const to = ev.key === 'ArrowLeft' || ev.key === 'ArrowDown' ? at - 1
+      : ev.key === 'ArrowRight' || ev.key === 'ArrowUp' ? at + 1
+      : ev.key === 'Home' ? 0
+      : ev.key === 'End' ? n - 1
+      : null;
+    if (to === null) return;
+    ev.preventDefault();
+    onSelect(Math.max(0, Math.min(n - 1, to)));
   }
 
-  const fmt = (iso: string) => formatShortDate(locale, iso);
+  const clip = `${uid}-lens`;
+  const hatch = `${uid}-gap`;
 
   return (
     <figure className="tempo" ref={figRef}>
-      <svg
-        viewBox={`0 0 ${W} ${H}`}
-        role="img"
-        aria-label={t.aria(series.length, missingDays, continuousDays)}
-        onPointerMove={onMove}
+      <div
+        className="tempo-plot"
+        id="record-scrub"
+        tabIndex={0}
+        role="slider"
+        aria-label={dict.lanes.sliderLabel}
+        aria-valuemin={0}
+        aria-valuemax={n - 1}
+        aria-valuenow={at}
+        aria-valuetext={t.valueText(formatShortDate(locale, day.date), rateWords(day, dict))}
+        onKeyDown={onKey}
+        onPointerMove={(ev) => { const i = indexAt(ev); setHover(i); if (ev.buttons === 1) onSelect(i); }}
         onPointerDown={(ev) => { ev.currentTarget.setPointerCapture(ev.pointerId); onSelect(indexAt(ev)); }}
         onPointerLeave={() => setHover(null)}
       >
-        <defs>
-          <linearGradient id="tempoFill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" className="tempo-stop" stopOpacity="0.36" />
-            <stop offset="100%" className="tempo-stop" stopOpacity="0" />
-          </linearGradient>
-          <pattern id="tempoGap" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-            <line x1="0" y1="0" x2="0" y2="6" className="tempo-gap-hatch" />
-          </pattern>
-        </defs>
+        <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} role="img"
+          aria-label={t.aria(n, missingDays, continuousDays)}>
+          <defs>
+            <pattern id={hatch} width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="4" className="tempo-gap-hatch" />
+            </pattern>
+            <clipPath id={clip}>
+              <circle cx={hoop.x} cy={hoop.y} r={HOOP_R - 1} />
+            </clipPath>
+          </defs>
 
-        {/* Continuous emission: the volcano at its most active, with no hourly count. */}
-        {continuous.map((r) => {
-          const b = band(r);
-          return (
-            <g key={`c${r.start}`}>
-              <rect className="tempo-continuous" {...b} />
-              <rect className="tempo-continuous-cap" x={b.x} y={H - PAD.b + 2} width={b.width} height={3} />
-            </g>
-          );
-        })}
+          {/* A faint rule at half the scale, labelled in the gutter. */}
+          <line x1={PLOT_GUTTER} x2={W} y1={midY} y2={midY} className="tempo-mid" />
+          <text x={0} y={midY + 4} className="tempo-tick">{formatNumber(locale, maxY / 2)}</text>
+          <text x={0} y={PAD.t + 4} className="tempo-tick">{formatNumber(locale, maxY)}</text>
 
-        {/* Days with no reported rate: a quiet hatch, never a line at 0. */}
-        {gaps.map((g) => <rect key={g.start} className="tempo-gap" fill="url(#tempoGap)" {...band(g)} />)}
+          {/* Continuous emission: the volcano at its most active, with no hourly count. */}
+          {continuous.map((r) => {
+            const b = band(r);
+            return (
+              <g key={`c${r.start}`} data-state="continuous">
+                <rect className="tempo-continuous" {...b} />
+                <rect className="tempo-continuous-cap" x={b.x} y={base + 2} width={b.width} height={3} />
+              </g>
+            );
+          })}
 
-        {ticks.map((v) => {
-          const y = H - PAD.b - (v / maxY) * (H - PAD.t - PAD.b);
-          return (
-            <g key={v}>
-              <line x1={0} x2={W} y1={y} y2={y} className="tempo-grid" />
-              <text x={4} y={y - 5} className="tempo-tick">{v}</text>
-            </g>
-          );
-        })}
+          {/* Days with no reported rate: a hatched band, never a line at 0. */}
+          {gaps.map((g) => <rect key={g.start} className="tempo-gap" fill={`url(#${hatch})`} {...band(g)} />)}
 
-        {runs.map((r) =>
-          r.pts.length > 1 ? (
-            <g key={r.key}>
-              <path d={r.area} fill="url(#tempoFill)" />
-              <path d={r.line} className="tempo-line" />
-            </g>
-          ) : (
+          <line x1={PLOT_GUTTER} x2={W} y1={base} y2={base} className="tempo-base" />
+
+          {runs.map((r) => (r.single
             // A reported day between two gaps has no neighbour to join.
-            <circle key={r.key} cx={r.pts[0][0]} cy={r.pts[0][1]} r={2.5} className="tempo-dot" />
-          ),
-        )}
+            ? <circle key={r.key} cx={r.single.x} cy={r.single.y} r={2} className="tempo-dot" />
+            : <polyline key={r.key} points={r.pts} className="tempo-line" />))}
 
-        {axisLabelIndices(series.length).map((i) => (
-          <text key={i} x={Math.min(xs[i], W - 52)} y={H - 8} className="tempo-tick">
-            {fmt(series[i].date)}
-          </text>
-        ))}
+          {labels.map((i, k) => (
+            <text key={i} x={xs[i]} y={H - 6} className="tempo-tick"
+              textAnchor={k === 0 && i === 0 ? 'start' : i === n - 1 ? 'end' : 'middle'}>
+              {fmt(series[i].date)}
+            </text>
+          ))}
 
-        <g className="tempo-selected">
-          <line x1={xs[selected]} x2={xs[selected]} y1={PAD.t} y2={H - PAD.b}
-            className="tempo-cross" strokeWidth={1.5} opacity={0.85} />
-          {/* A day with no rate gets the line alone: any point would sit on the scale. */}
-          {ys[selected] !== null && (
-            <circle cx={xs[selected]} cy={ys[selected]!} r={5} className="tempo-point" />
+          {hover !== null && hover !== at && (
+            <line x1={xs[hover]} x2={xs[hover]} y1={PAD.t} y2={base} className="tempo-hover" />
           )}
-        </g>
 
-        {hover !== null && (
-          <>
-            <line x1={xs[hover]} x2={xs[hover]} y1={PAD.t} y2={H - PAD.b}
-              className="tempo-cross" strokeWidth={1} strokeDasharray="2 3" opacity={0.6} />
-            {ys[hover] !== null && <circle cx={xs[hover]} cy={ys[hover]!} r={3.5} className="tempo-dot" />}
-          </>
-        )}
-      </svg>
+          {/* Hoop: the line inside the lens goes bold. */}
+          <g className="tempo-selected" data-state={fieldState(day, 'rate')}>
+            <g clipPath={`url(#${clip})`}>
+              {runs.map((r) => (r.single
+                ? <circle key={r.key} cx={r.single.x} cy={r.single.y} r={3} className="tempo-dot" />
+                : <polyline key={r.key} points={r.pts} className="tempo-line tempo-line-bold" />))}
+            </g>
+            <g className="tempo-hoop" transform={`translate(${hoop.x} ${hoop.y})`}>
+              <circle r={HOOP_R} className="tempo-hoop-lens" />
+              <path d={HOOP_BODY} transform={`scale(${HOOP_R / 14.25})`} className="tempo-hoop-body" />
+              <path d={HOOP_EYES} transform={`translate(0 ${-HOOP_R - 7}) scale(0.7)`} className="tempo-hoop-eyes" />
+            </g>
+          </g>
+        </svg>
+      </div>
 
       <figcaption className="tempo-tip" ref={tipRef} data-on={active !== null}>
         {active && (
           <>
             <b>{fmt(active.date)}</b>
-            <span>
-              {active.explosionsMax !== null
-                ? t.rate(rateText(active.explosionsMin, active.explosionsMax))
-                : active.phenomena.includes('continuousPhase')
-                  ? t.continuous
-                  : t.rateMissing}
-            </span>
+            <span>{rateWords(active, dict)}</span>
             <span>
               {active.ashMaxMasl !== null ? t.ash(formatNumber(locale, active.ashMaxMasl)) : t.ashMissing}
               {' · '}
@@ -226,22 +264,10 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
         )}
       </figcaption>
 
-      {(missingDays > 0 || continuousDays > 0) && (
-        <p className="tempo-key">
-          {missingDays > 0 && (
-            <span>
-              <Mark kind="hatched" />
-              {t.keyMissing(missingDays, series.length)}
-            </span>
-          )}
-          {continuousDays > 0 && (
-            <span>
-              <Mark kind="half" />
-              {t.keyContinuous(continuousDays)}
-            </span>
-          )}
-        </p>
-      )}
+      <MarkKey t={dict} counts={{
+        ...(missingDays > 0 && { notReported: t.keyDays(missingDays, n) }),
+        ...(continuousDays > 0 && { continuous: t.keyDays(continuousDays, n) }),
+      }} />
     </figure>
   );
 }
