@@ -1,3 +1,4 @@
+import Pill from '@/components/ink/Pill';
 import { getDict, type Locale } from '@/i18n';
 
 /**
@@ -13,8 +14,8 @@ export default function Notice({ locale }: { locale: Locale }) {
         <strong>{t.lead}</strong> {t.body}
       </p>
       <nav className="notice-links" aria-label={t.linksLabel}>
-        <a href="https://insivumeh.gob.gt/vulcanologia/">{t.insivumeh}</a>
-        <a href="https://conred.gob.gt/alertas/">{t.conred}</a>
+        <Pill variant="outline" compact external href="https://insivumeh.gob.gt/vulcanologia/">{t.insivumeh}</Pill>
+        <Pill variant="outline" compact external href="https://conred.gob.gt/alertas/">{t.conred}</Pill>
       </nav>
     </aside>
   );

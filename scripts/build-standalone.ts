@@ -33,7 +33,15 @@ async function main(): Promise<void> {
 
   const meta = await readFile(path.join(ROOT, 'public/terrain/massif.json'), 'utf8');
   const png = await readFile(path.join(ROOT, 'public/terrain/massif.png'));
-  const css = await readFile(path.join(ROOT, 'src/app/globals.css'), 'utf8');
+  // The page's stylesheet imports the vendored ink and paper system; a single
+  // file has nowhere to import from, so the system is inlined in its place.
+  const ink = path.join(ROOT, 'vendor/ink-and-paper');
+  const system = (await Promise.all(
+    ['tokens/tokens.css', 'css/base.css', 'css/components.css', 'css/motion.css']
+      .map((f) => readFile(path.join(ink, f), 'utf8')),
+  )).join('\n');
+  const css = (await readFile(path.join(ROOT, 'src/app/globals.css'), 'utf8'))
+    .replace(/@import\s+['"][^'"]*ink-and-paper\/css\/index\.css['"];/, () => system);
 
   // Inline the real archive so the offline file carries the collected record
   // rather than the placeholder.
@@ -50,24 +58,23 @@ async function main(): Promise<void> {
 <title>Fuego</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Barlow+Condensed:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&family=Geist+Mono:wght@400;500&display=swap">
 <style>
-${css.replace(/var\(--font-barlow-condensed\)/g, '"Barlow Condensed"')
-     .replace(/var\(--font-barlow\)/g, '"Barlow"')}
+${css}
 .labels { position: absolute; inset: 0; pointer-events: none; }
-.tick { font-family: "Barlow Condensed", sans-serif; font-size: 10.5px; letter-spacing: .12em; fill: #7F909E; }
+.tick { font-family: var(--mono); font-size: 11px; letter-spacing: .04em; fill: var(--muted); }
 .tip {
   position: absolute; top: -6px; transform: translate(-50%, -100%);
   display: flex; flex-direction: column; gap: 1px; padding: 9px 12px;
-  background: #17212B; border: 1px solid #2B3945; font-size: 12px; line-height: 1.45;
-  white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .12s ease;
+  background: var(--surface); border: 1px solid var(--rule); border-radius: var(--r-chip); font-size: 12px; line-height: 1.45;
+  white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity var(--dur-quick) var(--ease-out);
   font-variant-numeric: tabular-nums;
 }
-.tip span { color: #7F909E; }
+.tip span { color: var(--soft); }
 </style>
 
 <main>
-  <section class="hero">
+  <section class="hero dark">
     <div class="massif">
       <canvas class="massif-canvas" aria-label="The Acatenango and Fuego massif, built from elevation data"></canvas>
       <div class="labels"></div>

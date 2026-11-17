@@ -2,6 +2,7 @@
 
 import { useId, useMemo } from 'react';
 
+import Mark from '@/components/ink/Mark';
 import { type Dict, formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
 import { rich } from '@/i18n/rich';
 import { AXIS_W as W, dayX } from '@/lib/fields';
@@ -85,8 +86,8 @@ export default function GvpWeeks({ series, selected, locale }: { series: IndexEn
       </div>
 
       <p className="tempo-key">
-        <span><span className="tempo-key-swatch" aria-hidden="true" />{g.keyMissing}</span>
-        {differing.length > 0 && <span><span className="gvp-key-ring" aria-hidden="true" />{g.keyDiffer}</span>}
+        <span><Mark kind="hatched" />{g.keyMissing}</span>
+        {differing.length > 0 && <span><Mark kind="ring" />{g.keyDiffer}</span>}
       </p>
 
       {weeks.length === 0 ? (

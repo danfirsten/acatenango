@@ -1,0 +1,8 @@
+{
+  "routes": [],
+  "routeFiles": {
+    "/": ["src/components/ink/", "src/lib/theme.ts", "vendor/ink-and-paper/", "public/manifest.webmanifest"],
+    "/es/": ["src/components/ink/", "src/lib/theme.ts", "vendor/ink-and-paper/"],
+    "/no-such-page/": ["src/lib/theme.ts", "vendor/ink-and-paper/"]
+  }
+}

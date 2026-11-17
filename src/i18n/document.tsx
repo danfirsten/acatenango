@@ -1,32 +1,22 @@
 import type { Metadata, Viewport } from 'next';
-import { Barlow, Barlow_Condensed } from 'next/font/google';
+import { GeistMono } from 'geist/font/mono';
+import { GeistSans } from 'geist/font/sans';
 import type { ReactNode } from 'react';
 
 import ServiceWorker from '@/components/ServiceWorker';
 import { siteUrl, withBase } from '@/lib/base-path';
 import { LANG_KEY } from '@/lib/place';
+import { THEME_COLOR } from '@/lib/theme';
 
 import { getDict, LOCALE_PATH, LOCALES, type Locale } from './index';
 
 /**
  * What both root layouts share: the fonts, the metadata and the <html> shell.
+ * Geist and Geist Mono are self-hosted (next/font/local, through the `geist`
+ * package), so the page makes no font request to anyone else.
  * Each language has its own root layout (`app/(en)` and `app/es`) so that the
  * static HTML carries the right `lang` from the first byte.
  */
-
-const barlow = Barlow({
-  variable: '--font-barlow',
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  display: 'swap',
-});
-
-const barlowCondensed = Barlow_Condensed({
-  variable: '--font-barlow-condensed',
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  display: 'swap',
-});
 
 /**
  * Where the site is served; the social card needs absolute URLs. Always ends in
@@ -77,7 +67,8 @@ export function buildMetadata(locale: Locale): Metadata {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0B1016',
+  // Paper by day, ink after dark, as data-theme="auto" chooses.
+  themeColor: THEME_COLOR,
 };
 
 /**
@@ -99,8 +90,10 @@ export function Document({ locale, children, followRemembered = false }: {
   followRemembered?: boolean;
 }) {
   return (
-    <html lang={getDict(locale).htmlLang} className={`${barlow.variable} ${barlowCondensed.variable}`}>
-      <body>
+    // Ink and paper: data-theme="auto" follows the system, paper by day and ink after dark.
+    <html lang={getDict(locale).htmlLang} data-theme="auto" className={`${GeistSans.variable} ${GeistMono.variable}`}>
+      {/* An app surface: labels keep the mono but drop the capitals. */}
+      <body data-surface="app">
         {/* First in the body, so it runs before any of the page is parsed or painted. */}
         {followRemembered && <script dangerouslySetInnerHTML={{ __html: rememberedSpanishScript() }} />}
         {children}

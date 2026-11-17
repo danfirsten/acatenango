@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from 'react';
 
+import Mark from '@/components/ink/Mark';
 import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
 import { AXIS_W as W, bearing, dayAt, dayX, fieldSummary, incandescenceTop } from '@/lib/fields';
 import type { IndexEntry } from '../../scripts/build-index';
@@ -200,7 +201,7 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
       </figcaption>
 
       <p className="tempo-key">
-        <span><span className="tempo-key-swatch" aria-hidden="true" />{l10n.key}</span>
+        <span><Mark kind="hatched" />{l10n.key}</span>
       </p>
 
       <dl className="lanes-summary">

@@ -1,53 +1,60 @@
-/* Ridgeline: the Acatenango–Fuego monitor.
-   Ember on alpine night — a single accent against a blue-biased dark, so the
-   only warm thing on the page is the volcano. */
+/* Fuego's own rules, written against ink and paper's theme roles (--bg, --surface,
+   --fg, --soft, --muted, --rule, --fill). The system itself is vendored, never
+   edited here: tokens, base, components and motion come in through this import.
+   The only colour on the page is the scene's own; nothing here is warm. */
+@import '../../vendor/ink-and-paper/css/index.css';
 
+/* Geist and Geist Mono are self-hosted through next/font (src/i18n/document.tsx),
+   which names them by these variables on <html>. */
 :root {
-  --ground: #0B1016;
-  --surface: #121A22;
-  --line: #1E2A34;
-  --ink: #E7EEF4;
-  --muted: #7F909E;
-  --ember: #E8622C;
-  --ash: #93A7B8;
-
-  --label: var(--font-barlow-condensed), "Barlow Condensed", system-ui, sans-serif;
-  --body: var(--font-barlow), "Barlow", system-ui, -apple-system, sans-serif;
+  --sans: var(--font-geist-sans, 'Geist Variable'), 'Geist', ui-sans-serif, system-ui, sans-serif;
+  --mono: var(--font-geist-mono, 'Geist Mono'), ui-monospace, 'SFMono-Regular', Menlo, monospace;
 }
 
-* { box-sizing: border-box; }
+/* Fuego's labels: the system's label, sentence case inside the page. */
+.readout-k, .tempo-key, .lane-head, .figures dt, .figures dd.figures-note, .readout-v small,
+.lanes-summary dt, .camp-date, .camp-line dt, .massif-state, .scrollcue, .badge, .summit-text i {
+  font-family: var(--mono);
+  font-size: var(--text-label);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+[data-surface='app'] .chip-tag { text-transform: none; }
 
-html, body { margin: 0; padding: 0; }
-
-body {
-  background: var(--ground);
-  color: var(--ink);
-  font-family: var(--body);
-  font-size: 16px;
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
+/* Text links in prose: underlined with a 4px offset. */
+.colophon a, .camp-foot a, .gvp-note a, .gvp-credit a, .gvp-list a, .lost a {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--muted);
+  transition: text-decoration-color var(--dur-quick) var(--ease-out);
+}
+.colophon a:hover, .camp-foot a:hover, .gvp-credit a:hover, .gvp-list a:hover, .lost a:hover {
+  text-decoration-color: currentColor;
 }
 
-a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 2px; }
-
-:where(button, a):focus-visible {
-  outline: 2px solid var(--ember);
-  outline-offset: 2px;
+/* The compact pill, kept for the two official links in the notice. */
+.pill-compact {
+  min-height: 44px;
+  padding: 0 16px;
+  font-size: 14px;
 }
 
-.eyebrow, .badge, .summit i, .readout-k, .tempo-tick, .figures dt, .massif-views button {
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-}
+/* A mark beside its words. */
+.marked { display: inline-flex; align-items: center; gap: var(--space-2); }
 
 /* ── hero ─────────────────────────────────────────────────────────────── */
 
+/* The scene keeps its night sky until the engraving lands (#35), so the hero is
+   an ink section in both themes: the system's .dark switches only this part. */
 .hero {
   position: relative;
   height: 100svh;
   min-height: 560px;
   overflow: hidden;
+  background: var(--bg);
+  color: var(--fg);
 }
 
 .massif, .massif-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
@@ -59,32 +66,52 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 16px;
+  gap: var(--space-4);
   padding: 20px 26px;
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.15em;
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
   font-size: 12px;
   color: var(--muted);
   /* Keeps the type legible over a bright sky without a hard band. */
-  background: linear-gradient(#0B1016CC, #0B101600);
+  background: linear-gradient(color-mix(in srgb, var(--bg) 80%, transparent), transparent);
   pointer-events: none;
   /* First in the DOM for keyboard order, so it lifts itself over the scene. */
   z-index: 1;
 }
 
-.brand { color: var(--ink); letter-spacing: 0.3em; font-size: 14px; font-weight: 500; }
-.observed { display: flex; align-items: center; gap: 14px; margin-left: auto; }
-
-.badge {
-  font-size: 11px;
-  letter-spacing: 0.12em;
-  color: var(--ember);
-  border: 1px solid #4A2A1C;
-  background: #1B1009;
-  padding: 3px 8px;
-  border-radius: 2px;
+/* The wordmark: Geist 500 at -0.05em, with Pip's full stop after it. */
+.brand {
+  font-family: var(--sans);
+  font-size: 22px;
+  font-weight: 500;
+  letter-spacing: -0.05em;
+  line-height: 1;
+  color: var(--fg);
 }
+.brand::after {
+  content: '';
+  display: inline-block;
+  width: 0.22em;
+  height: 0.22em;
+  margin-left: 0.08em;
+  border-radius: 50%;
+  background: currentColor;
+}
+.observed { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+
+/* A badge is a label in a pill with a 1px rule. */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  color: var(--fg);
+  white-space: nowrap;
+}
+/* Replaying an earlier day: the dotted ring, the system's mark for "held". */
+.badge[data-replaying="true"] { border: 1.5px dotted var(--fg); }
+/* Unread warnings: an outline and plain words, never a colour. */
+.badge[data-warn="true"] { border-color: var(--fg); border-style: dashed; }
 
 /* Summit labels are DOM, positioned from the 3D projection each frame. */
 .summit {
@@ -95,37 +122,29 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   /* transform positions the dot; the text hangs off it. */
   margin-left: -3px;
   gap: 9px;
-  transition: opacity 0.35s ease;
+  transition: opacity var(--dur-base) var(--ease-out);
   pointer-events: none;
   will-change: transform;
 }
 .summit-dot {
   width: 7px; height: 7px; border-radius: 50%;
-  background: var(--ash);
-  box-shadow: 0 0 0 4px #93A7B822;
+  border: 1.5px solid var(--fg);
   flex: none;
 }
-.summit[data-active="true"] .summit-dot {
-  background: var(--ember);
-  box-shadow: 0 0 0 4px #E8622C33, 0 0 16px #E8622C88;
-}
+.summit[data-active="true"] .summit-dot { background: var(--fg); }
 .summit-text { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
 .summit-text b {
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
   font-size: 13px;
   font-weight: 500;
-  text-shadow: 0 1px 8px #0B1016;
+  letter-spacing: -0.01em;
+  color: var(--fg);
+  text-shadow: 0 1px 8px var(--bg);
 }
 .summit-text i {
   font-style: normal;
-  font-size: 11px;
-  color: var(--ash);
-  letter-spacing: 0.1em;
-  text-shadow: 0 0 3px #0B1016, 0 1px 8px #0B1016;
+  color: var(--soft);
+  text-shadow: 0 0 3px var(--bg), 0 1px 8px var(--bg);
 }
-.summit[data-active="true"] .summit-text i { color: var(--ember); }
 
 .readout {
   position: absolute;
@@ -133,13 +152,15 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   right: 26px;
   transform: translateY(-50%);
   width: 208px;
-  background: #0B1016D9;
-  border: 1px solid var(--line);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-card);
   backdrop-filter: blur(8px);
 }
-.readout-row { padding: 13px 16px; border-bottom: 1px solid var(--line); }
+.readout-row { padding: 13px 16px; border-bottom: 1px solid var(--rule); }
 .readout-row:last-child { border-bottom: 0; }
-.readout-k { display: block; font-size: 11px; color: var(--muted); margin-bottom: 5px; }
+.readout-k { display: block; margin-bottom: 5px; }
 .readout-v {
   /* Values are usually short numbers, but some are words ("continuous"), and a
      named-community list can run long. Let both wrap instead of overflowing. */
@@ -147,59 +168,31 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   flex-wrap: wrap;
   align-items: baseline;
   column-gap: 6px;
-  font-size: 23px;
-  font-weight: 500;
-  letter-spacing: -0.01em;
+  font-family: var(--mono);
+  font-size: 21px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
-  line-height: 1.1;
+  line-height: 1.15;
   overflow-wrap: anywhere;
 }
-.readout-row[data-lead="true"] .readout-v { font-size: 29px; color: var(--ember); }
+.readout-row[data-lead="true"] .readout-v { font-size: 27px; }
 /* A value the bulletin left out reads as a gap, not a figure. */
 .readout-row[data-missing="true"] .readout-v {
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 15px;
-  color: var(--ash);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--soft);
 }
 .readout-note {
   margin: 0;
   padding: 10px 16px 12px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--rule);
   font-size: 12px;
   line-height: 1.45;
-  color: var(--muted);
+  color: var(--soft);
 }
-.figures dd.figures-note {
-  white-space: normal;
-  margin-top: 2px;
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 11px;
-  color: var(--muted);
-}
-.readout-v small {
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 11px;
-  color: var(--muted);
-  font-weight: 400;
-}
-
-/* A replayed day is not live data, so its badge stays out of the ember. */
-.badge[data-replaying="true"] {
-  color: var(--ash);
-  border-color: var(--line);
-  background: transparent;
-}
-.badge[data-warn="true"] {
-  color: #C9A227;
-  border-color: #4A4020;
-  background: #191506;
-}
+.readout-v small { font-weight: 400; }
+.readout-v .mark { align-self: center; }
 
 .record-foot { padding-top: 0; }
 .colophon p + p { margin-top: 12px; }
@@ -213,35 +206,35 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   left: 26px;
   bottom: 26px;
   display: flex;
-  border: 1px solid var(--line);
-  background: #0B1016D9;
+  gap: 2px;
+  padding: 2px;
+  border-radius: var(--r-pill);
+  background: color-mix(in srgb, var(--bg) 78%, transparent);
   backdrop-filter: blur(8px);
 }
 .massif-views button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  color: var(--muted);
-  font-size: 11px;
-  padding: 9px 15px;
+  font-family: var(--sans);
+  font-size: 13px;
+  color: var(--soft);
+  padding: 0 16px;
   min-height: 44px;
   min-width: 44px;
-  cursor: pointer;
-  transition: color 0.2s ease, background 0.2s ease;
+  border-radius: var(--r-pill);
+  transition:
+    color var(--dur-quick) var(--ease-out),
+    background-color var(--dur-quick) var(--ease-out),
+    transform var(--dur-quick) var(--ease-out);
 }
-.massif-views button + button { border-left: 1px solid var(--line); }
-.massif-views button:hover { color: var(--ink); }
-.massif-views button[aria-pressed="true"] { color: var(--ember); background: #E8622C14; }
+.massif-views button:active { transform: scale(0.97); }
+.massif-views button:hover { color: var(--fg); }
+.massif-views button[aria-pressed="true"] { color: var(--bg); background: var(--fg); }
 
 .massif-state {
   position: absolute;
   inset: auto 0 46%;
   text-align: center;
-  color: var(--muted);
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
   font-size: 12px;
+  color: var(--soft);
 }
 
 .scrollcue {
@@ -249,15 +242,10 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  font-size: 11px;
-  color: var(--muted);
+  color: var(--soft);
   pointer-events: none;
 }
-.scrollcue span { animation: breathe 3.4s ease-in-out infinite; display: block; }
-@keyframes breathe { 0%, 100% { opacity: 0.4; } 50% { opacity: 0.95; } }
+.scrollcue span { display: block; }
 
 /* ── record ───────────────────────────────────────────────────────────── */
 
@@ -273,14 +261,15 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   align-items: end;
   margin-bottom: 30px;
 }
-.record-head h2 {
+.record-head h2, .camp-head h2 {
   margin: 0 0 10px;
   font-size: clamp(26px, 3.6vw, 38px);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
   text-wrap: balance;
 }
-.record-head p { margin: 0; color: var(--muted); max-width: 54ch; }
+.record-head p { margin: 0; color: var(--soft); max-width: 54ch; }
 
 /* The cells share one row structure (label, value, day count), so the values
    line up across them at every width. */
@@ -291,32 +280,35 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   grid-template-rows: auto auto auto;
   gap: 0 1px;
   margin: 0;
-  background: var(--line);
-  border: 1px solid var(--line);
+  background: var(--rule);
+  border-top: 1px solid var(--fg);
+  border-bottom: 1px solid var(--rule);
 }
 .figures > div {
   display: grid;
   grid-row: span 3;
   grid-template-rows: subgrid;
   align-content: start;
-  background: var(--ground);
+  background: var(--bg);
   padding: 12px 18px;
 }
-.figures dt { font-size: 11px; color: var(--muted); }
 .figures dd {
   margin: 4px 0 0;
+  font-family: var(--mono);
   font-size: 20px;
+  letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+.figures dd.figures-note { white-space: normal; margin-top: 2px; letter-spacing: 0.04em; }
 
 /* Headroom for the hover tooltip, which sits above the plotted point. */
 .tempo { position: relative; margin: 74px 0 0; }
 .tempo svg { display: block; width: 100%; height: auto; /* a vertical swipe still scrolls the page; a horizontal one scrubs */ touch-action: pan-y; }
 .tempo-tick {
-  font-family: var(--label);
+  font-family: var(--mono);
   font-size: 11px;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.04em;
   fill: var(--muted);
 }
 .tempo-tip {
@@ -328,61 +320,48 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   flex-direction: column;
   gap: 1px;
   padding: 9px 12px;
-  background: #17212B;
-  border: 1px solid #2B3945;
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-chip);
+  box-shadow: var(--shadow);
   font-size: 12px;
   line-height: 1.45;
   white-space: nowrap;
   pointer-events: none;
   opacity: 0;
-  transition: opacity 0.12s ease;
+  transition: opacity var(--dur-quick) var(--ease-out);
   font-variant-numeric: tabular-nums;
 }
 .tempo-tip[data-on="true"] { opacity: 1; }
-.tempo-tip b { font-weight: 600; }
-.tempo-tip span { color: var(--muted); }
+.tempo-tip b { font-family: var(--mono); font-weight: 500; }
+.tempo-tip span { color: var(--soft); }
 
-/* The record's marks take the tokens; the line is the only warm thing in it. */
-.tempo-stop { stop-color: var(--ember); }
-.tempo-grid { stroke: var(--line); stroke-width: 1; }
-.tempo-line { fill: none; stroke: var(--ember); stroke-width: 2; stroke-linejoin: round; }
-.tempo-dot { fill: var(--ember); }
-.tempo-cross { stroke: var(--ember); }
-.tempo-point { fill: var(--ember); stroke: var(--ground); stroke-width: 2; }
+/* The record is schematic ink: a thin line, quiet rules, hatched gaps. */
+.tempo-stop { stop-color: var(--fg); }
+.tempo-stop:first-child { stop-opacity: 0.08; }
+.tempo-grid { stroke: var(--rule); stroke-width: 1; }
+.tempo-line { fill: none; stroke: var(--fg); stroke-width: 1.5; stroke-linejoin: round; }
+.tempo-dot { fill: var(--fg); }
+.tempo-cross { stroke: var(--fg); }
+.tempo-point { fill: var(--fg); stroke: var(--bg); stroke-width: 2; }
 
-/* Missing days are hatched in ash, quiet enough not to read as activity. */
-.tempo-gap-hatch { stroke: var(--ash); stroke-width: 1; opacity: 0.36; }
-/* Continuous emission is activity, so it takes a faint ember wash, not the hatch. */
-.tempo-continuous { fill: color-mix(in srgb, var(--ember) 8%, transparent); }
-/* A thin ember tick under the baseline marks the stretch as a state; kept off
-   the value scale so it never reads as a rate. */
-.tempo-continuous-cap { fill: var(--ember); opacity: 0.7; }
+/* Missing days are hatched, quiet enough not to read as activity. */
+.tempo-gap-hatch { stroke: var(--muted); stroke-width: 1; opacity: 0.6; }
+/* Continuous emission is activity with no count: a faint wash, never the hatch. */
+.tempo-continuous { fill: color-mix(in srgb, var(--fg) 7%, transparent); }
+/* A thin tick under the baseline marks the stretch as a state; kept off the
+   value scale so it never reads as a rate. */
+.tempo-continuous-cap { fill: var(--fg); }
 .tempo-key {
   display: flex;
   flex-wrap: wrap;
   gap: 6px 22px;
   margin: 10px 0 0;
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 11px;
-  color: var(--muted);
 }
-.tempo-key > span { display: inline-flex; align-items: center; gap: 8px; }
-.tempo-key-swatch {
-  flex: none;
-  width: 14px;
-  height: 10px;
-  border: 1px solid var(--line);
-  background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--ash) 36%, transparent) 0 1px, transparent 1px 4px);
-}
-.tempo-key-swatch[data-kind="continuous"] {
-  background: color-mix(in srgb, var(--ember) 8%, transparent);
-  border-bottom: 2px solid var(--ember);
-}
+.tempo-key > span { display: inline-flex; align-items: center; gap: var(--space-2); }
 
-.colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--line); }
-.colophon p { margin: 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
+.colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--rule); }
+.colophon p { margin: 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
 
 @media (max-width: 860px) {
   .readout {
@@ -395,7 +374,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
     display: grid;
     grid-template-columns: repeat(3, 1fr);
   }
-  .readout-row { border-bottom: 0; border-right: 1px solid var(--line); }
+  .readout-row { border-bottom: 0; border-right: 1px solid var(--rule); }
   .readout-row:nth-child(n + 4) { display: none; }
   .readout-note { grid-column: 1 / -1; }
   .massif-views { left: 16px; bottom: 16px; }
@@ -425,33 +404,20 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .figures dd.figures-note { grid-column: 1 / -1; text-align: left; margin-top: 2px; }
 }
 
-@media (prefers-reduced-motion: reduce) {
-  * { animation: none !important; transition: none !important; }
-}
-
 /* ── standing notice and bulletin age ─────────────────────────────────── */
 
 .notice {
-  background: var(--surface);
-  border-bottom: 1px solid var(--line);
-  padding: 10px 26px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--rule);
+  padding: 12px 26px;
 }
-.notice p { margin: 0; max-width: 90ch; font-size: 14px; line-height: 1.5; color: var(--ash); }
-.notice strong { color: var(--ink); font-weight: 600; }
-.notice-links { display: flex; flex-wrap: wrap; column-gap: 24px; }
-.notice-links a {
-  display: inline-flex;
-  align-items: center;
-  min-height: 44px;
-  font-size: 14px;
-  color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: var(--ash);
-}
+.notice p { margin: 0 0 10px; max-width: 90ch; font-size: 14px; line-height: 1.45; color: var(--soft); }
+.notice strong { color: var(--fg); font-weight: 500; }
+.notice-links { display: flex; flex-wrap: wrap; gap: var(--space-2); }
 .observed-text { text-align: right; }
 .observed-date { white-space: nowrap; }
 .bulletin-age { display: inline-block; }
-.bulletin-behind { color: var(--ink); font-weight: 600; }
+.bulletin-behind { color: var(--fg); font-weight: 500; }
 
 /* The topbar lets pointers through to the scene; the language switch takes them. */
 .lang-switch {
@@ -460,41 +426,38 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   align-items: center;
   min-height: 44px;
   padding: 0 2px;
-  color: var(--ink);
+  font-family: var(--sans);
+  font-size: 14px;
+  letter-spacing: 0;
+  color: var(--fg);
   text-decoration: underline;
-  text-decoration-color: var(--ash);
+  text-decoration-thickness: 1px;
+  text-decoration-color: var(--muted);
   text-underline-offset: 4px;
   white-space: nowrap;
+  transition: text-decoration-color var(--dur-quick) var(--ease-out);
 }
 .colophon .lang-switch { padding: 0; }
-.lang-switch:hover { text-decoration-color: var(--ink); }
-.lang-switch:focus-visible { outline: 2px solid var(--ember); outline-offset: 2px; }
+.lang-switch:hover { text-decoration-color: var(--fg); }
 
 /* The 404, in both languages. */
 .lost { max-width: 60ch; margin: 0 auto; padding: 18vh 24px; }
 .lost h1, .lost h2 {
   margin: 0 0 6px;
-  font-family: var(--label);
-  font-size: 14px;
+  font-size: 22px;
   font-weight: 500;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ink);
+  letter-spacing: -0.035em;
+  color: var(--fg);
 }
-.lost p { margin: 0 0 8px; color: var(--ash); }
+.lost p { margin: 0 0 8px; color: var(--soft); }
 /* The same wordmark the top bar carries, so a lost reader knows whose 404 this is. */
-.lost .lost-brand {
-  margin: 0 0 40px;
-  font-family: var(--label);
-  text-transform: uppercase;
-  color: var(--ink);
-}
+.lost .lost-brand { margin: 0 0 40px; }
 .lost p:has(a) { margin-bottom: 40px; }
-.lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration-color: var(--ash); }
+.lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); }
 
 @media (max-width: 860px) {
-  .notice { padding: 10px 16px; }
-  .topbar { flex-wrap: wrap; row-gap: 6px; }
+  .notice { padding: 12px 16px; }
+  .topbar { flex-wrap: wrap; row-gap: 6px; padding: 16px; }
   /* The switch shares the brand's row; the bulletin line gets its own row below,
      where it always sat, clear of the summit labels. */
   .topbar .lang-switch { order: 1; margin-left: auto; margin-block: -11px; }
@@ -507,26 +470,22 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 
 .lanes { margin: 22px 0 0; }
 .lanes-plot { cursor: crosshair; touch-action: pan-y; }
-.lanes-plot:focus-visible { outline: 2px solid var(--ember); outline-offset: 4px; }
+.lanes-plot:focus-visible { outline-offset: 4px; }
 .lane { margin: 0 0 10px; }
-.lane svg { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--line); }
+.lane svg { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--rule); }
 .lane-head {
   display: flex;
   justify-content: space-between;
   gap: 12px;
   margin: 0 0 3px;
-  font-family: var(--label);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--ash);
+  color: var(--soft);
 }
-.lane-note { color: var(--muted); letter-spacing: 0.1em; }
-.lane-arrow { fill: none; stroke: var(--ash); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
-.lane-bar, .lane-mark { fill: var(--ember); }
+.lane-note { color: var(--muted); }
+.lane-arrow { fill: none; stroke: var(--soft); stroke-width: 1.2; stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.lane-bar, .lane-mark { fill: var(--fg); }
 .lane-mark { opacity: 0.7; }
-.lane-sel { stroke: var(--ember); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.lane-hover { stroke: var(--ember); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.6; vector-effect: non-scaling-stroke; }
+.lane-sel { stroke: var(--fg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.lane-hover { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.6; vector-effect: non-scaling-stroke; }
 .lanes-day {
   display: flex;
   flex-wrap: wrap;
@@ -535,27 +494,21 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-size: 14px;
   font-variant-numeric: tabular-nums;
 }
-.lanes-day b { font-weight: 600; }
-.lanes-day span { color: var(--muted); }
+.lanes-day b { font-family: var(--mono); font-weight: 500; }
+.lanes-day span { color: var(--soft); }
 .lanes-summary {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
   margin: 18px 0 0;
-  background: var(--line);
-  border: 1px solid var(--line);
+  background: var(--rule);
+  border-top: 1px solid var(--fg);
+  border-bottom: 1px solid var(--rule);
 }
-.lanes-summary > div { background: var(--ground); padding: 12px 18px; }
-.lanes-summary dt {
-  font-family: var(--label);
-  font-size: 11px;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--muted);
-}
+.lanes-summary > div { background: var(--bg); padding: 12px 18px; }
 .lanes-summary dd { margin: 4px 0 0; font-size: 18px; font-variant-numeric: tabular-nums; }
 .lanes-summary ul { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; padding: 0; list-style: none; font-size: 15px; }
-.lanes-summary li span { color: var(--ember); font-weight: 600; }
+.lanes-summary li span { font-family: var(--mono); font-weight: 500; }
 .lanes-summary .figures-note { font-size: 13px; color: var(--muted); }
 @media (max-width: 560px) {
   .lanes-summary { grid-template-columns: 1fr; }
@@ -571,16 +524,26 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 /* ── Smithsonian weekly report lane (beside the field lanes) ──────────── */
 
 .gvp { margin: 14px 0 0; }
-.gvp-span { fill: var(--ash); opacity: 0.55; }
-.gvp-differ { fill: none; stroke: var(--ember); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
-.gvp-key-ring { width: 12px; height: 8px; border: 1.5px solid var(--ember); flex: none; }
+.gvp-span { fill: var(--muted); }
+.gvp-differ { fill: none; stroke: var(--fg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .gvp .lane-head { flex-wrap: wrap; }
 .gvp .lane svg { min-height: 18px; }
 .gvp-list a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 4px; }
-.gvp-note { margin: 10px 0 0; color: var(--muted); font-size: 14px; max-width: 76ch; }
-.gvp-list { margin: 10px 0 0; padding: 0; list-style: none; display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); }
-.gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; background: var(--ground); font-size: 14px; font-variant-numeric: tabular-nums; }
-.gvp-list li span { color: var(--muted); }
+.gvp-note { margin: 10px 0 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
+.gvp-list {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-chip);
+  overflow: hidden;
+}
+.gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; background: var(--bg); font-size: 14px; font-variant-numeric: tabular-nums; }
+.gvp-list li b { font-weight: 500; }
+.gvp-list li span { color: var(--soft); }
 .gvp-list .gvp-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin-top: 2px; }
 .gvp-credit { margin: 12px 0 0; color: var(--muted); font-size: 13px; max-width: 76ch; }
 
@@ -594,7 +557,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 /* The rule sits inside the side padding, so it spans the content width like the colophon's. */
 .camp-head {
   padding-top: 48px;
-  border-top: 1px solid var(--line);
+  border-top: 1px solid var(--fg);
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
@@ -603,22 +566,9 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   row-gap: 6px;
   margin-bottom: 26px;
 }
-.camp-head h2 {
-  margin: 0;
-  font-size: clamp(26px, 3.6vw, 38px);
-  font-weight: 600;
-  letter-spacing: -0.02em;
-}
-.camp-date {
-  margin: 0;
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 12px;
-  color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-.camp-date time { color: var(--ink); }
+.camp-head h2 { margin: 0; }
+.camp-date { margin: 0; font-size: 12px; font-variant-numeric: tabular-nums; }
+.camp-date time { color: var(--fg); }
 .camp-body {
   display: grid;
   grid-template-columns: minmax(0, 5fr) minmax(0, 6fr);
@@ -628,31 +578,22 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 .camp-summary {
   margin: 0;
   font-size: clamp(21px, 2.4vw, 27px);
-  line-height: 1.35;
+  line-height: 1.2;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.03em;
   font-variant-numeric: tabular-nums;
   text-wrap: pretty;
   max-width: 34ch;
 }
-.camp-lines { margin: 0; border-top: 1px solid var(--line); }
+.camp-lines { margin: 0; border-top: 1px solid var(--rule); }
 .camp-line {
   display: grid;
   grid-template-columns: 9.5em minmax(0, 1fr);
   gap: 16px;
-  padding: 13px 0 13px 14px;
-  border-bottom: 1px solid var(--line);
-  border-left: 2px solid var(--ember);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--rule);
 }
-.camp-line dt {
-  font-family: var(--label);
-  text-transform: uppercase;
-  letter-spacing: 0.14em;
-  font-size: 11px;
-  line-height: 1.6;
-  padding-top: 2px;
-  color: var(--muted);
-}
+.camp-line dt { line-height: 1.6; padding-top: 2px; }
 .camp-line dd {
   margin: 0;
   font-size: 16px;
@@ -660,17 +601,17 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-/* Something the bulletin left out reads as a gap: no ember, a broken rule. */
-.camp-line[data-missing="true"] { border-left: 2px dashed var(--ash); }
-.camp-line[data-missing="true"] dd { color: var(--ash); }
-.camp-empty { margin: 0; color: var(--muted); max-width: 60ch; }
+/* Something the bulletin left out reads as a gap: the hatched mark and its words. */
+.camp-line[data-missing="true"] dd { color: var(--soft); }
+.camp-line[data-missing="true"] .mark { margin-right: var(--space-2); vertical-align: -1px; }
+.camp-empty { margin: 0; color: var(--soft); max-width: 60ch; }
 .camp-foot {
   margin-top: 30px;
   display: grid;
   gap: 10px;
 }
 .camp-foot p { margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; max-width: 76ch; }
-.camp-foot .camp-advice { color: var(--ash); }
+.camp-foot .camp-advice { color: var(--soft); }
 
 @media (max-width: 860px) {
   .camp-body { grid-template-columns: 1fr; gap: 24px; }
