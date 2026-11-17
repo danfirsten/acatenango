@@ -647,6 +647,9 @@
 .tempo-hoop-body { fill: none; stroke: var(--fg); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .tempo-hoop-eyes { fill: var(--fg); }
 .tempo-selected { pointer-events: none; }
+/* Hoop jumps to the day for now; its glide is #38's. The system's reduced-motion
+   rule gives everything a 0.01ms transition, which would still lag a frame here. */
+.tempo-selected, .tempo-selected * { transition-property: none; }
 
 /* The key to the five marks, used the same across the record. */
 .mark-key {

@@ -170,12 +170,12 @@ describe('phone layout', () => {
 
   it('keeps the record legible at 390 wide: a short chart, roomy lanes, the drift lane marking camp', async () => {
     const page = await open(390, 844, true);
+    // No named helpers in here: the test runner's transform would rename them.
     const m = await page.evaluate(() => {
-      const box = (s: string) => document.querySelector(s)!.getBoundingClientRect();
       return {
-        chart: box('.tempo svg').height,
+        chart: document.querySelector('.tempo svg')!.getBoundingClientRect().height,
         lanes: [...document.querySelectorAll('.lane svg')].map((l) => l.getBoundingClientRect().height),
-        plot: box('.lanes-plot').height,
+        plot: document.querySelector('.lanes-plot')!.getBoundingClientRect().height,
         camp: document.querySelectorAll('.lane[data-lane="compass"] .lane-camp').length,
         campTick: document.querySelector('.lane[data-lane="compass"] .lane-tick[data-camp]')?.textContent,
       };
