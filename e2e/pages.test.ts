@@ -241,7 +241,8 @@ describe(`static build served under ${BASE}`, () => {
     await page.waitForURL(`${origin}${BASE}/es/`);
     await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
     await page.waitForFunction((d) => document.querySelector('[data-selected-day]')?.getAttribute('data-selected-day') === d, day);
-    assert.match(await page.locator('.observed-date').innerText(), new RegExp(es.topbar.replaying, 'i'));
+    assert.equal(await page.locator('.observed-date').getAttribute('data-replaying'), 'true');
+    assert.match(await page.locator('.observed-date').innerText(), /^Viendo el /);
     assert.equal(await page.evaluate(() => localStorage.getItem('fuego-lang')), 'es');
 
     // Switch back from the foot of the page: the reader stays at the foot.

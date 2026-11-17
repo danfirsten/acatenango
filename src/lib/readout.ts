@@ -188,7 +188,8 @@ export function readoutRows(day: IndexEntry, t: Dict = en, held: Held = {}): Rea
   const dirs = day.driftDirections.map((d) => t.compassAbbr[d] ?? d).join('·');
   const aboveSummit = day.ashMaxMasl === null ? null : day.ashMaxMasl - SUMMIT_M;
   const missing = (key: string, from?: string | null, lead?: boolean): ReadoutRow => (from
-    ? { key, value: r.notReported, unit: r.plumeShows(from), missing: true, state: 'held', ...(lead && { lead }) }
+    // Left out, and the scene holds an earlier day: said with the key's word for the dotted ring.
+    ? { key, value: t.marks.word.held, unit: r.plumeShows(from), missing: true, state: 'held', ...(lead && { lead }) }
     : { key, value: r.notReported, unit: '', missing: true, state: 'notReported', ...(lead && { lead }) });
 
   const rate = fieldState(day, 'rate');

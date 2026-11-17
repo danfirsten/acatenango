@@ -70,7 +70,7 @@ export default function GvpWeeks({ series, selected, locale }: { series: IndexEn
     return (
       <section className="gvp" id="gvp" aria-label={g.sectionLabel} data-folded="true" ref={ref}>
         <p className="gvp-fold">
-          <span className="marked"><StateMark state="notReported" />{g.title}: {g.noneYet}.</span>
+          <span className="marked"><StateMark state="notReported" />{g.folded}</span>
         </p>
         {credit}
       </section>

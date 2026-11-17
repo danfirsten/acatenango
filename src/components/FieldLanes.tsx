@@ -17,8 +17,8 @@ interface FieldLanesProps {
   locale: Locale;
 }
 
-/** Each compass row of the drift lane, in pixels. */
-const ROW = 7;
+/** Each compass row of the drift lane, in pixels: roomier on a phone. */
+const rowFor = (w: number) => (w < 600 ? 10 : 7);
 const BAR_H = 30;
 const MARK_H = 24;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -47,6 +47,7 @@ export default function FieldLanes({ series, selected, onSelect, locale }: Field
   const [hover, setHover] = useState<number | null>(null);
   const figRef = useRef<HTMLElement>(null);
   const W = useWidth(figRef);
+  const ROW = rowFor(W);
   const uid = useId();
   const hatch = `${uid}-hatch`;
   const n = series.length;

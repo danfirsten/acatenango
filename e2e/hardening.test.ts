@@ -177,7 +177,8 @@ describe('launch checks', () => {
     const v = lead.locator('.readout-v');
     const state = await v.getAttribute('data-state');
     assert.match(state ?? '', /^(notReported|held)$/);
-    assert.equal((await v.evaluate((el) => el.firstChild?.nextSibling?.textContent ?? ''))?.trim(), en.readout.notReported);
+    assert.equal((await v.evaluate((el) => el.firstChild?.nextSibling?.textContent ?? ''))?.trim(),
+      state === 'held' ? en.marks.word.held : en.readout.notReported);
     if (state === 'held') assert.match(await v.locator('small').innerText(), /^plume shows /);
     const rate = page.locator('.camp-line', { hasText: en.camp.labels.rate });
     assert.equal(await rate.getAttribute('data-missing'), 'true');

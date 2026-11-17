@@ -64,7 +64,7 @@ export const es: Dict = {
     unread: (n) => `${n} ${plural(n, 'campo sin leer', 'campos sin leer')}`,
     latest: 'Último boletín',
     replaying: 'Día seleccionado',
-    replayingOn: (d) => `Día seleccionado: ${d}`,
+    replayingOn: (d) => `Viendo el ${d}`,
   },
   age: {
     label: (days) => (days === 0 ? 'hoy' : days === 1 ? 'hace 1 día' : `hace ${days} días`),
@@ -166,7 +166,7 @@ export const es: Dict = {
     drainagesTitle: 'Barrancas nombradas',
     townsTitle: 'Comunidades con caída de ceniza',
     daysOf: (n, total) => `${n} de ${total} días`,
-    campRow: 'fila discontinua: hacia el campamento',
+    campRow: 'discontinua: hacia el campamento',
     glowNote: (m) => (m === null ? 'sin reporte' : `hasta ${m} m sobre el cráter`),
     notReported: 'sin reporte',
     dayDrift: (dirs) => `Desplazamiento ${dirs === null ? 'sin reporte' : `hacia ${dirs}`}`,
@@ -191,6 +191,7 @@ export const es: Dict = {
     ashColumn: 'Columna de ceniza',
     check: (what, gvp, bulletins) => `${what}: GVP ${gvp}; boletines ${bulletins}`,
     noneYet: 'aún no se han recopilado reportes semanales',
+    folded: 'Reportes semanales del Smithsonian: aún no se ha recopilado ninguno.',
     read: (weeks, differ) =>
       `${weeks} ${plural(weeks, 'semana leída', 'semanas leídas')} · ${differ} ${plural(differ, 'difiere', 'difieren')}`,
     keyMissing: 'Sin reporte del GVP recopilado para la semana',

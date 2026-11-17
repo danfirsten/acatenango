@@ -55,7 +55,7 @@ export function MarkKey({ t, counts = {} }: { t: Dict; counts?: Partial<Record<V
       {VALUE_STATES.map((s) => (
         <div key={s} data-state={s}>
           <dt><Mark kind={STATE_MARK[s]} />{t.marks.word[s]}</dt>
-          <dd>{t.marks.hint[s]}{counts[s] && <span className="mark-key-count"> {counts[s]}</span>}</dd>
+          <dd>{t.marks.hint[s]}{counts[s] && <span className="mark-key-count">{counts[s]}</span>}</dd>
         </div>
       ))}
     </dl>
@@ -241,6 +241,8 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
                 ? <circle key={r.key} cx={r.single.x} cy={r.single.y} r={3} className="tempo-dot" />
                 : <polyline key={r.key} points={r.pts} className="tempo-line tempo-line-bold" />))}
             </g>
+            {/* A tick on the baseline marks the exact day under the lens. */}
+            <line x1={hoop.x} x2={hoop.x} y1={base - 4} y2={base + 4} className="tempo-tick-day" />
             <g className="tempo-hoop" transform={`translate(${hoop.x} ${hoop.y})`}>
               <circle r={HOOP_R} className="tempo-hoop-lens" />
               <path d={HOOP_BODY} transform={`scale(${HOOP_R / 14.25})`} className="tempo-hoop-body" />

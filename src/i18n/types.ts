@@ -172,6 +172,8 @@ export interface Dict {
     ashColumn: string;
     check: (what: string, gvp: string, bulletins: string) => string;
     noneYet: string;
+    /** The folded lane's one line, until a week is collected. */
+    folded: string;
     read: (weeks: number, differ: number) => string;
     keyMissing: string;
     keyDiffer: string;

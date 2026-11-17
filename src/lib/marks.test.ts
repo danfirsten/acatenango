@@ -92,9 +92,9 @@ describe('readoutRows marks', () => {
   it('marks a held rate and column with the dotted ring and names the day the plume shows', () => {
     const rows = readoutRows(EMPTY, en, { rate: '26 Jul', column: '25 Jul' });
     assert.deepEqual(rows.slice(0, 3).map((r) => [r.state, r.value, r.unit]), [
-      ['held', 'Not reported', 'plume shows 26 Jul'],
-      ['held', 'Not reported', 'plume shows 25 Jul'],
-      ['held', 'Not reported', 'plume shows 25 Jul'],
+      ['held', 'Held', 'plume shows 26 Jul'],
+      ['held', 'Held', 'plume shows 25 Jul'],
+      ['held', 'Held', 'plume shows 25 Jul'],
     ]);
     assert.equal(readoutRows(EMPTY, es, { rate: '26 jul' })[0].unit, 'la columna muestra el 26 jul');
   });
