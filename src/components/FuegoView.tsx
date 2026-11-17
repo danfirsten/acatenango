@@ -3,14 +3,14 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
 import BulletinAge from '@/components/BulletinAge';
+import CampPanel from '@/components/CampPanel';
 import FieldLanes from '@/components/FieldLanes';
 import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import TempoChart from '@/components/TempoChart';
-import { formatDate, formatNumber, getDict, LOCALE_PATH, type Locale } from '@/i18n';
-import { withBase } from '@/lib/base-path';
-import { rememberedLanguage, scrollToPlace, takePlace } from '@/lib/place';
+import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
+import { scrollToPlace, takePlace } from '@/lib/place';
 import { lastReportedIndex, readoutRows, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
 
@@ -21,8 +21,8 @@ interface FuegoViewProps {
 }
 
 /**
- * Holds the selected day. Scrubbing the record drives both the readout and the
- * 3D plume, so the chart and the volcano are two views of the same number.
+ * Holds the selected day. Scrubbing the record drives the readout, the 3D
+ * plume and the camp panel, so every part of the page shows the same day.
  */
 export default function FuegoView({ series, isRepresentative, locale }: FuegoViewProps) {
   const t = getDict(locale);
@@ -64,14 +64,10 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
   // Stable identity so selecting a day does not rebuild the terrain mesh.
   const onSelect = useCallback((i: number) => setSelected(i), []);
 
-  // A reader who chose Spanish and opens the English address gets the Spanish
-  // page. Only that way: a shared /es/ link always stays Spanish. Then pick up
-  // where they were after a switch (the replayed day, the section).
+  // After a language switch, pick up where the reader was (the replayed day,
+  // the section). A remembered Spanish choice is followed before the English
+  // page paints, by a script in its head (src/i18n/document.tsx).
   useEffect(() => {
-    if (locale === 'en' && rememberedLanguage() === 'es') {
-      window.location.replace(withBase(LOCALE_PATH.es) + window.location.hash);
-      return;
-    }
     const place = takePlace();
     if (place === null) return;
     const i = place.day === null ? -1 : series.findIndex((e) => e.date === place.day);
@@ -81,13 +77,13 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
       if (i !== -1) onSelect(i);
       requestAnimationFrame(() => scrollToPlace(place));
     });
-  }, [locale, series, onSelect]);
+  }, [series, onSelect]);
 
   return (
     <>
       <section className="hero">
-        <Massif day={sceneDay} locale={locale} />
-
+        {/* The top bar comes first in the page so the keyboard reaches the brand,
+            the date and the language switch before the scene's view buttons. */}
         <header className="topbar">
           <span className="brand">Fuego</span>
           <span className="observed" data-selected-day={day.date}>
@@ -104,6 +100,8 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
           </span>
           <LanguageSwitch locale={locale} />
         </header>
+
+        <Massif day={sceneDay} locale={locale} />
 
         <aside className="readout">
           {rows.map((r) => (
@@ -147,6 +145,8 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
         <FieldLanes series={series} selected={selected} onSelect={onSelect} locale={locale} />
         <GvpWeeks series={series} selected={selected} locale={locale} />
       </section>
+
+      <CampPanel entry={day ?? null} isLatest={isToday} isRepresentative={isRepresentative} locale={locale} />
     </>
   );
 }

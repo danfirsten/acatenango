@@ -1,10 +1,8 @@
-import CampPanel from '@/components/CampPanel';
 import FuegoView from '@/components/FuegoView';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Notice from '@/components/Notice';
 import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { rich } from '@/i18n/rich';
-import { latestEntry } from '@/lib/camp';
 import { loadSeries } from '@/lib/series';
 
 /**
@@ -20,7 +18,6 @@ export default function FuegoPage({ locale }: { locale: Locale }) {
     <main>
       <Notice locale={locale} />
       <FuegoView series={series} isRepresentative={isRepresentative} locale={locale} />
-      <CampPanel entry={latestEntry(series)} isRepresentative={isRepresentative} locale={locale} />
 
       <section className="record record-foot">
         <footer className="colophon" id="colophon">

@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 
 import ServiceWorker from '@/components/ServiceWorker';
 import { siteUrl, withBase } from '@/lib/base-path';
+import { LANG_KEY } from '@/lib/place';
 
 import { getDict, LOCALE_PATH, LOCALES, type Locale } from './index';
 
@@ -79,10 +80,29 @@ export const viewport: Viewport = {
   themeColor: '#0B1016',
 };
 
-export function Document({ locale, children }: { locale: Locale; children: ReactNode }) {
+/**
+ * Runs before the English page paints: a reader who chose Spanish is sent to
+ * the Spanish page at once, so they never see a flash of English. Only that
+ * way round, so a shared /es/ link always stays Spanish. Blocked storage
+ * throws, and then the English page simply shows.
+ */
+export function rememberedSpanishScript(): string {
+  const to = JSON.stringify(withBase(LOCALE_PATH.es));
+  return `try{if(localStorage.getItem(${JSON.stringify(LANG_KEY)})==="es"){` +
+    `document.documentElement.style.visibility="hidden";location.replace(${to}+location.hash)}}catch(e){}`;
+}
+
+export function Document({ locale, children, followRemembered = false }: {
+  locale: Locale;
+  children: ReactNode;
+  /** Send a reader who chose Spanish on to it before anything paints (the English page only). */
+  followRemembered?: boolean;
+}) {
   return (
     <html lang={getDict(locale).htmlLang} className={`${barlow.variable} ${barlowCondensed.variable}`}>
       <body>
+        {/* First in the body, so it runs before any of the page is parsed or painted. */}
+        {followRemembered && <script dangerouslySetInnerHTML={{ __html: rememberedSpanishScript() }} />}
         {children}
         <ServiceWorker />
       </body>
