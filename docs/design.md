@@ -1,7 +1,7 @@
 <!-- sasori:approved gate=design date=2026-11-17 -->
 # Fuego: design direction
 
-Fuego is built in Dan's ink and paper system (`vendor/ink-and-paper`, see its `DESIGN.md`). Dan chose it on 17 November 2026 from the UI and UX design canvas, boards A to D: the first screen, replaying a day, motion and the engraved 3D scene. Where the system already decides something (black and white, Geist, pills, the curves, marks, the voice), Fuego follows it exactly. This file only adds what a volcano monitor needs on top.
+Fuego is built in Dan's ink and paper system (`vendor/ink-and-paper`, see its `DESIGN.md`). Dan chose it on 17 November 2026 from the UI and UX design canvas, boards A to D: the first screen, replaying a day, motion and the engraved 3D scene. Where the system already decides something (black and white, Geist, pills, the curves, marks, the voice), Fuego follows it exactly. This file only adds what a volcano monitor needs on top. Until the ink and paper build issues land, the shipped CSS still has the earlier ember-on-navy look; this file describes where it is going.
 
 ## Subject, audience, job
 
@@ -32,7 +32,7 @@ Fuego is built in Dan's ink and paper system (`vendor/ink-and-paper`, see its `D
 
 ## Marks: missing is never zero
 
-The system's five marks, in its order, are how the page shows the state of a value. Used the same in the readout, the chart, the lanes and the camp panel, always with the words beside them:
+The system's five marks are how the page shows the state of a value. Used the same in the readout, the chart, the lanes and the camp panel, always with the words beside them:
 
 | Mark | Meaning |
 |---|---|
