@@ -615,7 +615,7 @@ export function createMassifScene(
 
   /*
    * The loop draws only while something moves, paced by FramePacer: at most
-   * 30 draws a second, and after each draw a rest twice as long as the draw
+   * 30 draws a second, and after each draw a rest four times as long as the draw
    * held the frame up, so a slow or busy machine keeps most frames free of
    * WebGL work and clicks are never starved (the base went red when a QA
    * click timed out). It stops while the scene is off screen or the tab is

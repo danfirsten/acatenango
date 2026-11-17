@@ -38,13 +38,13 @@ describe('FramePacer', () => {
     assert.ok(r.drawsPerSecond > 29, `${r.drawsPerSecond} draws a second`);
   });
 
-  it('leaves two frames in three free when each draw holds a frame for a quarter of a second', () => {
+  it('leaves four frames in five free when each draw holds a frame for a quarter of a second', () => {
     const r = simulate(1000 / 60, 250);
-    assert.ok(r.frameShare <= 0.34, `draws in ${(r.frameShare * 100).toFixed(0)}% of frames`);
+    assert.ok(r.frameShare <= 0.2, `draws in ${(r.frameShare * 100).toFixed(0)}% of frames`);
     assert.ok(r.draws > 0, 'still animates');
-    // And the free frames add up to at least twice the time spent drawing.
+    // And the free time adds up to about four times the time spent drawing.
     const busy = r.draws * 250;
-    assert.ok(10_000 - busy >= 2 * busy * 0.9, `busy ${busy} ms of 10 s`);
+    assert.ok(10_000 - busy >= 4 * busy * 0.9, `busy ${busy} ms of 10 s`);
   });
 
   it('starts afresh after the loop stops, rather than reading the pause as a slow draw', () => {

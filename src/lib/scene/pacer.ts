@@ -2,12 +2,12 @@
  * Decides, frame by frame, whether the scene draws.
  *
  * The scene draws at most `cap` times a second. After a draw it also rests
- * for twice as long as that draw held the frame up, measured as how much
+ * for four times as long as that draw held the frame up, measured as how much
  * longer the next frame took than the display's own frame interval. On a fast
  * machine a draw costs next to nothing and this is simply the cap: every
  * other frame at 60 Hz, every fourth at 120 Hz. On a slow or busy one, where
- * software WebGL can hold each frame for a quarter of a second, it leaves two
- * frames in three free of WebGL work, so scrolling and clicks are never
+ * software WebGL can hold each frame for a quarter of a second, it leaves four
+ * frames in five free of WebGL work, so scrolling and clicks are never
  * starved.
  *
  * Pure: it only sees the timestamps it is given, so it can be tested without
