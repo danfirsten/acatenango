@@ -37,7 +37,7 @@ export class FramePacer {
       if (this.drewLast) {
         // What the draw added beyond an ordinary frame.
         const cost = Math.max(0, delta - this.interval);
-        this.restUntil = now + Math.min(1000, 2 * cost);
+        this.restUntil = now + Math.min(1000, 4 * cost);
       }
     }
     this.prev = now;
