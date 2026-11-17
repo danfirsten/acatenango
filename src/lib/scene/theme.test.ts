@@ -64,6 +64,11 @@ describe('sceneTheme', () => {
     }
   });
 
+  it('lays the ash lighter on paper, where it reads as a wash', () => {
+    assert.ok(sceneTheme('paper').plumeOpacity < sceneTheme('ink').plumeOpacity);
+    assert.ok(sceneTheme('paper').plumeOpacity > 0.4, 'still clearly a plume');
+  });
+
   it('keeps the vent ember orange in both themes', () => {
     for (const mode of ['paper', 'ink'] as const) {
       const [r, g, b] = rgb(sceneTheme(mode).ember);

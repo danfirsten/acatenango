@@ -157,6 +157,7 @@ const PLUME_FRAG = /* glsl */ `
   precision highp float;
   uniform vec3 uAsh;
   uniform vec3 uEmber;
+  uniform float uOpacity;
   varying float vLife;
   varying float vSeed;
 
@@ -170,7 +171,7 @@ const PLUME_FRAG = /* glsl */ `
     vec3 c = mix(uEmber, uAsh, smoothstep(0.0, 0.10, vLife));
     // Fade in at the vent, then thin out as the parcel cools and disperses.
     float fade = smoothstep(0.0, 0.04, vLife) * (1.0 - smoothstep(0.62, 1.0, vLife));
-    alpha *= fade * (0.46 + 0.34 * vSeed);
+    alpha *= fade * (0.46 + 0.34 * vSeed) * uOpacity;
     gl_FragColor = vec4(c, alpha);
     #include <colorspace_fragment>
   }
@@ -384,6 +385,7 @@ export function createMassifScene(
       uniforms: {
         uAsh: { value: new THREE.Color() },
         uEmber: { value: new THREE.Color() },
+        uOpacity: { value: 1 },
       },
     }),
   );
@@ -428,6 +430,7 @@ export function createMassifScene(
       uniforms: {
         uAsh: { value: new THREE.Color(0xff9d4a) },
         uEmber: { value: new THREE.Color(0xfff0d0) },
+        uOpacity: { value: 1 },
       },
     }),
   );
@@ -451,6 +454,7 @@ export function createMassifScene(
     const plumeU = (plume.material as THREE.ShaderMaterial).uniforms;
     plumeU.uAsh.value.setHex(theme.ash);
     plumeU.uEmber.value.setHex(theme.ember);
+    plumeU.uOpacity.value = theme.plumeOpacity;
 
     // Embers add light on ink. On paper adding light only washes out to
     // white, so they are laid down as solid orange instead.

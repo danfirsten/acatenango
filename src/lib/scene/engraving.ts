@@ -131,7 +131,7 @@ export const TERRAIN_FRAG = /* glsl */ `
       tone = smoothstep(0.78, 0.10, lambert);
       darkest = smoothstep(0.48, 0.0, lambert);
     } else {
-      tone = max(0.12, smoothstep(0.30, 0.95, lambert));
+      tone = max(0.08, smoothstep(0.45, 0.98, lambert));
       darkest = smoothstep(0.72, 1.05, lambert);
     }
 

@@ -31,6 +31,8 @@ export interface SceneTheme {
   lineStrength: number;
   /** Plume colour once it has cooled: a warm grey ash in both themes. */
   ash: number;
+  /** How thick the ash lies: lighter on paper, where it reads as a wash. */
+  plumeOpacity: number;
   /** Fresh ash at the vent still carries heat. */
   ember: number;
   /** Embers glow by adding light on ink; on paper adding light washes out to white. */
@@ -48,6 +50,7 @@ export function sceneTheme(mode: SceneMode, background?: number): SceneTheme {
       contourWidth: 0.5,
       lineStrength: 0.3,
       ash: 0x8f877e,
+      plumeOpacity: 1,
       ember: 0xff7a33,
       emberAdditive: true,
     };
@@ -60,6 +63,7 @@ export function sceneTheme(mode: SceneMode, background?: number): SceneTheme {
     contourWidth: 0.62,
     lineStrength: 0.86,
     ash: 0x8a8279,
+    plumeOpacity: 0.62,
     ember: 0xff7a33,
     emberAdditive: false,
   };

@@ -137,16 +137,27 @@
   flex-direction: column;
   line-height: 1.25;
   white-space: nowrap;
-  /* The system's label style, on a plate: the engraving and the plume run
-     behind the labels, so they sit on the page's own ground, blurred like the
-     image tags on the scene, to stay legible over any line. */
+  /* The system's label style. The engraving and the plume run behind the
+     labels, so each glyph is knocked out of the drawing with a tight outline
+     in the page's own --bg, over a light blurred plate that lets the plume
+     read through rather than cutting it off. */
   font-family: var(--mono);
-  letter-spacing: 0.04em;
+  letter-spacing: 0.06em;
+}
+.summit-text, .observed-text, .scrollcue {
+  /* The scene runs behind these: the topbar's date and the scroll cue get
+     the same plate as the summit labels. */
   padding: 3px 7px 4px;
   border-radius: var(--r-chip);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  background: color-mix(in srgb, var(--bg) 60%, transparent);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+.summit-text b, .summit-text i, .observed-text, .scrollcue {
+  text-shadow:
+    1px 0 0 var(--bg), -1px 0 0 var(--bg), 0 1px 0 var(--bg), 0 -1px 0 var(--bg),
+    1px 1px 0 var(--bg), -1px -1px 0 var(--bg), 1px -1px 0 var(--bg), -1px 1px 0 var(--bg),
+    0 0 4px var(--bg);
 }
 .summit-text b {
   font-size: 12px;
@@ -156,8 +167,11 @@
 .summit-text i {
   font-style: normal;
   font-size: var(--text-label);
-  color: var(--muted);
+  /* --soft rather than --muted: the line sits on a light plate over lines. */
+  color: var(--soft);
 }
+/* Nothing needs to show through the topbar's date: a denser plate. */
+.observed-text { background: color-mix(in srgb, var(--bg) 85%, transparent); }
 /* Near the right edge the label hangs to the left of its dot: the element is
    shifted back by its own width, so the dot stays on the summit. */
 .summit[data-flip="true"] { flex-direction: row-reverse; margin-left: 3px; }
@@ -262,12 +276,6 @@
   transform: translateX(-50%);
   color: var(--soft);
   pointer-events: none;
-  /* It sits on the engraving: the same plate as the summit labels. */
-  padding: 4px 9px;
-  border-radius: var(--r-chip);
-  background: color-mix(in srgb, var(--bg) 90%, transparent);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
 }
 .scrollcue span { display: block; }
 
