@@ -13,7 +13,7 @@
 
 /* Fuego's labels: the system's label, sentence case inside the page. */
 .readout-k, .tempo-key, .lane-head, .figures dt, .figures dd.figures-note, .readout-v small,
-.lanes-summary dt, .camp-date, .camp-line dt, .massif-state, .scrollcue, .badge {
+.lanes-summary dt, .camp-date, .camp-line dt, .massif-state, .badge {
   font-family: var(--mono);
   font-size: var(--text-label);
   font-weight: 400;
@@ -44,39 +44,27 @@
 /* A mark beside its words. */
 .marked { display: inline-flex; align-items: center; gap: var(--space-2); }
 
-/* ── hero ─────────────────────────────────────────────────────────────── */
+/* ── the first screen (#36): the day's sentence first, the scene as the photo ── */
 
-/* The hero follows the page's theme: the engraved scene draws on paper by day
-   and on ink after dark, with the page's own --bg as its sky. */
-.hero {
-  position: relative;
-  height: 100svh;
-  min-height: 560px;
-  overflow: hidden;
-  background: var(--bg);
+/* One column on a phone, in reading order: the top row, the scene, the day.
+   From tablet width the scene takes the left and the words the right. */
+.first {
+  max-width: var(--max);
+  margin: 0 auto;
+  padding: 0 var(--gutter) var(--space-7);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: 'top' 'scene' 'day';
   color: var(--fg);
 }
 
-.massif, .massif-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
-.massif-canvas { display: block; }
-
 .topbar {
-  position: absolute;
-  top: 0; left: 0; right: 0;
+  grid-area: top;
   display: flex;
-  justify-content: space-between;
+  flex-wrap: wrap;
   align-items: center;
-  gap: var(--space-4);
-  padding: 20px 26px;
-  font-family: var(--mono);
-  letter-spacing: 0.04em;
-  font-size: 12px;
-  color: var(--muted);
-  /* Keeps the type legible over a bright sky without a hard band. */
-  background: linear-gradient(color-mix(in srgb, var(--bg) 80%, transparent), transparent);
-  pointer-events: none;
-  /* First in the DOM for keyboard order, so it lifts itself over the scene. */
-  z-index: 1;
+  gap: var(--space-1) var(--space-3);
+  padding: var(--space-3) 0 var(--space-2);
 }
 
 /* The wordmark: Geist 500 at -0.05em, with Pip's full stop after it. */
@@ -97,7 +85,67 @@
   border-radius: 50%;
   background: currentColor;
 }
-.observed { display: flex; align-items: center; gap: var(--space-3); margin-left: auto; }
+
+/* The bulletin's age as a pill: "16 Nov · today". */
+.age-pill {
+  margin-left: auto;
+  /* Inline-block, not flex: a flex row would drop the space before the "·". */
+  display: inline-block;
+  line-height: 26px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--rule);
+  border-radius: var(--r-pill);
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--fg);
+  white-space: nowrap;
+}
+/* Past two days old: a dashed edge, and the line under the row says why. */
+.age-pill[data-behind] { border: 1px dashed var(--fg); }
+.age-behind {
+  order: 3;
+  flex-basis: 100%;
+  margin: 0;
+  font-size: var(--text-small);
+  line-height: 1.45;
+  color: var(--soft);
+}
+.topbar .replay-ring { margin-left: auto; white-space: nowrap; }
+
+/* The scene in a 20px clip: the only colour on the page is inside it. */
+.first-scene {
+  grid-area: scene;
+  position: relative;
+  height: 250px;
+  overflow: hidden;
+  border-radius: var(--r-media);
+  border: 1px solid var(--rule);
+  background: var(--bg);
+}
+.massif, .massif-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.massif-canvas { display: block; }
+
+/* The day: the sentence, three figures under an ink rule, the way to the record. */
+.first-day {
+  grid-area: day;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  padding-top: var(--space-5);
+  min-width: 0;
+}
+.first-badges { display: flex; flex-wrap: wrap; gap: var(--space-2); margin: 0 0 calc(-1 * var(--space-2)); }
+.day-sentence {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1.1;
+  font-variant-numeric: tabular-nums;
+  text-wrap: pretty;
+}
+.first-day > .pill { align-self: stretch; }
 
 /* A badge is a label in a pill with a 1px rule. */
 .badge {
@@ -141,7 +189,7 @@
   font-family: var(--mono);
   letter-spacing: 0.06em;
 }
-.summit-text b, .summit-text i, .observed-text, .scrollcue {
+.summit-text b, .summit-text i {
   /* The scene runs behind these: a tight outline in the page's own --bg
      knocks each glyph out of the lines and the plume, with no plate, so the
      plume carries on behind the text. */
@@ -168,52 +216,57 @@
 .summits { position: absolute; inset: 0; pointer-events: none; }
 
 .readout {
-  position: absolute;
-  top: 50%;
-  right: 26px;
-  transform: translateY(-50%);
-  width: 208px;
-  overflow: hidden;
-  background: color-mix(in srgb, var(--bg) 85%, transparent);
-  border: 1px solid var(--rule);
-  border-radius: var(--r-card);
-  backdrop-filter: blur(8px);
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-rows: auto auto;
+  column-gap: var(--space-3);
+  margin: 0;
+  border-top: 1px solid var(--fg);
 }
-.readout-row { padding: 13px 16px; border-bottom: 1px solid var(--rule); }
-.readout-row:last-child { border-bottom: 0; }
-.readout-k { display: block; margin-bottom: 5px; }
+/* The rows share one structure, so a label that wraps ("Columna de ceniza")
+   leaves the three values on one line. */
+.readout-row {
+  display: grid;
+  grid-row: span 2;
+  grid-template-rows: subgrid;
+  row-gap: var(--space-1);
+  align-content: start;
+  padding: 10px 0 0;
+  min-width: 0;
+}
+.readout-k { display: block; }
 .readout-v {
-  /* Values are usually short numbers, but some are words ("continuous"), and a
-     named-community list can run long. Let both wrap instead of overflowing. */
+  /* Values are usually short numbers, but some are words ("continuous", "Held"):
+     let them wrap instead of overflowing. */
   display: flex;
   flex-wrap: wrap;
   align-items: baseline;
   column-gap: 6px;
+  margin: 0;
   font-family: var(--mono);
-  font-size: 21px;
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.02em;
   font-variant-numeric: tabular-nums;
   line-height: 1.15;
   overflow-wrap: anywhere;
 }
-.readout-row[data-lead="true"] .readout-v { font-size: 27px; }
 /* A value the bulletin left out reads as a gap, not a figure. */
 .readout-row[data-missing="true"] .readout-v {
   font-size: 13px;
   letter-spacing: 0.04em;
   color: var(--soft);
 }
+/* One rule at every width: the unit takes its own line under the value, in line with it past the mark. */
+.readout-v small { flex-basis: 100%; margin-left: calc(12px + 6px); font-size: var(--text-label); letter-spacing: 0.04em; }
+/* The mark sits centred on the value's first line, however the unit wraps. */
+.readout-v .mark { align-self: flex-start; margin-top: calc((1.15em - 12px) / 2); }
 .readout-note {
-  margin: 0;
-  padding: 10px 16px 12px;
-  border-top: 1px solid var(--rule);
-  font-size: 12px;
+  margin: calc(-1 * var(--space-2)) 0 0;
+  font-size: var(--text-small);
   line-height: 1.45;
   color: var(--soft);
 }
-.readout-v small { font-weight: 400; }
-.readout-v .mark { align-self: center; }
 
 .record-foot { padding-top: 0; }
 .colophon p + p { margin-top: 12px; }
@@ -222,51 +275,46 @@
 .tempo svg { cursor: crosshair; }
 .tempo-selected { pointer-events: none; }
 
+/* The view switch sits on the scene, bottom-right, across from the image tag. */
 .massif-views {
   position: absolute;
-  left: 26px;
-  bottom: 26px;
+  right: 10px;
+  bottom: 8px;
   display: flex;
-  gap: 2px;
-  padding: 2px;
-  border-radius: var(--r-pill);
-  background: color-mix(in srgb, var(--bg) 78%, transparent);
-  backdrop-filter: blur(8px);
 }
 .massif-views button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-pill);
   font-family: var(--sans);
   font-size: 13px;
-  color: var(--soft);
-  padding: 0 16px;
-  min-height: 48px;
-  min-width: 48px;
-  border-radius: var(--r-pill);
+  font-weight: 500;
+  color: var(--fg);
+  background: color-mix(in srgb, var(--bg) 92%, transparent);
+  border: 1px solid var(--rule);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
   transition:
     color var(--dur-quick) var(--ease-out),
     background-color var(--dur-quick) var(--ease-out),
     transform var(--dur-quick) var(--ease-out);
 }
-.massif-views button:active { transform: scale(0.97); }
-.massif-views button:hover { color: var(--fg); }
-.massif-views button[aria-pressed="true"] { color: var(--bg); background: var(--fg); }
+.massif-views button:hover { border-color: var(--fg); }
+/* Pressed: solid, and Hoop turns with it (it is always the opposite of what is under it). */
+.massif-views button[aria-pressed="true"] { color: var(--bg); background: var(--fg); border-color: var(--fg); }
+.massif-views button:focus-visible { outline: 2px solid var(--fg); outline-offset: 2px; }
+.first-scene .chip-tag { white-space: nowrap; }
 
 .massif-state {
   position: absolute;
-  inset: auto 0 46%;
+  inset: auto var(--space-4) 46%;
   text-align: center;
   font-size: 12px;
   color: var(--soft);
 }
-
-.scrollcue {
-  position: absolute;
-  bottom: 26px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: var(--soft);
-  pointer-events: none;
-}
-.scrollcue span { display: block; }
 
 /* ── record ───────────────────────────────────────────────────────────── */
 
@@ -385,21 +433,6 @@
 .colophon p { margin: 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
 
 @media (max-width: 860px) {
-  .readout {
-    top: auto;
-    bottom: 78px;
-    right: 16px;
-    left: 16px;
-    width: auto;
-    transform: none;
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-  }
-  .readout-row { border-bottom: 0; border-right: 1px solid var(--rule); }
-  .readout-row:nth-child(n + 4) { display: none; }
-  .readout-note { grid-column: 1 / -1; }
-  .massif-views { left: 16px; bottom: 16px; }
-  .scrollcue { display: none; }
   .record-head { grid-template-columns: 1fr; gap: 22px; }
 }
 
@@ -425,24 +458,28 @@
   .figures dd.figures-note { grid-column: 1 / -1; text-align: left; margin-top: 2px; }
 }
 
-/* ── standing notice and bulletin age ─────────────────────────────────── */
+/* ── the standing notice: a compact strip, on every visit ─────────────── */
 
 .notice {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 14px var(--gutter);
   background: var(--bg);
   border-bottom: 1px solid var(--rule);
-  padding: 12px 26px;
 }
-.notice p { margin: 0 0 10px; max-width: 90ch; font-size: 14px; line-height: 1.45; color: var(--soft); }
+.notice p { margin: 0; max-width: 90ch; font-size: var(--text-small); line-height: 1.45; color: var(--soft); }
 .notice strong { color: var(--fg); font-weight: 500; }
 .notice-links { display: flex; flex-wrap: wrap; gap: var(--space-2); }
-.observed-text { text-align: right; }
-.observed-date { white-space: nowrap; }
+/* From tablet width the strip is one row: the sentence, then the two pills. */
+@media (min-width: 768px) {
+  .notice { flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-5); }
+  .notice-links { flex: none; }
+}
 .bulletin-age { display: inline-block; }
 .bulletin-behind { color: var(--fg); font-weight: 500; }
 
-/* The topbar lets pointers through to the scene; the language switch takes them. */
 .lang-switch {
-  pointer-events: auto;
   display: inline-flex;
   align-items: center;
   min-height: 44px;
@@ -477,13 +514,6 @@
 .lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); }
 
 @media (max-width: 860px) {
-  .notice { padding: 12px 16px; }
-  .topbar { flex-wrap: wrap; row-gap: 6px; padding: 16px; }
-  /* The switch shares the brand's row; the bulletin line gets its own row below,
-     where it always sat, clear of the summit labels. */
-  .topbar .lang-switch { order: 1; margin-left: auto; margin-block: -11px; }
-  .topbar .observed { order: 2; flex-basis: 100%; margin-left: 0; }
-  .topbar .observed-text { text-align: left; }
   .lane-head { flex-wrap: wrap; column-gap: 12px; row-gap: 2px; }
 }
 
@@ -641,6 +671,58 @@
   .camp-line { grid-template-columns: 1fr; gap: 2px; }
 }
 
+/* On the first screen the camp panel follows the day's sentence and figures,
+   in the words' column, so it sits narrow: its lines stack label over text. */
+.first .camp { max-width: none; margin: var(--space-4) 0 0; padding: 0; }
+.first .camp-head { padding-top: var(--space-5); border-top-color: var(--rule); margin-bottom: var(--space-3); }
+.first .camp-head h2 { font-size: 20px; letter-spacing: -0.025em; }
+.first .camp-body { grid-template-columns: minmax(0, 1fr); gap: 0; }
+.first .camp-line { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+.first .camp-line dd { font-size: 15px; }
+.first .camp-foot { margin-top: var(--space-4); }
+.first .camp-foot p { font-size: var(--text-small); }
+
+/* Tablet and desktop: the same order in two columns, the scene large on the
+   left and held in view while the words beside it scroll. */
+@media (min-width: 768px) {
+  .first {
+    grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+    grid-template-areas: 'top top' 'scene day';
+    column-gap: var(--space-6);
+  }
+  .topbar { padding: var(--space-4) 0; }
+  /* A fixed shape the camera is framed for (both summits and the plume in
+     the upper half), not a column stretched to the screen's height. */
+  .first-scene {
+    position: sticky;
+    top: var(--space-4);
+    align-self: start;
+    height: auto;
+    aspect-ratio: 3 / 4;
+  }
+  .first-day { padding-top: 0; }
+}
+/* Tablet: the words' column is narrow, so the figures read as rows, label
+   left and value right, rather than three cramped cells. */
+@media (min-width: 768px) and (max-width: 1099px) {
+  .readout { grid-template-columns: minmax(0, 1fr); grid-template-rows: none; }
+  .readout-row {
+    grid-row: auto;
+    grid-template-rows: none;
+    /* Values start in one column, so the marks line up. */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    column-gap: var(--space-4);
+    align-items: baseline;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+}
+@media (min-width: 1100px) {
+  .first { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); }
+  .first-scene { aspect-ratio: 4 / 3; max-height: calc(100svh - 2 * var(--space-4)); }
+  .day-sentence { font-size: 32px; }
+}
+
 /* ── the record in ink (#37): Hoop as the cursor, the five marks, replay ── */
 
 /* The chart: a 1px line, a 1px baseline, a faint mid rule, hatched gaps. */
@@ -705,7 +787,6 @@
 .gvp-fold + .gvp-credit { margin-top: var(--space-1); }
 
 /* The readout and the camp panel carry the same marks beside their words. */
-.readout-v[data-state] .mark { align-self: center; }
 .camp-line dd { display: flex; align-items: baseline; gap: var(--space-2); }
 .camp-line dd .state-mark { transform: translateY(1px); }
 

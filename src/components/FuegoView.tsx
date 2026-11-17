@@ -2,16 +2,18 @@
 
 import { useCallback, useEffect, useMemo, useState } from 'react';
 
-import BulletinAge from '@/components/BulletinAge';
+import { AgePill } from '@/components/BulletinAge';
 import CampPanel from '@/components/CampPanel';
 import FieldLanes from '@/components/FieldLanes';
 import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import Mark from '@/components/ink/Mark';
+import Pill from '@/components/ink/Pill';
 import ReplayBar from '@/components/ReplayBar';
 import TempoChart from '@/components/TempoChart';
 import { formatDate, formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
+import { describeCamp } from '@/lib/camp';
 import { scrollToPlace, takePlace } from '@/lib/place';
 import { lastReportedIndex, readoutRows, STATE_MARK, summaryFigures } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
@@ -59,6 +61,10 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
     () => readoutRows(day, t, { rate: heldRate, column: heldColumn }),
     [day, t, heldRate, heldColumn],
   );
+  // The first screen's three figures: the rate, the column and the drift.
+  const figureRows = [rows[0], rows[1], rows[3]];
+  // The day's sentence, from the camp panel's own wording: only what was reported.
+  const sentence = useMemo(() => describeCamp(day, t).summary, [day, t]);
   const notes: string[] = [];
   const rateMissing = day.explosionsMax === null && !continuous;
   const columnMissing = day.ashMaxMasl === null;
@@ -89,44 +95,53 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
 
   return (
     <>
-      <section className="hero">
-        {/* The top bar comes first in the page so the keyboard reaches the brand,
-            the date and the language switch before the scene's view buttons. */}
+      {/* The first screen: the top row, the scene, then the day in one sentence
+          and three figures. One column on a phone; from tablet width the scene
+          takes the left and the words the right (docs/design.md, First screen). */}
+      <section className="first" data-selected-day={day.date}>
         <header className="topbar">
           <span className="brand">Fuego</span>
-          <span className="observed" data-selected-day={day.date}>
-            {isRepresentative && <span className="badge">{t.topbar.representative}</span>}
-            {day.warnings.length > 0 && (
-              <span className="badge" data-warn="true">{t.topbar.unread(day.warnings.length)}</span>
-            )}
-            <span className="observed-text">
-              {/* While replaying, the age pill is the dotted ring (the "held" mark):
-                  the `replay-ring` class is the hook the first screen restyles from. */}
-              <span className={isToday ? 'observed-date' : 'observed-date replay-ring'} data-replaying={!isToday || undefined}>
-                {isToday ? `${t.topbar.latest} · ${date(day.date)}` : t.topbar.replayingOn(formatShortDate(locale, day.date))}
-              </span>
-              {isToday && <BulletinAge date={day.date} locale={locale} />}
+          {isToday ? (
+            <AgePill date={day.date} locale={locale} />
+          ) : (
+            // Replaying: the age pill becomes the dotted ring, the "held" mark.
+            <span className="observed-date replay-ring num" data-replaying="true">
+              {t.topbar.replayingOn(formatShortDate(locale, day.date))}
             </span>
-          </span>
+          )}
           <LanguageSwitch locale={locale} />
         </header>
 
-        <Massif day={sceneDay} locale={locale} />
+        <div className="first-scene">
+          <Massif day={sceneDay} locale={locale} />
+        </div>
 
-        <aside className="readout">
-          {rows.map((r) => (
-            <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
-              <span className="readout-k">{r.key}</span>
-              <span className="readout-v" data-state={r.state}><Mark kind={STATE_MARK[r.state]} />{r.value}<small>{r.unit}</small></span>
-            </div>
-          ))}
+        <div className="first-day">
+          {(isRepresentative || day.warnings.length > 0) && (
+            <p className="first-badges">
+              {isRepresentative && <span className="badge">{t.topbar.representative}</span>}
+              {day.warnings.length > 0 && (
+                <span className="badge" data-warn="true">{t.topbar.unread(day.warnings.length)}</span>
+              )}
+            </p>
+          )}
+          <p className="day-sentence">{sentence}</p>
+
+          <dl className="readout">
+            {figureRows.map((r) => (
+              <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
+                <dt className="readout-k">{r.key}</dt>
+                <dd className="readout-v" data-state={r.state}><Mark kind={STATE_MARK[r.state]} />{r.value}<small>{r.unit}</small></dd>
+              </div>
+            ))}
+          </dl>
           {notes.length > 0 && (
             <p className="readout-note" role="status">{notes.join(' ')}</p>
           )}
-        </aside>
 
-        <div className="scrollcue" aria-hidden="true">
-          <span>{t.scrollcue}</span>
+          <Pill href="#record">{t.first.seeRecord(series.length)}</Pill>
+
+          <CampPanel entry={day ?? null} isLatest={isToday} isRepresentative={isRepresentative} locale={locale} />
         </div>
       </section>
 
@@ -156,7 +171,6 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
         <GvpWeeks series={series} selected={selected} locale={locale} />
       </section>
 
-      <CampPanel entry={day ?? null} isLatest={isToday} isRepresentative={isRepresentative} locale={locale} />
       <ReplayBar dates={dates} selected={at} onSelect={onSelect} locale={locale} />
     </>
   );

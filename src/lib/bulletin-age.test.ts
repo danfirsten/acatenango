@@ -16,16 +16,16 @@ test('uses the Guatemala calendar day, not UTC', () => {
   assert.equal(bulletinAge('2026-11-15', at('2026-11-16T02:00:00Z'))?.label, 'today');
 });
 
-test('one day is singular', () => {
-  assert.equal(bulletinAge('2026-11-15', at('2026-11-16T15:00:00Z'))?.label, '1 day ago');
+test('one day is yesterday', () => {
+  assert.equal(bulletinAge('2026-11-15', at('2026-11-16T15:00:00Z'))?.label, 'yesterday');
 });
 
 test('two days is not yet behind, three is', () => {
   const two = bulletinAge('2026-11-14', at('2026-11-16T15:00:00Z'));
-  assert.equal(two?.label, '2 days ago');
+  assert.equal(two?.label, '2 days old');
   assert.equal(two?.behind, false);
   const three = bulletinAge('2026-11-13', at('2026-11-16T15:00:00Z'));
-  assert.equal(three?.label, '3 days ago');
+  assert.equal(three?.label, '3 days old');
   assert.equal(three?.behind, true);
 });
 

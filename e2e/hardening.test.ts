@@ -244,25 +244,31 @@ describe('launch checks', () => {
         if (el.closest('.topbar .lang-switch')) return 'switch';
         if (el.closest('.massif-views')) return `view:${el.textContent}`;
         if (el.classList.contains('tempo-plot')) return 'scrub';
+        if (el.matches('.first-day > a[href="#record"]')) return 'record';
         return el.closest('#notice') ? 'notice' : el.tagName.toLowerCase();
       }));
     }
     const at = (s: string) => order.indexOf(s);
+    const view = `view:${en.massif.fromCamp}`;
+    assert.ok(at('notice') !== -1, `the notice's links are reached (${order.join(', ')})`);
     assert.ok(at('switch') !== -1, `the language switch is reached (${order.join(', ')})`);
-    assert.ok(at(`view:${en.massif.orbit}`) !== -1, 'the view buttons are reached');
-    assert.ok(at('switch') < at(`view:${en.massif.orbit}`), `the top bar comes before the view buttons (${order.join(', ')})`);
-    assert.ok(at(`view:${en.massif.orbit}`) < at('scrub'), 'the scene comes before the record');
+    assert.ok(at(view) !== -1, 'the view switch is reached');
+    // Reading order: the notice, the top row, the scene, the way to the record, the record.
+    assert.ok(at('notice') < at('switch'), `the notice comes before the top row (${order.join(', ')})`);
+    assert.ok(at('switch') < at(view), `the top row comes before the view switch (${order.join(', ')})`);
+    assert.ok(at(view) < at('record'), `the scene comes before the record pill (${order.join(', ')})`);
+    assert.ok(at('record') < at('scrub'), 'the record pill comes before the record');
 
-    // The view switch: Enter and Space both press a button.
-    const orbit = page.getByRole('button', { name: en.massif.orbit });
+    // The view switch: Enter and Space both press it, and it says which view is on.
     const camp = page.getByRole('button', { name: en.massif.fromCamp });
     await camp.focus();
     await page.keyboard.press('Enter');
     assert.equal(await camp.getAttribute('aria-pressed'), 'true');
-    assert.equal(await orbit.getAttribute('aria-pressed'), 'false');
-    await orbit.focus();
+    const tag = () => page.locator('.first-scene .chip-tag').textContent();
+    assert.ok((await tag())?.startsWith(en.massif.tag('camp', '')), 'the image tag names the view from camp');
     await page.keyboard.press('Space');
-    assert.equal(await orbit.getAttribute('aria-pressed'), 'true');
+    assert.equal(await camp.getAttribute('aria-pressed'), 'false');
+    assert.ok((await tag())?.startsWith(en.massif.tag('orbit', '')), 'the image tag names the orbit');
 
     // The record scrub: arrows step a day, Home and End jump to the ends.
     const dates = index.entries.map((e) => e.date);

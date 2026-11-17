@@ -84,13 +84,12 @@ describe('dictionaries', () => {
 });
 
 describe('the notice keeps its meaning in Spanish', () => {
-  test('unofficial, not a warning service, copies INSIVUMEH, always behind', () => {
+  test('unofficial, copied from INSIVUMEH, behind the observatory, not a warning service', () => {
+    assert.equal(en.notice.lead, 'Unofficial archive.');
+    assert.equal(en.notice.body, 'Copied from INSIVUMEH’s bulletin, so it lags the observatory. It is not a warning service.');
     assert.equal(es.notice.lead, 'Archivo no oficial.');
-    assert.match(es.notice.body, /^Este sitio, Fuego, no es un servicio de alertas\./);
-    assert.match(es.notice.body, /Copia el boletín diario del INSIVUMEH una o dos veces al día/);
-    assert.match(es.notice.body, /siempre va con retraso respecto al observatorio/);
-    assert.match(es.notice.insivumeh, /INSIVUMEH/);
-    assert.match(es.notice.conred, /CONRED/);
+    assert.match(es.notice.body, /^Copiado del boletín del INSIVUMEH, así que va con retraso respecto al observatorio\./);
+    assert.match(es.notice.body, /No es un servicio de alertas\.$/);
   });
 
   test('neither language words anything as safety advice', () => {
@@ -119,10 +118,16 @@ describe('dates and numbers per language', () => {
   });
 
   test('bulletin age', () => {
+    assert.equal(describeAge(0).label, 'today');
+    assert.equal(describeAge(1).label, 'yesterday');
+    assert.equal(describeAge(4).label, '4 days old');
     assert.equal(describeAge(0, es).label, 'hoy');
-    assert.equal(describeAge(1, es).label, 'hace 1 día');
+    assert.equal(describeAge(1, es).label, 'ayer');
     assert.equal(describeAge(4, es).label, 'hace 4 días');
-    assert.equal(describeAge(4).label, '4 days ago');
+    // Behind only past two days, and said without a word of danger or safety.
+    assert.equal(describeAge(2).behind, false);
+    assert.equal(describeAge(3).behind, true);
+    for (const t of [en, es]) assert.doesNotMatch(t.age.behindNote, /safe|danger|segur|peligr/i);
   });
 });
 

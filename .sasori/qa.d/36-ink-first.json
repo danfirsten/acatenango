@@ -1,0 +1,10 @@
+{
+  "routes": ["/", "/es/"],
+  "interactions": [
+    { "route": "/es/", "selector": ".massif-views button:last-child", "action": "click", "label": "desde el campamento" }
+  ],
+  "routeFiles": {
+    "/": ["src/components/FuegoPage.tsx", "src/components/FuegoView.tsx", "src/components/Notice.tsx", "src/components/BulletinAge.tsx", "src/components/Massif.tsx", "src/components/CampPanel.tsx", "src/app/globals.css", "src/i18n/en.ts", "src/i18n/types.ts"],
+    "/es/": ["src/components/FuegoPage.tsx", "src/components/FuegoView.tsx", "src/components/Notice.tsx", "src/components/BulletinAge.tsx", "src/components/Massif.tsx", "src/components/CampPanel.tsx", "src/app/globals.css", "src/i18n/es.ts", "src/i18n/types.ts"]
+  }
+}
