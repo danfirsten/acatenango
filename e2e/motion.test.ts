@@ -114,7 +114,7 @@ describe('motion: the moment, the scrub and the sleeping Hoop', () => {
     assert.equal(await page.locator('.first').getAttribute('data-swap'), 'false', 'nothing swaps on load');
     assert.equal(await page.locator('.replay-bar').count(), 0);
     const hoop = page.locator('.tempo-hoop');
-    assert.equal(await hoop.evaluate((el) => getComputedStyle(el).transitionDuration), '0.22s');
+    assert.equal(await hoop.evaluate((el) => getComputedStyle(el).transitionDuration), '0.15s');
     await page.locator('#record-scrub').focus();
     await page.keyboard.press('ArrowLeft');
     await page.locator('.replay-bar[data-open="true"]').waitFor();

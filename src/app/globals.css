@@ -772,7 +772,7 @@
 .tempo-selected { pointer-events: none; }
 /* Hoop glides to the day. Reduced motion gets no glide: it jumps, and the system's
    0.01ms rule would still lag a frame, so the transition is removed outright. */
-.tempo-hoop { transition: transform var(--dur-base) var(--ease-out); }
+.tempo-hoop { transition: transform var(--dur-quick) var(--ease-out); }
 @media (prefers-reduced-motion: reduce) { .tempo-hoop { transition: none; } }
 
 /* The key to the five marks, used the same across the record. */
@@ -888,4 +888,9 @@ body:has(.replay-bar) { padding-bottom: 80px; }
   font-size: 12px;
   color: var(--fg);
   background: var(--bg);
+  /* Its own row under the top row: the language switch stays where it is. */
+  order: 10;
+  flex-basis: auto;
+  margin-right: auto;
 }
+.topbar .lang-switch { margin-left: auto; }
