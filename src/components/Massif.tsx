@@ -11,7 +11,6 @@ import {
   createMassifScene,
   loadHeightfield,
 } from '@/lib/scene/massif';
-import type { SceneMode } from '@/lib/scene/theme';
 import { MASSIF_JSON_URL, MASSIF_PNG_URL } from '@/lib/terrain';
 import styles from './Massif.module.css';
 
@@ -46,8 +45,6 @@ export default function Massif({ day, locale }: MassifProps) {
   const [labels, setLabels] = useState<LabelPosition[]>([]);
   const [status, setStatus] = useState<Status>('loading');
   const [view, setView] = useState<'orbit' | 'camp'>('orbit');
-  // The scene reads the page's theme itself and follows it; the labels match.
-  const [sceneMode, setSceneMode] = useState<SceneMode | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -74,7 +71,6 @@ export default function Massif({ day, locale }: MassifProps) {
           reducedMotion: prefersReducedMotion(),
           // Labels are DOM, not WebGL, so they stay selectable and legible.
           onLabels: setLabels,
-          onTheme: (theme) => setSceneMode(theme.mode),
         });
         handleRef.current = handle;
         setStatus('ready');
@@ -107,7 +103,7 @@ export default function Massif({ day, locale }: MassifProps) {
     <div className="massif">
       <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 
-      <div className={styles.labels} data-scene={sceneMode ?? undefined}>
+      <div className={styles.labels}>
         {labels.map((l) => (
           <div
             key={l.key}

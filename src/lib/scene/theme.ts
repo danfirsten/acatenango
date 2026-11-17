@@ -115,11 +115,15 @@ export function sameTheme(a: SceneTheme, b: SceneTheme): boolean {
 
 const DARK_QUERY = '(prefers-color-scheme: dark)';
 
-/** Reads the theme from the live document. Browser only. */
-export function readPageTheme(): SceneTheme {
+/**
+ * Reads the theme from the live document. The --bg is read where the scene
+ * sits (its canvas), so a section that sets its own theme is matched too.
+ * Browser only.
+ */
+export function readPageTheme(at: Element = document.documentElement): SceneTheme {
   const root = document.documentElement;
   return resolveTheme({
-    bg: getComputedStyle(root).getPropertyValue('--bg'),
+    bg: getComputedStyle(at).getPropertyValue('--bg'),
     dataTheme: root.dataset.theme,
     prefersDark: window.matchMedia?.(DARK_QUERY).matches ?? false,
   });
@@ -130,10 +134,13 @@ export function readPageTheme(): SceneTheme {
  * or inline style on <html> (where a theme switch would set it), or the system
  * setting. Returns the function that stops watching. Browser only.
  */
-export function watchPageTheme(onChange: (theme: SceneTheme) => void): () => void {
-  let current = readPageTheme();
+export function watchPageTheme(
+  onChange: (theme: SceneTheme) => void,
+  at: Element = document.documentElement,
+): () => void {
+  let current = readPageTheme(at);
   const check = () => {
-    const next = readPageTheme();
+    const next = readPageTheme(at);
     if (sameTheme(next, current)) return;
     current = next;
     onChange(next);

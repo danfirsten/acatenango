@@ -47,8 +47,6 @@ export interface MassifOptions {
    * follows it live as `data-theme` or the system setting changes.
    */
   theme?: SceneTheme;
-  /** Called with the theme the scene drew in, at start and on every change. */
-  onTheme?: (theme: SceneTheme) => void;
 }
 
 /** Relief is real but subtle at true scale; stretch it to match perception. */
@@ -461,10 +459,9 @@ export function createMassifScene(
     emberMaterial.uniforms.uAsh.value.setHex(theme.emberAdditive ? 0xff9d4a : 0xe2531a);
     emberMaterial.uniforms.uEmber.value.setHex(theme.emberAdditive ? 0xfff0d0 : 0xff8a3d);
     redraw = 3;
-    options.onTheme?.(theme);
   }
-  applyTheme(options.theme ?? readPageTheme());
-  const stopWatchingTheme = options.theme ? () => {} : watchPageTheme(applyTheme);
+  applyTheme(options.theme ?? readPageTheme(canvas));
+  const stopWatchingTheme = options.theme ? () => {} : watchPageTheme(applyTheme, canvas);
 
   /* ── camera rig ──────────────────────────────────────────────────────── */
   let view: 'orbit' | 'camp' = 'orbit';

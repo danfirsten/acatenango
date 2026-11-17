@@ -30,7 +30,7 @@ const TYPES: Record<string, string> = {
   '.woff2': 'font/woff2',
 };
 
-/** The tokens' paper and ink, which the sky must match when the page has no --bg of its own. */
+/** The tokens' paper and ink: the sky is one or the other. */
 const PAPER = [0xf7, 0xf7, 0xf4];
 const INK = [0x0b, 0x0b, 0x0b];
 
@@ -84,11 +84,17 @@ describe('the engraved scene', () => {
     return page;
   }
 
-  /** The page's --bg if it has one, else the token the scene falls back to. */
-  async function expectedSky(page: Page, fallback: number[]): Promise<number[]> {
-    const bg = await page.evaluate(() => getComputedStyle(document.documentElement).getPropertyValue('--bg').trim());
+  /**
+   * The --bg where the scene sits, which must be the page's paper or ink: the
+   * hero follows the page's theme rather than keeping a section of its own.
+   */
+  async function expectedSky(page: Page, theme: number[]): Promise<number[]> {
+    const bg = await page.evaluate(() => getComputedStyle(document.querySelector('.massif-canvas')!).getPropertyValue('--bg').trim());
     const hex = /^#([0-9a-f]{6})$/i.exec(bg);
-    return hex ? [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16)) : fallback;
+    assert.ok(hex, `the scene sits on a --bg (${bg})`);
+    const rgb = [0, 2, 4].map((i) => parseInt(hex[1].slice(i, i + 2), 16));
+    assert.deepEqual(rgb, theme, 'the scene sits on the theme the page is in');
+    return rgb;
   }
 
   /** A patch of open sky at the left of the scene, clear of the readout and labels. */
@@ -142,6 +148,9 @@ describe('the engraved scene', () => {
         return { family: s.fontFamily, size: parseFloat(s.fontSize), transform: s.textTransform };
       }));
     assert.ok(fonts.length >= 4, 'both summits have a name and a line under it');
+    // Labels take the scene's theme: dark ink on the paper sky.
+    const ink = await page.evaluate(() => getComputedStyle(document.querySelector('.summit-text b')!).color);
+    assert.equal(ink, 'rgb(11, 11, 11)', 'the summit names are ink on paper');
     for (const f of fonts) {
       assert.match(f.family, /Geist Mono|monospace/i);
       assert.ok(f.size >= 11, `no label under 11 px (${f.size})`);

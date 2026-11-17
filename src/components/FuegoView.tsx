@@ -82,7 +82,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
 
   return (
     <>
-      <section className="hero dark">
+      <section className="hero">
         {/* The top bar comes first in the page so the keyboard reaches the brand,
             the date and the language switch before the scene's view buttons. */}
         <header className="topbar">

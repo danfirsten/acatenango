@@ -46,8 +46,8 @@
 
 /* ── hero ─────────────────────────────────────────────────────────────── */
 
-/* The scene keeps its night sky until the engraving lands (#35), so the hero is
-   an ink section in both themes: the system's .dark switches only this part. */
+/* The hero follows the page's theme: the engraved scene draws on paper by day
+   and on ink after dark, with the page's own --bg as its sky. */
 .hero {
   position: relative;
   height: 100svh;
