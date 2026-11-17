@@ -132,22 +132,37 @@
   flex: none;
 }
 .summit[data-active="true"] .summit-dot { background: var(--fg); }
-.summit-text { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
+.summit-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+  white-space: nowrap;
+  /* The system's label style, on a plate: the engraving and the plume run
+     behind the labels, so they sit on the page's own ground, blurred like the
+     image tags on the scene, to stay legible over any line. */
+  font-family: var(--mono);
+  letter-spacing: 0.04em;
+  padding: 3px 7px 4px;
+  border-radius: var(--r-chip);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
 .summit-text b {
   font-size: 12px;
   font-weight: 500;
-  letter-spacing: -0.02em;
   color: var(--fg);
-  text-shadow: 0 1px 8px var(--bg);
 }
 .summit-text i {
-  /* Geist, not the mono: the labels must fit beside each summit on a phone. */
   font-style: normal;
   font-size: var(--text-label);
-  letter-spacing: -0.015em;
-  color: var(--soft);
-  text-shadow: 0 0 3px var(--bg), 0 1px 8px var(--bg);
+  color: var(--muted);
 }
+/* Near the right edge the label hangs to the left of its dot: the element is
+   shifted back by its own width, so the dot stays on the summit. */
+.summit[data-flip="true"] { flex-direction: row-reverse; margin-left: 3px; }
+.summit[data-flip="true"] .summit-text { align-items: flex-end; }
+.summits { position: absolute; inset: 0; pointer-events: none; }
 
 .readout {
   position: absolute;
@@ -247,6 +262,12 @@
   transform: translateX(-50%);
   color: var(--soft);
   pointer-events: none;
+  /* It sits on the engraving: the same plate as the summit labels. */
+  padding: 4px 9px;
+  border-radius: var(--r-chip);
+  background: color-mix(in srgb, var(--bg) 90%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
 }
 .scrollcue span { display: block; }
 

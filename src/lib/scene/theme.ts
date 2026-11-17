@@ -46,7 +46,7 @@ export function sceneTheme(mode: SceneMode, background?: number): SceneTheme {
       // Light lines on ink read heavier than ink on paper; draw them thinner.
       hatchWidth: 0.36,
       contourWidth: 0.5,
-      lineStrength: 0.42,
+      lineStrength: 0.3,
       ash: 0x8f877e,
       ember: 0xff7a33,
       emberAdditive: true,

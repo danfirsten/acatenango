@@ -129,7 +129,7 @@ export const TERRAIN_FRAG = /* glsl */ `
     float tone, darkest;
     if (uInkOnLight > 0.5) {
       tone = smoothstep(0.78, 0.10, lambert);
-      darkest = smoothstep(0.38, -0.05, lambert);
+      darkest = smoothstep(0.48, 0.0, lambert);
     } else {
       tone = max(0.12, smoothstep(0.30, 0.95, lambert));
       darkest = smoothstep(0.72, 1.05, lambert);
@@ -161,7 +161,7 @@ export const TERRAIN_FRAG = /* glsl */ `
         * smoothstep(0.0, 0.25, tone) * 0.85;
     }
     if (keep * darkest > 0.0) {
-      ink = max(ink, hatch(dot(vWorld, DIR_B), perB, fine, fade, halfWidth * 0.9) * darkest * 0.85);
+      ink = max(ink, hatch(dot(vWorld, DIR_B), perB, fine, fade, halfWidth * 0.9) * darkest);
     }
 
     // Contours every 100 m, index contours every 500 m drawn heavier.

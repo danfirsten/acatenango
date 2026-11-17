@@ -12,7 +12,6 @@ import {
   loadHeightfield,
 } from '@/lib/scene/massif';
 import { MASSIF_JSON_URL, MASSIF_PNG_URL } from '@/lib/terrain';
-import styles from './Massif.module.css';
 
 interface MassifProps {
   /** The archived day the scene should draw. */
@@ -103,7 +102,7 @@ export default function Massif({ day, locale }: MassifProps) {
     <div className="massif">
       <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 
-      <div className={styles.labels}>
+      <div className="summits">
         {labels.map((l) => (
           <div
             key={l.key}
