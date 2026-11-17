@@ -185,6 +185,16 @@ describe('launch checks', () => {
     for (const v of await page.locator('.readout-v').allInnerTexts()) {
       assert.doesNotMatch(v.trim(), /^0(\D|$)/, `the readout shows "${v}"`);
     }
+
+    // The same day is marked the same way in the readout, the lanes, the camp panel and the chart.
+    assert.equal(await page.locator('.tempo-selected').getAttribute('data-state'), await rate.getAttribute('data-state'));
+    const marks = await page.evaluate(() => [...document.querySelectorAll('[data-state] .mark')].map((m) => [
+      m.closest('[data-state]')!.getAttribute('data-state'), m.getAttribute('data-mark')]));
+    const want: Record<string, string> = { reported: 'solid', saidNone: 'ring', notReported: 'hatched', held: 'dotted', continuous: 'half' };
+    assert.ok(marks.length > 8);
+    for (const [state, mark] of marks) assert.equal(mark, want[state!], `${state} is drawn as ${want[state!]}`);
+    assert.deepEqual(await page.locator('.mark-key dt').allInnerTexts(),
+      ['Reported', 'Said none', 'Not reported', 'Held', 'Continuous']);
     await page.context().close();
   });
 
@@ -337,29 +347,6 @@ describe('launch checks', () => {
     assert.equal(await bar.count(), 0);
     assert.equal(await ring.getAttribute('data-replaying'), null);
     await page.waitForFunction(() => document.activeElement?.id === 'record-scrub');
-    await page.context().close();
-  });
-
-  it('marks values the same way in the readout, the lanes and the camp panel', async () => {
-    const page = await open('/');
-    await ready(page);
-    const entries = index.entries;
-    // A day with a left-out rate, if the record has one; otherwise the latest.
-    const target = Math.max(0, entries.findLastIndex((e) => e.explosionsMax === null && !e.phenomena.includes('continuousPhase')));
-    await page.locator('.tempo-plot').focus();
-    await page.keyboard.press('End');
-    for (let k = entries.length - 1; k > target; k--) await page.keyboard.press('ArrowLeft');
-    const rate = await page.locator('.camp-line', { hasText: en.camp.labels.rate }).getAttribute('data-state');
-    assert.equal(await page.locator('.tempo-selected').getAttribute('data-state'), rate, 'the chart and the panel agree');
-    // Every state shown carries its system mark.
-    const marks = await page.evaluate(() => [...document.querySelectorAll('[data-state] .mark')].map((m) => [
-      m.closest('[data-state]')!.getAttribute('data-state'), m.getAttribute('data-mark')]));
-    const want: Record<string, string> = { reported: 'solid', saidNone: 'ring', notReported: 'hatched', held: 'dotted', continuous: 'half' };
-    assert.ok(marks.length > 8);
-    for (const [state, mark] of marks) assert.equal(mark, want[state!], `${state} is drawn as ${want[state!]}`);
-    // The key lists all five words.
-    assert.deepEqual(await page.locator('.mark-key dt').allInnerTexts(),
-      ['Reported', 'Said none', 'Not reported', 'Held', 'Continuous']);
     await page.context().close();
   });
 
