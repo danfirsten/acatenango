@@ -83,6 +83,21 @@ function webglAvailable(): boolean {
   }
 }
 
+/** Set once the clip has opened, so it plays once per visit (a tab's session). */
+const CLIP_KEY = 'fuego:clip';
+
+/** Whether this visit has yet to see the clip open. Storage can be blocked: then it plays each load. */
+function clipDue(): boolean {
+  if (prefersReducedMotion()) return false;
+  try {
+    if (sessionStorage.getItem(CLIP_KEY)) return false;
+    sessionStorage.setItem(CLIP_KEY, '1');
+  } catch {
+    // Blocked storage: play it.
+  }
+  return true;
+}
+
 export default function Massif({ day, locale }: MassifProps) {
   const t = getDict(locale).massif;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -91,6 +106,13 @@ export default function Massif({ day, locale }: MassifProps) {
   const [status, setStatus] = useState<Status>('loading');
   const [view, setView] = useState<'orbit' | 'camp'>('orbit');
   const viewRef = useRef(view);
+  // 'play' runs the clip's CSS animation once; the page is server-rendered open.
+  const [clip, setClip] = useState<'idle' | 'play'>('idle');
+  useEffect(() => {
+    // Next frame, so the effect never sets state synchronously.
+    const id = requestAnimationFrame(() => { if (clipDue()) setClip('play'); });
+    return () => cancelAnimationFrame(id);
+  }, []);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -153,7 +175,8 @@ export default function Massif({ day, locale }: MassifProps) {
   }, [view]);
 
   return (
-    <div className="massif">
+    <div className="massif" data-clip={clip === 'play' ? 'play' : undefined}>
+      <div className="massif-stage">
       <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 
       <div className="summits">
@@ -176,6 +199,7 @@ export default function Massif({ day, locale }: MassifProps) {
             </span>
           </div>
         ))}
+      </div>
       </div>
 
       {/* The scene's own controls sit inside it: the image tag names the view and

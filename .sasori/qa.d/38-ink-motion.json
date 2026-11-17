@@ -1,0 +1,16 @@
+{
+  "motion": {
+    "allow": [".massif-stage"],
+    "moment": { "route": "/", "selector": ".massif", "action": "load", "label": "The clip opens on the mountain" }
+  },
+  "interactions": [
+    { "route": "/", "selector": ".massif-views button:last-child", "action": "click", "label": "Switch to the view from camp" },
+    { "route": "/", "selector": "#record-scrub", "action": "focus", "label": "Hoop on the record's scrub" },
+    { "route": "/es/", "selector": ".massif-views button:last-child", "action": "click", "label": "Cambiar a la vista desde el campamento" },
+    { "route": "/es/", "selector": "#record-scrub", "action": "focus", "label": "Hoop en el control del registro" }
+  ],
+  "routeFiles": {
+    "/": ["src/components/Massif.tsx", "src/components/FuegoView.tsx", "src/components/ReplayBar.tsx", "src/components/TempoChart.tsx", "src/components/Offline.tsx", "src/app/globals.css"],
+    "/es/": ["src/components/Massif.tsx", "src/components/FuegoView.tsx", "src/components/ReplayBar.tsx", "src/components/TempoChart.tsx", "src/components/Offline.tsx", "src/i18n/es.ts"]
+  }
+}

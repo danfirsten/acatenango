@@ -114,6 +114,10 @@ export interface Dict {
     unsupported: string;
     failed: string;
   };
+  /** The chip shown while the page is a saved copy and there is no network. */
+  offline: {
+    chip: (newest: string) => string;
+  };
   /** The first screen under the scene. */
   first: {
     /** The solid pill that leads to the record. */

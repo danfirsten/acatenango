@@ -119,6 +119,9 @@ export const en: Dict = {
     unsupported: 'This view needs WebGL. The bulletin’s figures and the record work without it.',
     failed: 'Terrain unavailable. The bulletin’s figures and the record are unaffected.',
   },
+  offline: {
+    chip: (newest) => `Offline · saved copy · ${newest}`,
+  },
   first: {
     seeRecord: (days) => `See the ${days}-day record`,
   },

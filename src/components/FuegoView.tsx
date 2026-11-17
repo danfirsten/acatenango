@@ -9,6 +9,7 @@ import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
 import Mark from '@/components/ink/Mark';
+import Offline from '@/components/Offline';
 import Pill from '@/components/ink/Pill';
 import ReplayBar from '@/components/ReplayBar';
 import TempoChart from '@/components/TempoChart';
@@ -76,7 +77,10 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
   }
 
   // Stable identity so selecting a day does not rebuild the terrain mesh.
-  const onSelect = useCallback((i: number) => setSelected(i), []);
+  // Once the reader has moved off the opening day, a swap fades in place. The
+  // opening day's words are simply there: nothing animates on load but the clip.
+  const [moved, setMoved] = useState(false);
+  const onSelect = useCallback((i: number) => { setSelected(i); setMoved(true); }, []);
 
   // After a language switch, pick up where the reader was (the replayed day,
   // the section). A remembered Spanish choice is followed before the English
@@ -98,7 +102,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
       {/* The first screen: the top row, the scene, then the day in one sentence
           and three figures. One column on a phone; from tablet width the scene
           takes the left and the words the right (docs/design.md, First screen). */}
-      <section className="first" data-selected-day={day.date}>
+      <section className="first" data-selected-day={day.date} data-swap={moved}>
         <header className="topbar">
           <span className="brand">Fuego</span>
           {isToday ? (
@@ -109,6 +113,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
               {t.topbar.replayingOn(formatShortDate(locale, day.date))}
             </span>
           )}
+          <Offline locale={locale} newest={series[series.length - 1]?.date ?? null} />
           <LanguageSwitch locale={locale} />
         </header>
 
@@ -125,13 +130,13 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
               )}
             </p>
           )}
-          <p className="day-sentence">{sentence}</p>
+          <p className="day-sentence swap" key={`s${day.date}`}>{sentence}</p>
 
           <dl className="readout">
             {figureRows.map((r) => (
               <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
                 <dt className="readout-k">{r.key}</dt>
-                <dd className="readout-v" data-state={r.state}><Mark kind={STATE_MARK[r.state]} />{r.value}<small>{r.unit}</small></dd>
+                <dd className="readout-v swap" key={day.date} data-state={r.state}><Mark kind={STATE_MARK[r.state]} />{r.value}<small>{r.unit}</small></dd>
               </div>
             ))}
           </dl>

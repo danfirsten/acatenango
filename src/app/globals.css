@@ -123,8 +123,31 @@
   border: 1px solid var(--rule);
   background: var(--bg);
 }
-.massif, .massif-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+.massif, .massif-canvas, .massif-stage { position: absolute; inset: 0; width: 100%; height: 100%; }
 .massif-canvas { display: block; }
+
+/* The moment, once per visit: the clip opens on the mountain. The mask opens from
+   inset(15% round 32px) to inset(0 round 20px) over 1.2 s while the scene settles from
+   1.15x to 1x over 1.6 s. The image tag and the switch sit outside the clip, so they
+   are in place and clickable from the first frame. Plain CSS on the compositor: no per-frame script, no loop. */
+@keyframes clip-open {
+  from { clip-path: inset(15% round 32px); }
+  to { clip-path: inset(0 round var(--r-media)); }
+}
+@keyframes scene-settle {
+  from { transform: scale(1.15); }
+  to { transform: none; }
+}
+.massif[data-clip="play"] .massif-stage { animation: clip-open var(--dur-clip) var(--ease-inout) both; }
+.massif[data-clip="play"] .massif-stage > * { animation: scene-settle var(--dur-settle) var(--ease-expo) both; }
+/* Reduced motion: the final state, no clip and no settle. */
+@media (prefers-reduced-motion: reduce) {
+  .massif[data-clip] .massif-stage, .massif[data-clip] .massif-stage > * { animation: none; }
+}
+
+/* Scrubbing: figures swap in place with a short fade. No counting, no sliding. */
+@keyframes swap-in { from { opacity: 0; } }
+[data-swap="true"] .swap { animation: swap-in var(--dur-quick) var(--ease-out) both; }
 
 /* The day: the sentence, three figures under an ink rule, the way to the record. */
 .first-day {
@@ -747,9 +770,10 @@
 .tempo-hoop-body { fill: none; stroke: var(--fg); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
 .tempo-hoop-eyes { fill: var(--fg); }
 .tempo-selected { pointer-events: none; }
-/* Hoop jumps to the day for now; its glide is #38's. The system's reduced-motion
-   rule gives everything a 0.01ms transition, which would still lag a frame here. */
-.tempo-selected, .tempo-selected * { transition-property: none; }
+/* Hoop glides to the day. Reduced motion gets no glide: it jumps, and the system's
+   0.01ms rule would still lag a frame, so the transition is removed outright. */
+.tempo-hoop { transition: transform var(--dur-base) var(--ease-out); }
+@media (prefers-reduced-motion: reduce) { .tempo-hoop { transition: none; } }
 
 /* The key to the five marks, used the same across the record. */
 .mark-key {
@@ -821,6 +845,13 @@
 .replay-step { width: 48px; padding: 0; font-size: 20px; flex: none; }
 .replay-date { flex: 1; text-align: center; font-size: 14px; white-space: nowrap; }
 .replay-bar .pill-solid { flex: none; padding: 0 20px; }
+/* The bar comes up like a drawer and goes when you return to the latest day. It uses
+   the `translate` property so the desktop bar's own centring transform is untouched. */
+@keyframes drawer-up { from { translate: 0 120%; } }
+@keyframes drawer-down { to { translate: 0 120%; } }
+.replay-bar[data-open="true"] { animation: drawer-up var(--dur-slow) var(--ease-drawer) both; }
+.replay-bar[data-open="false"] { animation: drawer-down var(--dur-slow) var(--ease-drawer) both; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) { .replay-bar { animation: none !important; } }
 /* Room at the foot of the page so the bar never covers the last words. */
 body:has(.replay-bar) { padding-bottom: 80px; }
 @media (min-width: 768px) {
@@ -843,3 +874,18 @@ body:has(.replay-bar) { padding-bottom: 80px; }
 /* The key: three and two at tablet width, all five in a row on a wide screen. */
 @media (min-width: 600px) { .mark-key { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
 @media (min-width: 1100px) { .mark-key { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+
+/* ── the sleeping Hoop: a saved copy, offline (#38) ── */
+.offline-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 28px;
+  padding: 0 var(--space-3);
+  border: 1px solid var(--fg);
+  border-radius: var(--r-pill);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg);
+  background: var(--bg);
+}
