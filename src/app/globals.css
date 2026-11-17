@@ -220,8 +220,8 @@
   font-size: 13px;
   color: var(--soft);
   padding: 0 16px;
-  min-height: 44px;
-  min-width: 44px;
+  min-height: 48px;
+  min-width: 48px;
   border-radius: var(--r-pill);
   transition:
     color var(--dur-quick) var(--ease-out),
@@ -454,7 +454,7 @@
 }
 .lost p { margin: 0 0 8px; color: var(--soft); }
 /* The same wordmark the top bar carries, so a lost reader knows whose 404 this is. */
-.lost .lost-brand { margin: 0 0 40px; }
+.lost .lost-brand { margin: 0 0 40px; color: var(--fg); }
 .lost p:has(a) { margin-bottom: 40px; }
 .lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--fg); }
 
@@ -604,9 +604,9 @@
   font-variant-numeric: tabular-nums;
   overflow-wrap: anywhere;
 }
-/* Something the bulletin left out reads as a gap: the hatched mark and its words. */
+/* Something the bulletin left out reads as a gap, in words. A line can be only
+   partly missing ("reported; no towns named"), so it takes no single mark here. */
 .camp-line[data-missing="true"] dd { color: var(--soft); }
-.camp-line[data-missing="true"] .mark { margin-right: var(--space-2); vertical-align: -1px; }
 .camp-empty { margin: 0; color: var(--soft); max-width: 60ch; }
 .camp-foot {
   margin-top: 30px;

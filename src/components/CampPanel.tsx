@@ -1,5 +1,4 @@
 import BulletinAge from '@/components/BulletinAge';
-import Mark from '@/components/ink/Mark';
 import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { rich } from '@/i18n/rich';
 import { CAMP_BEARING_DEG, CAMP_DISTANCE_KM, compassPoint, describeCamp } from '@/lib/camp';
@@ -69,7 +68,7 @@ function CampBody({ entry, locale }: { entry: IndexEntry; locale: Locale }) {
         {lines.map((l) => (
           <div className="camp-line" key={l.key} data-missing={l.missing}>
             <dt>{l.label}</dt>
-            <dd>{l.missing && <Mark kind="hatched" />}{l.text}</dd>
+            <dd>{l.text}</dd>
           </div>
         ))}
       </dl>
