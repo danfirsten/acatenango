@@ -8,6 +8,7 @@ import FieldLanes from '@/components/FieldLanes';
 import GvpWeeks from '@/components/GvpWeeks';
 import LanguageSwitch from '@/components/LanguageSwitch';
 import Massif from '@/components/Massif';
+import Mark from '@/components/ink/Mark';
 import TempoChart from '@/components/TempoChart';
 import { formatDate, formatNumber, getDict, type Locale } from '@/i18n';
 import { scrollToPlace, takePlace } from '@/lib/place';
@@ -81,7 +82,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
 
   return (
     <>
-      <section className="hero">
+      <section className="hero dark">
         {/* The top bar comes first in the page so the keyboard reaches the brand,
             the date and the language switch before the scene's view buttons. */}
         <header className="topbar">
@@ -107,7 +108,7 @@ export default function FuegoView({ series, isRepresentative, locale }: FuegoVie
           {rows.map((r) => (
             <div className="readout-row" key={r.key} data-lead={r.lead} data-missing={r.missing}>
               <span className="readout-k">{r.key}</span>
-              <span className="readout-v">{r.value}<small>{r.unit}</small></span>
+              <span className="readout-v">{r.missing && <Mark kind="hatched" />}{r.value}<small>{r.unit}</small></span>
             </div>
           ))}
           {notes.length > 0 && (

@@ -2,6 +2,7 @@
 
 import { useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
+import Mark from '@/components/ink/Mark';
 import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
 import { axisLabelIndices, rateRuns, rateText, runDays } from '@/lib/readout';
 import type { IndexEntry } from '../../scripts/build-index';
@@ -183,7 +184,7 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
 
         {axisLabelIndices(series.length).map((i) => (
           <text key={i} x={Math.min(xs[i], W - 52)} y={H - 8} className="tempo-tick">
-            {fmt(series[i].date).toUpperCase()}
+            {fmt(series[i].date)}
           </text>
         ))}
 
@@ -229,13 +230,13 @@ export default function TempoChart({ series, selected, onSelect, locale }: Tempo
         <p className="tempo-key">
           {missingDays > 0 && (
             <span>
-              <span className="tempo-key-swatch" aria-hidden="true" />
+              <Mark kind="hatched" />
               {t.keyMissing(missingDays, series.length)}
             </span>
           )}
           {continuousDays > 0 && (
             <span>
-              <span className="tempo-key-swatch" data-kind="continuous" aria-hidden="true" />
+              <Mark kind="half" />
               {t.keyContinuous(continuousDays)}
             </span>
           )}

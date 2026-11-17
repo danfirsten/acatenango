@@ -20,6 +20,7 @@
     "postbuild": "tsx scripts/build-sw.ts"
   },
   "dependencies": {
+    "geist": "1.9.2",
     "next": "16.4.6",
     "pdfjs-dist": "^6.2.108",
     "pngjs": "^7.0.0",
