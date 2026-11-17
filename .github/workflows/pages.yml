@@ -10,7 +10,7 @@ name: Publish to GitHub Pages
 # notice instead of failing.
 on:
   push:
-    branches: [claude/guatemala-volcano-portfolio-vyahmq]
+    branches: [main]
   workflow_dispatch:
   workflow_run:
     workflows: ['Collect Fuego bulletin']
