@@ -26,7 +26,7 @@ Fuego is built in Dan's ink and paper system (`vendor/ink-and-paper`, see its `D
 ## Shape
 
 - **Radius by role:** 20 px for the scene and media, 24 px for cards, 12 px for chips, 999 px for buttons and pills.
-- **Buttons are pills at least 48 px tall** (44 px only for the two compact official links in the notice). Primary is solid ink, secondary a 1 px outline. Links that leave the site carry ↗.
+- **Buttons are pills at least 48 px tall** (44 px only for the compact ones: the two official links in the notice and the `From camp` switch that sits on the scene). Primary is solid ink, secondary a 1 px outline. Links that leave the site carry ↗.
 - **Image tags** on the scene: a dark pill at 78% with blur, mono, 14 px from the bottom-left (`Orbit · 16 Nov`).
 - **Flat**, with 1 px rules. The only shadow is on things that float.
 
@@ -91,7 +91,7 @@ The system's curves and app-speed durations (`--dur-quick` 150 ms, `--dur-base` 
 
 | When | What | Curve |
 |---|---|---|
-| Load, once | **The orchestrated moment: the clip opens on the mountain.** The scene's mask opens from `inset(15% round 32px)` to `inset(0 round 20px)` over 1.2 s while the image settles from 1.15× to 1× over 1.6 s. Words and figures are already there; the scene arrives inside them. | `--ease-inout`, `--ease-expo` |
+| Load, once | **The orchestrated moment: the clip opens on the mountain.** The scene's mask opens from `inset(15% round 32px)` to `inset(0 round 20px)` over 1.2 s while the image settles from 1.15× to 1× over 1.6 s. Words and figures are already there; the scene arrives inside them. On a slow signal the stage waits closed at the first frame until the terrain has drawn, so the clip always opens on the mountain, and the camera starts in its orbit place (no fly-in). Once per visit (a tab's session). | `--ease-inout`, `--ease-expo` |
 | Scrub | Hoop glides to the day; figures swap in place with a short fade. No counting up, no sliding. | 150 ms `--ease-out` |
 | Scene | The plume's height and lean settle to the selected day. | settle on `--ease-expo` |
 | Replay | The replay bar comes up like a drawer, and goes when you return to the latest day. | `--dur-slow` `--ease-drawer` |
@@ -107,7 +107,7 @@ The system's curves and app-speed durations (`--dur-quick` 150 ms, `--dur-base` 
 |---|---|---|---|
 | `/` | `.massif` | load | The clip opens on the mountain (the moment) |
 | `/` | `.massif-views button:last-child` | click | Switch to the view from camp |
-| `/` | the record's scrub | focus and arrow keys | Hoop moves to the day; the replay bar comes up |
+| `/` | `#record-scrub` | focus and arrow keys | Hoop moves to the day; the replay bar comes up |
 | `/es/` | the same three | as above | Spanish |
 
 ## Voice
@@ -117,6 +117,16 @@ Calm and factual, like an observer's log, in plain words, British English, no em
 ## Widths
 
 390, 768 and 1440, in paper and ink. On a phone both summits are in frame, the readout never covers Fuego, touch targets are at least 44 px, and the first screen holds the sentence and the three figures.
+
+## As shipped
+
+What the build settled that the canvas left open, so a later change keeps it:
+- **One grid.** The record and the colophon share the first screen's edges (`--max`, `--gutter`), and their spacing sits on the `--space-*` steps. A narrower reading measure is set on the text (`54ch`, `76ch`), never on the container.
+- **Hoop on the chart** wears its eyes just above the lens rather than inside it, so the bold line inside the lens stays clear. This is on purpose.
+- **Held in the readout.** On a day with no rate whose plume the scene holds from an earlier day, the readout's explosions figure carries the dotted ring and names that day ("plume shows 9 Jun"); the chart and the lanes show the same day as hatched, not reported. Never a 0 in either.
+- **The 404** carries the wordmark and says the same thing in both languages, the Spanish marked `lang="es"`, with a link home in each.
+- **Social cards** are taken from the real first screen on paper, one per language (`public/og.png`, `public/og-es.png`, `npm run og` after a build).
+- **The title** is "Fuego: the daily record of Volcán de Fuego" ("el registro diario"), never "live": the site is an archive that lags the observatory.
 
 ## Checked against the generic defaults
 

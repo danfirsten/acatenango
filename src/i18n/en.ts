@@ -169,7 +169,7 @@ export const en: Dict = {
     commonDriftValue: (dirs, days) => `${dirs.map((d) => ABBR[d] ?? d).join(', ')} (${days} ${plural(days, 'day', 'days')})`,
     commonDriftNote: (n) => `of ${n} days that stated one`,
     drainagesNamed: 'Drainages named',
-    drainagesNote: (n) => `days named, of ${n} days that named any`,
+    drainagesNote: (n) => `days each was named, of the ${n} days that named one`,
   },
   gvp: {
     sectionLabel: 'Smithsonian weekly report cross-check',
