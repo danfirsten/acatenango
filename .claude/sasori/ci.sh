@@ -214,14 +214,16 @@ qa() { # name
     # the commit's worktree (--ignore-scripts, so nothing runs). Without it the shooter errors rather than passing.
     local qd=${SASORI_QA_DEPS:-${SASORI_CACHE:-$HOME/.cache/sasori}/qa-deps}
     [ -f "$qd/node_modules/axe-core/axe.min.js" ] || (mkdir -p "$qd" && cd "$qd" && npm install --no-save --no-audit --no-fund --ignore-scripts --prefix "$qd" "axe-core@${SASORI_AXE_VERSION:-4.10.3}") >/dev/null 2>&1
-    deps=("NODE_PATH=$qd/node_modules" SASORI_QA_NEED_AXE=1)
+    # The machine's own NODE_PATH stays after it: in a cloud session that's where the Playwright built for its Chromium
+    # lives, which the shooter falls back to when the product's own Playwright can't find its browser.
+    deps=("NODE_PATH=$qd/node_modules${NODE_PATH:+:$NODE_PATH}" SASORI_QA_NEED_AXE=1)
     tq=$(tools)
     (cd "$W" && env -u SASORI_CI_POST "${deps[@]}" node "$tq/qa/shoot.mjs" --base-url "http://localhost:$port" --out "$L/qa") || rc=$?
     rm -rf "$tq"
     stop_server "$pid"
   } >> "$L/$n.log" 2>&1
   if [ "$rc" = 3 ]; then result "$n" error "axe-core couldn't be installed, so accessibility wasn't checked (not run)"; return; fi
-  if [ ! -f "$L/qa/report.json" ]; then result "$n" error "the shooter didn't run (playwright and axe-core installed?)"; return; fi
+  if [ ! -f "$L/qa/report.json" ]; then result "$n" error "the shooter didn't run (no Playwright could launch a Chromium? see the QA log)"; return; fi
   if [ "$rc" = 0 ]; then result "$n" success "$(jq -r '"\(.screenshots | length) screenshots, all checks passed"' "$L/qa/report.json")"
   else result "$n" failure "$(jq -r '"\(.failures | length) QA failures"' "$L/qa/report.json")"; fi
   qa_comment "$L/qa" "$n"
