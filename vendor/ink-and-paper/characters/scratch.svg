@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-16 -16 32 32" width="64" height="64" role="img" aria-label="Scratch">
+  <!-- Scratch: the hatched disc. Writes and marks things up. Hatching stops short of the eyes. -->
+  <defs>
+    <pattern id="scratch-hatch" width="2.4" height="2.4" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <line x1="0" y1="0" x2="0" y2="2.4" stroke="currentColor" stroke-width="0.9"/>
+    </pattern>
+    <mask id="scratch-eyes">
+      <rect x="-16" y="-16" width="32" height="32" fill="#fff"/>
+      <ellipse cx="-5" cy="-1.4" rx="2.6" ry="3.9" fill="#000"/>
+      <ellipse cx="5" cy="-1.4" rx="2.6" ry="3.9" fill="#000"/>
+    </mask>
+  </defs>
+  <path fill="url(#scratch-hatch)" mask="url(#scratch-eyes)" d="M0,-14C8.2,-14 14.5,-8 14.5,1C14.5,9.2 8,13.6 0,13.6C-8,13.6 -14.5,9.2 -14.5,1C-14.5,-8 -8.2,-14 0,-14Z"/>
+  <path fill="none" stroke="currentColor" stroke-width="1.8" d="M0,-14C8.2,-14 14.5,-8 14.5,1C14.5,9.2 8,13.6 0,13.6C-8,13.6 -14.5,9.2 -14.5,1C-14.5,-8 -8.2,-14 0,-14Z"/>
+  <path fill="currentColor" d="M-6.6,-1.4a1.6,2.9 0 1,0 3.2,0a1.6,2.9 0 1,0 -3.2,0Z M3.4,-1.4a1.6,2.9 0 1,0 3.2,0a1.6,2.9 0 1,0 -3.2,0Z"/>
+</svg>

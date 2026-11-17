@@ -1,0 +1,95 @@
+/* Ink and paper: the reveal system. An element gets .is-in when it enters the view
+   (observeReveals() in src/motion.ts, or your own observer). */
+
+/* Headline rise: each line slides up from 110% through its own mask. */
+.mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.06em;
+  margin-bottom: -0.06em;
+}
+.mask > span {
+  display: block;
+  transform: translateY(110%);
+  transition: transform var(--dur-rise) var(--ease-expo);
+  transition-delay: var(--d, 0ms);
+}
+.is-in .mask > span,
+.mask.is-in > span {
+  transform: none;
+}
+
+/* Fade: opacity 0 to 1 while rising 18px. */
+[data-reveal='fade'] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition:
+    opacity var(--dur-fade) var(--ease-out),
+    transform var(--dur-fade) var(--ease-out);
+  transition-delay: var(--d, 0ms);
+}
+[data-reveal='fade'].is-in {
+  opacity: 1;
+  transform: none;
+}
+
+/* The clip, the signature move: a rounded mask opens while the image settles from 115%. */
+.clip {
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--r-media);
+  clip-path: inset(15% round 32px);
+  transition: clip-path var(--dur-clip) var(--ease-inout);
+  transition-delay: var(--d, 0ms);
+  background: var(--fill);
+}
+.clip > img,
+.clip > .clip-inner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1.15);
+  transition: transform var(--dur-settle) var(--ease-expo);
+  transition-delay: var(--d, 0ms);
+}
+.clip.is-in {
+  clip-path: inset(0 round var(--r-media));
+}
+.clip.is-in > img,
+.clip.is-in > .clip-inner {
+  transform: none;
+}
+
+/* Small interactions */
+.press:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .zoom-on-hover > img {
+    transition: transform 300ms var(--ease-out);
+  }
+  .zoom-on-hover:hover > img {
+    transform: scale(1.04);
+  }
+}
+
+/* Reduced motion: every transform off, everything in its final state. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    transition-delay: 0ms !important;
+  }
+  .mask > span,
+  [data-reveal='fade'],
+  .clip,
+  .clip > img,
+  .clip > .clip-inner {
+    transform: none !important;
+    opacity: 1 !important;
+    clip-path: none !important;
+  }
+}
