@@ -54,3 +54,13 @@
   font-size: 11px;
   color: var(--muted, var(--label-muted));
 }
+
+/* Near the right edge the label hangs to the left of its dot: the element is
+   shifted back by its own width, so the dot stays on the summit. */
+.labels :global(.summit[data-flip="true"]) {
+  flex-direction: row-reverse;
+  margin-left: 3px;
+}
+.labels :global(.summit[data-flip="true"] .summit-text) {
+  align-items: flex-end;
+}

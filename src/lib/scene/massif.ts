@@ -31,6 +31,8 @@ export interface LabelPosition {
   elevation: number;
   x: number;
   y: number;
+  /** Free canvas to the right of the dot, in CSS pixels. */
+  roomRight: number;
   visible: boolean;
 }
 
@@ -492,9 +494,16 @@ export function createMassifScene(
       desired.copy(campPos).add(new THREE.Vector3(sway - 0.16, 0.30, -0.62 * fit.campBack));
       lookAt.copy(craterPos).add(new THREE.Vector3(0, 0.62, 0));
     }
-    // Critically-damped follow so view changes glide rather than snap.
-    camera.position.lerp(desired, 1 - Math.exp(-dt * 1.9));
-    currentLook.lerp(lookAt, 1 - Math.exp(-dt * 2.4));
+    // Critically-damped follow so view changes glide rather than snap. With
+    // reduced motion there is no glide: the camera goes straight to its final
+    // place, so the scene settles in a frame and then stops drawing.
+    if (reduced) {
+      camera.position.copy(desired);
+      currentLook.copy(lookAt);
+    } else {
+      camera.position.lerp(desired, 1 - Math.exp(-dt * 1.9));
+      currentLook.lerp(lookAt, 1 - Math.exp(-dt * 2.4));
+    }
     camera.lookAt(currentLook);
   }
 
@@ -645,6 +654,7 @@ export function createMassifScene(
         return {
           key: s.key, name: s.name, elevation: s.elevation,
           x: (projected.x * 0.5 + 0.5) * w,
+          roomRight: w - (projected.x * 0.5 + 0.5) * w,
           // Keep the label clear of the top bar without moving the dot off the
           // peak for every other label on screen.
           y: Math.max((-projected.y * 0.5 + 0.5) * h, 64),

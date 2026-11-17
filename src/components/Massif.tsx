@@ -21,6 +21,9 @@ interface MassifProps {
   locale: Locale;
 }
 
+/** Room a summit label needs to the right of its dot, in CSS pixels. */
+const LABEL_ROOM = 176;
+
 type Status = 'loading' | 'ready' | 'unsupported' | 'failed';
 
 function prefersReducedMotion(): boolean {
@@ -110,8 +113,10 @@ export default function Massif({ day, locale }: MassifProps) {
             key={l.key}
             className="summit"
             data-active={l.key === 'fuego'}
+            // Near the right edge the label hangs to the left of its dot.
+            data-flip={l.roomRight < LABEL_ROOM}
             style={{
-              transform: `translate(${l.x}px, ${l.y}px)`,
+              transform: `translate(${l.x}px, ${l.y}px)${l.roomRight < LABEL_ROOM ? ' translateX(-100%)' : ''}`,
               opacity: status === 'ready' && l.visible ? 1 : 0,
             }}
           >
