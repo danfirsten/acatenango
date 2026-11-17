@@ -41,20 +41,20 @@ export interface Dict {
     lead: string;
     body: string;
     linksLabel: string;
-    insivumeh: string;
-    conred: string;
   };
   topbar: {
     representative: string;
     unread: (n: number) => string;
-    latest: string;
     replaying: string;
     /** The age pill while an earlier day is shown: "Replaying 29 Jul". */
     replayingOn: (date: string) => string;
   };
   age: {
+    /** "today", "yesterday", "3 days old". */
     label: (days: number) => string;
     behind: string;
+    /** The line under the top row once the latest bulletin is over two days old. */
+    behindNote: string;
   };
   /** Full compass words, by bulletin code. */
   compass: Record<string, string>;
@@ -109,11 +109,17 @@ export interface Dict {
     viewsLabel: string;
     orbit: string;
     fromCamp: string;
+    /** The image tag on the scene: "Orbit · 16 Nov". */
+    tag: (view: string, date: string) => string;
     loading: string;
     unsupported: string;
     failed: string;
   };
-  scrollcue: string;
+  /** The first screen under the scene. */
+  first: {
+    /** The solid pill that leads to the record. */
+    seeRecord: (days: number) => string;
+  };
   record: {
     title: string;
     intro: string;

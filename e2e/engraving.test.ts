@@ -97,9 +97,10 @@ describe('the engraved scene', () => {
     return rgb;
   }
 
-  /** A patch of open sky at the left of the scene, clear of the readout and labels. */
+  /** A patch of open sky in the scene's top-left corner, clear of the summit labels and controls. */
   async function sky(page: Page): Promise<number[]> {
-    const png = PNG.sync.read(await page.screenshot({ clip: { x: 12, y: 300, width: 4, height: 4 } }));
+    const box = (await page.locator('.massif-canvas').boundingBox())!;
+    const png = PNG.sync.read(await page.screenshot({ clip: { x: box.x + 12, y: box.y + 12, width: 4, height: 4 } }));
     return [png.data[0], png.data[1], png.data[2]];
   }
 

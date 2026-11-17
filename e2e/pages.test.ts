@@ -149,13 +149,13 @@ describe(`static build served under ${BASE}`, () => {
 
     // The "From camp" panel and the mountain describe the same day: the
     // latest bulletin, which the scene opens on (and keeps in its camp view).
-    const topbarDate = (await page.locator('.observed-date').textContent() ?? '').split('·').at(-1)?.trim();
-    const campDate = (await page.locator('.camp-date time').textContent() ?? '').trim();
+    const topbarDate = await page.locator('.observed-date time').getAttribute('datetime');
+    const campDate = await page.locator('.camp-date time').getAttribute('datetime');
     assert.ok(campDate, 'the From camp panel states its bulletin date');
     assert.equal(campDate, topbarDate, 'the panel and the scene describe the same day');
     await page.getByRole('button', { name: 'From camp' }).click();
     assert.equal(
-      (await page.locator('.observed-date').textContent() ?? '').split('·').at(-1)?.trim(),
+      await page.locator('[data-selected-day]').getAttribute('data-selected-day'),
       campDate,
       'the scene\'s camp view shows the panel\'s day',
     );

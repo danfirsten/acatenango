@@ -64,11 +64,11 @@ export default function CampPanel({ entry, isLatest, isRepresentative, locale }:
 /** The field each line's mark follows, so the panel marks a value as the record does. */
 const LINE_FIELD: Record<CampLineKey, DayField> = { rate: 'rate', column: 'column', drift: 'drift', ashfall: 'towns' };
 
+/** The panel's lines. Its one-sentence summary is the day's sentence above it, on the first screen. */
 function CampBody({ entry, locale }: { entry: IndexEntry; locale: Locale }) {
-  const { summary, lines } = describeCamp(entry, getDict(locale));
+  const { lines } = describeCamp(entry, getDict(locale));
   return (
     <div className="camp-body">
-      <p className="camp-summary">{summary}</p>
       <dl className="camp-lines">
         {lines.map((l) => (
           <div className="camp-line" key={l.key} data-missing={l.missing} data-state={fieldState(entry, LINE_FIELD[l.key])}>

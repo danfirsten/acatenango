@@ -54,21 +54,19 @@ export const es: Dict = {
   notice: {
     label: 'Acerca de este registro',
     lead: 'Archivo no oficial.',
-    body: 'Este sitio, Fuego, no es un servicio de alertas. Copia el boletín diario del INSIVUMEH una o dos veces al día, así que siempre va con retraso respecto al observatorio.',
+    body: 'Copiado del boletín del INSIVUMEH, así que va con retraso respecto al observatorio. No es un servicio de alertas.',
     linksLabel: 'Fuentes oficiales',
-    insivumeh: 'Vulcanología del INSIVUMEH',
-    conred: 'Alertas de la CONRED',
   },
   topbar: {
     representative: 'Datos representativos',
     unread: (n) => `${n} ${plural(n, 'campo sin leer', 'campos sin leer')}`,
-    latest: 'Último boletín',
     replaying: 'Día seleccionado',
     replayingOn: (d) => `Viendo el ${d}`,
   },
   age: {
-    label: (days) => (days === 0 ? 'hoy' : days === 1 ? 'hace 1 día' : `hace ${days} días`),
+    label: (days) => (days === 0 ? 'hoy' : days === 1 ? 'ayer' : `hace ${days} días`),
     behind: 'el registro va atrasado',
+    behindNote: 'El registro va atrasado: aún no se ha archivado un boletín más reciente.',
   },
   compass: COMPASS,
   compassAbbr: { N: 'N', NE: 'NE', E: 'E', SE: 'SE', S: 'S', SW: 'SO', W: 'O', NW: 'NO' },
@@ -129,11 +127,14 @@ export const es: Dict = {
     viewsLabel: 'Vista de la cámara',
     orbit: 'Órbita',
     fromCamp: 'Desde el campamento',
+    tag: (view, date) => `${view} · ${date}`,
     loading: 'Cargando datos de elevación…',
-    unsupported: 'Esta vista necesita WebGL. Las lecturas de abajo funcionan sin ella.',
-    failed: 'Terreno no disponible. Las lecturas de abajo no se ven afectadas.',
+    unsupported: 'Esta vista necesita WebGL. Las cifras del boletín y el registro funcionan sin ella.',
+    failed: 'Terreno no disponible. Las cifras del boletín y el registro no se ven afectados.',
   },
-  scrollcue: 'El registro de abajo mueve la montaña',
+  first: {
+    seeRecord: (days) => `Ver el registro de ${days} días`,
+  },
   record: {
     title: 'Ritmo de las explosiones',
     intro:

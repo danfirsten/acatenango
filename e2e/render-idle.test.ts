@@ -158,15 +158,15 @@ describe('the scene leaves the page responsive', () => {
       const cdp = await ctx.newCDPSession(page);
       await cdp.send('Emulation.setCPUThrottlingRate', { rate: 4 });
       await page.waitForTimeout(3000);
-      const views = page.locator('.massif-views button');
+      // One switch on the scene: each click flips between orbit and the view from camp.
+      const target = page.locator('.massif-views button');
       for (let i = 0; i < 10; i++) {
-        const target = views.nth(i % 2 === 0 ? 1 : 0);
         // From the top of the page each time: the switch sits below the
         // first screen, so the click has to scroll to it, as QA's does.
         await page.evaluate(() => window.scrollTo(0, 0));
         // The same budget QA gives an interaction.
         await target.click({ timeout: 5000 });
-        assert.equal(await target.getAttribute('aria-pressed'), 'true', `click ${i + 1} switched the view`);
+        assert.equal(await target.getAttribute('aria-pressed'), String(i % 2 === 0), `click ${i + 1} switched the view`);
       }
       await ctx.close();
     } finally {
@@ -180,7 +180,7 @@ describe('the scene leaves the page responsive', () => {
     let idle = await measure(page, 2000);
     for (let i = 0; i < 15 && idle.drawn > 0; i++) idle = await measure(page, 2000);
     assert.equal(idle.drawn, 0, `no draws once settled (${idle.drawn} of ${idle.frames} frames)`);
-    await page.locator('.massif-views button').nth(1).click();
+    await page.locator('.massif-views button').click();
     const woke = await measure(page, 1500);
     assert.ok(woke.drawn > 0, 'a view switch draws again');
     await ctx.close();
