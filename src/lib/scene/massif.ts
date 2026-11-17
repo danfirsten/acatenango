@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { FramePacer } from './pacer';
+
 /**
  * The Acatenango–Fuego massif, rendered from real elevation data.
  *
@@ -577,9 +579,16 @@ export function createMassifScene(
       desired.copy(campPos).add(new THREE.Vector3(sway - 0.16, 0.30, -0.62 * fit.campBack));
       lookAt.copy(craterPos).add(new THREE.Vector3(0, 0.62, 0));
     }
-    // Critically-damped follow so view changes glide rather than snap.
-    camera.position.lerp(desired, 1 - Math.exp(-dt * 1.9));
-    currentLook.lerp(lookAt, 1 - Math.exp(-dt * 2.4));
+    // Critically-damped follow so view changes glide rather than snap. With
+    // reduced motion there is no glide: the camera goes straight to its final
+    // place, so the scene settles in a frame and then stops drawing.
+    if (reduced) {
+      camera.position.copy(desired);
+      currentLook.copy(lookAt);
+    } else {
+      camera.position.lerp(desired, 1 - Math.exp(-dt * 1.9));
+      currentLook.lerp(lookAt, 1 - Math.exp(-dt * 2.4));
+    }
     camera.lookAt(currentLook);
   }
 
@@ -604,6 +613,30 @@ export function createMassifScene(
   let last = performance.now();
   let disposed = false;
 
+  /*
+   * The loop draws only while something moves, paced by FramePacer: at most
+   * 30 draws a second, and after each draw a rest four times as long as the draw
+   * held the frame up, so a slow or busy machine keeps most frames free of
+   * WebGL work and clicks are never starved (the base went red when a QA
+   * click timed out). It stops while the scene is off screen or the tab is
+   * hidden, and starts again when either comes back.
+   */
+  const pacer = new FramePacer(30);
+  let onScreen = true;
+  let pageVisible = typeof document === 'undefined' || !document.hidden;
+
+  /** Asks for the next frame; a no-op while one is pending or the scene can't be seen. */
+  function schedule() {
+    if (disposed || frame || !onScreen || !pageVisible) return;
+    frame = requestAnimationFrame(step);
+  }
+  /** Something changed: draw again soon, even if the loop had stopped. */
+  function wake() {
+    redraw = Math.max(redraw, 3);
+    if (!frame) pacer.reset();
+    schedule();
+  }
+
   // Frames still to draw after a change, for the reduced-motion idle below.
   let redraw = 3;
 
@@ -614,7 +647,7 @@ export function createMassifScene(
     renderer.setSize(w, h, false);
     camera.aspect = w / h;
     fit = fitCamera(w / h, summitGapKm, orbitDistance);
-    redraw = 3;
+    wake();
     applyLens();
     // Lift the picture so the summits sit above the readout, not behind it.
     camera.setViewOffset(w, h, 0, h * fit.lift, w, h);
@@ -670,8 +703,13 @@ export function createMassifScene(
   const lastLook = new THREE.Vector3();
 
   function step(now: number) {
-    if (disposed) return;
-    frame = requestAnimationFrame(step);
+    frame = 0;
+    if (disposed || !onScreen || !pageVisible) return;
+    // A frame the pacer keeps free: ask for the next one and draw nothing.
+    if (!pacer.frame(now)) {
+      schedule();
+      return;
+    }
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
 
@@ -683,6 +721,7 @@ export function createMassifScene(
       camera.position.distanceToSquared(lastPosition) + currentLook.distanceToSquared(lastLook) > 1e-10;
     lastPosition.copy(camera.position);
     lastLook.copy(currentLook);
+    // Settled under reduced motion: stop until wake() is called.
     if (reduced && !moved && redraw <= 0) return;
     if (redraw > 0) redraw--;
     terrainMaterial.uniforms.uCameraPos.value.copy(camera.position);
@@ -738,15 +777,31 @@ export function createMassifScene(
         };
       }));
     }
+
+    schedule();
   }
+
+  const visibility = new IntersectionObserver((entries) => {
+    onScreen = entries.some((e) => e.isIntersecting);
+    if (onScreen) wake();
+  });
+  visibility.observe(canvas);
+  const onVisibility = () => {
+    pageVisible = !document.hidden;
+    if (pageVisible) wake();
+  };
+  document.addEventListener('visibilitychange', onVisibility);
+
   settlePlume();
-  frame = requestAnimationFrame(step);
+  schedule();
 
   return {
     dispose() {
       disposed = true;
       cancelAnimationFrame(frame);
       observer.disconnect();
+      visibility.disconnect();
+      document.removeEventListener('visibilitychange', onVisibility);
       geometry.dispose();
       terrainMaterial.dispose();
       plumeGeo.dispose();
@@ -757,9 +812,9 @@ export function createMassifScene(
       (sky.material as THREE.Material).dispose();
       renderer.dispose();
     },
-    setActivity(explosionsPerHour: number) { activity = explosionsPerHour; redraw = 3; },
+    setActivity(explosionsPerHour: number) { activity = explosionsPerHour; wake(); },
     setDay(day: SceneDay) {
-      redraw = 3;
+      wake();
       if (day.explosionsPerHour !== null) activity = day.explosionsPerHour;
       // A column below the summit is a misparse, not a reading — ignore it
       // rather than drawing a plume that sinks into the mountain.
@@ -774,6 +829,6 @@ export function createMassifScene(
       }
       if (reduced) { windDir.copy(windTarget); settlePlume(); }
     },
-    setView(next: 'orbit' | 'camp') { view = next; applyLens(); redraw = 3; },
+    setView(next: 'orbit' | 'camp') { view = next; applyLens(); wake(); },
   };
 }
