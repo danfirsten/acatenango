@@ -9,6 +9,29 @@
 const USER_AGENT =
   'acatenango-fuego-monitor (+https://github.com/danfirsten/acatenango)';
 
+/** A request that takes longer than this, body included, is abandoned. */
+const TIMEOUT_MS = 60_000;
+/** A bulletin is a few megabytes; anything far larger is not one. */
+export const MAX_BYTES = 40 * 1024 * 1024;
+
+/**
+ * The only place an explicit bulletin address (BULLETIN_URL) may point: an
+ * https address on INSIVUMEH's own site. Returns the URL, or throws.
+ */
+export function checkBulletinUrl(raw: string): URL {
+  let url: URL;
+  try {
+    url = new URL(raw);
+  } catch {
+    throw new Error(`BULLETIN_URL is not an address: ${raw}`);
+  }
+  const host = url.hostname.toLowerCase();
+  if (url.protocol !== 'https:' || !(host === 'insivumeh.gob.gt' || host.endsWith('.insivumeh.gob.gt'))) {
+    throw new Error(`BULLETIN_URL must be an https address on insivumeh.gob.gt, not ${raw}`);
+  }
+  return url;
+}
+
 export async function fetchWithRetry(
   url: string,
   attempts = 4,
@@ -19,14 +42,21 @@ export async function fetchWithRetry(
       const res = await fetch(url, {
         headers: { 'user-agent': USER_AGENT },
         redirect: 'follow',
+        signal: AbortSignal.timeout(TIMEOUT_MS),
       });
+      const length = Number(res.headers.get('content-length'));
+      if (res.ok && length > MAX_BYTES) {
+        // Not worth retrying: the same oversized body would come back.
+        throw Object.assign(new Error(`${url} is ${length} bytes, over the ${MAX_BYTES} limit`), { final: true });
+      }
       if (res.ok) return res;
       // 4xx other than 429 will not improve on retry.
       if (res.status < 500 && res.status !== 429) {
-        throw new Error(`${url} returned ${res.status}`);
+        throw Object.assign(new Error(`${url} returned ${res.status}`), { final: true });
       }
       lastError = new Error(`${url} returned ${res.status}`);
     } catch (err) {
+      if ((err as { final?: boolean }).final) throw err;
       lastError = err;
     }
     if (i < attempts - 1) {

@@ -87,7 +87,9 @@ self.addEventListener('fetch', (event) => {
       if (hit) return hit;
       return fetch(req)
         .then((res) => {
-          if (res.ok && res.type === 'basic') {
+          // Only plain addresses are kept: a query string would add an entry per
+          // variant and grow the cache until the next deploy.
+          if (res.ok && res.type === 'basic' && url.search === '') {
             const copy = res.clone();
             caches.open(CACHE).then((c) => c.put(req, copy));
           }

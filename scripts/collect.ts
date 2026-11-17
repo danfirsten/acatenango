@@ -16,7 +16,7 @@ import path from 'node:path';
 import type { Bulletin } from '../src/lib/bulletin';
 import { guatemalaDate } from '../src/lib/date';
 import { bvdUrl, recentDates } from '../src/lib/bvd';
-import { fetchWithRetry } from '../src/lib/fetch-text';
+import { checkBulletinUrl, fetchWithRetry } from '../src/lib/fetch-text';
 import { documentMentionsDate, printedDates } from '../src/lib/ocr';
 import { ocrAvailable, ocrBulletin } from './ocr';
 import { parseBulletin } from '../src/lib/parse-bulletin';
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
   const override = process.env.BULLETIN_URL;
   const found = override
     ? await (async () => {
-        const pdf = Buffer.from(await (await fetchWithRetry(override)).arrayBuffer());
+        const pdf = Buffer.from(await (await fetchWithRetry(checkBulletinUrl(override).href)).arrayBuffer());
         return { date: today, url: override, raw: (await ocrBulletin(pdf)).fuego ?? '' };
       })()
     : await resolveBulletin(today);
