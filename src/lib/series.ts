@@ -3,6 +3,7 @@ import path from 'node:path';
 
 import type { FuegoIndex, IndexEntry } from '../../scripts/build-index';
 import { demoSeries } from './demo-series';
+import type { CompletenessField } from '../i18n/types';
 
 /**
  * The series the page renders, read at build time.
@@ -31,8 +32,8 @@ export interface SeriesResult {
 }
 
 export interface FieldCompleteness {
-  /** Plain name for the footer, e.g. "explosion rate". */
-  field: string;
+  /** Which field; the dictionary names it for the footer. */
+  field: CompletenessField;
   /** Days whose bulletin stated a value. */
   reported: number;
   /** Days in the record. */
@@ -53,15 +54,15 @@ export function completeness(entries: IndexEntry[]): FieldCompleteness[] {
   const count = (pick: (e: IndexEntry) => unknown) => entries.filter((e) => pick(e) !== null).length;
   return [
     {
-      field: 'explosion rate',
+      field: 'rate',
       reported: count((e) => e.explosionsMax),
       total: entries.length,
       continuous: entries.filter(
         (e) => e.explosionsMax === null && e.phenomena.includes('continuousPhase'),
       ).length,
     },
-    { field: 'ash column height', reported: count((e) => e.ashMaxMasl), total: entries.length },
-    { field: 'drift distance', reported: count((e) => e.driftKm), total: entries.length },
+    { field: 'column', reported: count((e) => e.ashMaxMasl), total: entries.length },
+    { field: 'drift', reported: count((e) => e.driftKm), total: entries.length },
   ];
 }
 

@@ -2,22 +2,22 @@
 
 import { useId, useMemo } from 'react';
 
+import { type Dict, formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
+import { rich } from '@/i18n/rich';
 import { AXIS_W as W, dayX } from '@/lib/fields';
 import type { GvpCheck, GvpMark } from '@/lib/gvp';
 import type { IndexEntry } from '../../scripts/build-index';
 
 const H = 22;
 
-const short = (iso: string) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-
-const range = (r: { min: number; max: number } | null, unit: string) =>
-  r === null ? 'not stated' : `${r.min === r.max ? r.min.toLocaleString('en-GB') : `${r.min.toLocaleString('en-GB')} to ${r.max.toLocaleString('en-GB')}`} ${unit}`;
-
-function describe(c: GvpCheck): string {
-  const unit = c.field === 'explosions' ? 'per hour' : 'm above sea level';
-  const what = c.field === 'explosions' ? 'Explosions' : 'Ash column';
-  return `${what}: GVP ${range(c.gvp, unit)}; bulletins ${range(c.bulletins, unit)}`;
+function describe(c: GvpCheck, t: Dict): string {
+  const g = t.gvp;
+  const num = (n: number) => formatNumber(t.locale, n);
+  const unit = c.field === 'explosions' ? g.perHour : g.mAsl;
+  const range = (r: { min: number; max: number } | null) =>
+    r === null ? g.notStated : g.range(num(r.min), r.min === r.max ? null : num(r.max), unit);
+  const what = c.field === 'explosions' ? g.explosions : g.ashColumn;
+  return g.check(what, range(c.gvp), range(c.bulletins));
 }
 
 interface Week { mark: GvpMark; first: number; last: number }
@@ -28,7 +28,10 @@ interface Week { mark: GvpMark; first: number; last: number }
  * figures clearly disagree with the bulletins. Days with no GVP report are
  * hatched. Neither source is treated as the truth; the list below links both.
  */
-export default function GvpWeeks({ series, selected }: { series: IndexEntry[]; selected: number }) {
+export default function GvpWeeks({ series, selected, locale }: { series: IndexEntry[]; selected: number; locale: Locale }) {
+  const t = getDict(locale);
+  const g = t.gvp;
+  const short = (iso: string) => formatShortDate(locale, iso);
   const uid = useId();
   const hatch = `${uid}-hatch`;
   const n = series.length;
@@ -48,16 +51,14 @@ export default function GvpWeeks({ series, selected }: { series: IndexEntry[]; s
 
   const covered = useMemo(() => new Set(weeks.flatMap((w) => Array.from({ length: w.last - w.first + 1 }, (_, k) => w.first + k))), [weeks]);
   const differing = weeks.filter((w) => w.mark.state === 'differ').reverse();
-  const note = weeks.length === 0
-    ? 'no weekly reports collected yet'
-    : `${weeks.length} ${weeks.length === 1 ? 'week' : 'weeks'} read · ${differing.length} differ`;
+  const note = weeks.length === 0 ? g.noneYet : g.read(weeks.length, differing.length);
 
   return (
-    <section className="gvp" aria-label="Smithsonian weekly report cross-check">
+    <section className="gvp" id="gvp" aria-label={g.sectionLabel}>
       <div className="lane">
-        <p className="lane-head"><span>Smithsonian weekly report</span><span className="lane-note">{note}</span></p>
+        <p className="lane-head"><span>{g.title}</span><span className="lane-note">{note}</span></p>
         <svg viewBox={`0 0 ${W} ${H}`} preserveAspectRatio="none" style={{ aspectRatio: `${W} / ${H}` }}
-          role="img" aria-label={`Smithsonian weekly report: ${note}`}>
+          role="img" aria-label={`${g.title}: ${note}`}>
           <defs>
             <pattern id={hatch} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
               <line x1="0" y1="0" x2="0" y2="6" className="tempo-gap-hatch" />
@@ -84,35 +85,27 @@ export default function GvpWeeks({ series, selected }: { series: IndexEntry[]; s
       </div>
 
       <p className="tempo-key">
-        <span><span className="tempo-key-swatch" aria-hidden="true" />No GVP report collected for the week</span>
-        {differing.length > 0 && <span><span className="gvp-key-ring" aria-hidden="true" />The two sources differ</span>}
+        <span><span className="tempo-key-swatch" aria-hidden="true" />{g.keyMissing}</span>
+        {differing.length > 0 && <span><span className="gvp-key-ring" aria-hidden="true" />{g.keyDiffer}</span>}
       </p>
 
       {weeks.length === 0 ? (
-        <p className="gvp-note">
-          The Smithsonian Global Volcanism Program writes a weekly report on Fuego from the same
-          observatory reports. Once its weeks are collected, any week where its figures clearly
-          disagree with the bulletins is marked here.
-        </p>
+        <p className="gvp-note">{g.empty}</p>
       ) : differing.length === 0 ? (
-        <p className="gvp-note">No week has figures that clearly disagree with the bulletins.</p>
+        <p className="gvp-note">{g.agree}</p>
       ) : (
         <>
-          <p className="gvp-note">
-            In these weeks the report&rsquo;s figures and the bulletins&rsquo; figures sit clearly apart. That
-            can be a misread scan, a slip in the parser or a difference in what each source counts.
-            Neither is taken as right, and nothing here has been corrected.
-          </p>
+          <p className="gvp-note">{g.differIntro}</p>
           <ul className="gvp-list">
             {differing.map(({ mark }) => (
               <li key={mark.week}>
-                <b>{short(mark.week)} to {short(mark.end)}</b>
-                {mark.checks.filter((c) => c.differs).map((c) => <span key={c.field}>{describe(c)}</span>)}
+                <b>{g.week(short(mark.week), short(mark.end))}</b>
+                {mark.checks.filter((c) => c.differs).map((c) => <span key={c.field}>{describe(c, t)}</span>)}
                 <span className="gvp-links">
-                  <a href={mark.url}>GVP weekly report</a>
-                  <span>INSIVUMEH bulletins:</span>
+                  <a href={mark.url}>{g.report}</a>
+                  <span>{g.bulletins}</span>
                   {mark.bulletins.map((b) => (
-                    b.url ? <a key={b.date} href={b.url} aria-label={`INSIVUMEH bulletin, ${short(b.date)}`}>{short(b.date)}</a> : null
+                    b.url ? <a key={b.date} href={b.url} aria-label={g.bulletinLabel(short(b.date))}>{short(b.date)}</a> : null
                   ))}
                 </span>
               </li>
@@ -122,9 +115,7 @@ export default function GvpWeeks({ series, selected }: { series: IndexEntry[]; s
       )}
 
       <p className="gvp-credit">
-        Weekly figures from the{' '}
-        <a href="https://volcano.si.edu/volcano.cfm?vn=342090">Smithsonian Institution Global Volcanism Program</a>,
-        Weekly Volcanic Activity Reports for Fuego.
+        {rich(g.credit, { gvp: <a href="https://volcano.si.edu/volcano.cfm?vn=342090">{g.programme}</a> })}
       </p>
     </section>
   );

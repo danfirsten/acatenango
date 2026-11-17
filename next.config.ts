@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
   // Deployable to any static host, and cacheable in full by a service worker
   // so it still renders with no signal on the mountain.
   output: 'export',
+  // Each page is a folder with an index.html, so /es/ works on any static host
+  // (GitHub Pages serves /acatenango/es/ from es/index.html).
+  trailingSlash: true,
+  // Two root layouts (one per language) leave no single layout for the 404, so
+  // it is its own page: src/app/global-not-found.tsx.
+  experimental: { globalNotFound: true },
   basePath,
   assetPrefix: basePath || undefined,
   // Inlined into the client bundle so fetches and the service worker can use it.

@@ -2,6 +2,7 @@
 
 import { useId, useMemo, useState } from 'react';
 
+import { formatNumber, formatShortDate, getDict, type Locale } from '@/i18n';
 import { AXIS_W as W, bearing, dayAt, dayX, fieldSummary, incandescenceTop } from '@/lib/fields';
 import type { IndexEntry } from '../../scripts/build-index';
 
@@ -10,6 +11,7 @@ interface FieldLanesProps {
   /** The one shared selection, the same index the tempo chart and the mountain use. */
   selected: number;
   onSelect: (index: number) => void;
+  locale: Locale;
 }
 
 const ROW = 15;
@@ -17,12 +19,7 @@ const BAR_H = 30;
 const MARK_H = 26;
 const COMPASS = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
 
-const fmt = (iso: string) =>
-  new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-
 const list = (names: string[]) => names.join(', ');
-const none = 'not reported';
-const times = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
 
 /**
  * Compact lanes under the tempo chart on the same time axis: where the ash
@@ -30,7 +27,11 @@ const times = (n: number) => `${n} ${n === 1 ? 'day' : 'days'}`;
  * towns had ash. A day that did not state a field is a hatched cell, never a
  * short bar or an empty mark that could pass for a zero.
  */
-export default function FieldLanes({ series, selected, onSelect }: FieldLanesProps) {
+export default function FieldLanes({ series, selected, onSelect, locale }: FieldLanesProps) {
+  const t = getDict(locale);
+  const l10n = t.lanes;
+  const fmt = (iso: string) => formatShortDate(locale, iso);
+  const abbr = (dirs: string[]) => dirs.map((dir) => t.compassAbbr[dir] ?? dir);
   const [hover, setHover] = useState<number | null>(null);
   const uid = useId();
   const hatch = `${uid}-hatch`;
@@ -77,8 +78,8 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
   const lanes: Array<{ id: string; title: string; note: string; h: number; body: React.ReactNode }> = [
     {
       id: 'drift',
-      title: 'Ash drift toward',
-      note: `${summary.driftReported} of ${n} days`,
+      title: l10n.driftTitle,
+      note: l10n.daysOf(summary.driftReported, n),
       h: rows * ROW + 6,
       body: series.map((e, i) =>
         e.driftDirections.length === 0
@@ -97,8 +98,8 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
     {
       id: 'driftdots',
-      title: 'Ash drift toward',
-      note: `${summary.driftReported} of ${n} days · first direction named`,
+      title: l10n.driftTitle,
+      note: `${l10n.daysOf(summary.driftReported, n)} · ${l10n.firstNamed}`,
       h: COMPASS.length * 6 + 6,
       body: series.map((e, i) => {
         const row = COMPASS.indexOf(e.driftDirections[0]);
@@ -109,8 +110,8 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
     {
       id: 'glow',
-      title: 'Incandescence height',
-      note: top === null ? 'not reported' : `up to ${top.toLocaleString('en-GB')} m above the crater`,
+      title: l10n.glowTitle,
+      note: l10n.glowNote(top === null ? null : formatNumber(locale, top)),
       h: BAR_H + 6,
       body: series.map((e, i) =>
         e.incandescenceMaxM === null ? missing('glow', i, BAR_H + 6) : (
@@ -122,8 +123,8 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
     {
       id: 'drainages',
-      title: 'Drainages named',
-      note: `${summary.drainagesReported} of ${n} days`,
+      title: l10n.drainagesTitle,
+      note: l10n.daysOf(summary.drainagesReported, n),
       h: MARK_H + 6,
       body: series.map((e, i) =>
         e.drainages.length === 0 ? missing('drainages', i, MARK_H + 6) : (
@@ -135,8 +136,8 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
     {
       id: 'towns',
-      title: 'Ash-fall towns named',
-      note: `${summary.townsReported} of ${n} days`,
+      title: l10n.townsTitle,
+      note: l10n.daysOf(summary.townsReported, n),
       h: MARK_H + 6,
       body: series.map((e, i) =>
         e.ashfallCommunities.length === 0 ? missing('towns', i, MARK_H + 6) : (
@@ -148,15 +149,17 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
     },
   ];
 
-    const drift = summary.driftReported === 0 ? none : `${list(summary.commonDrift)} (${times(summary.commonDriftDays)})`;
+  const drift = summary.driftReported === 0
+    ? l10n.notReported
+    : l10n.commonDriftValue(summary.commonDrift, summary.commonDriftDays);
 
   return (
-    <figure className="lanes" aria-label="Daily fields from the bulletin, on the same days as the chart above">
+    <figure className="lanes" id="lanes" aria-label={l10n.figureLabel}>
       <div
         className="lanes-plot"
         tabIndex={0}
         role="slider"
-        aria-label="Selected day"
+        aria-label={l10n.sliderLabel}
         aria-valuemin={0}
         aria-valuemax={n - 1}
         aria-valuenow={selected}
@@ -185,30 +188,30 @@ export default function FieldLanes({ series, selected, onSelect }: FieldLanesPro
 
       <figcaption className="lanes-day" >
         <b>{fmt(d.date)}</b>
-        <span>Drift {d.driftDirections.length > 0 ? `toward ${d.driftDirections.join(' · ')}` : none}</span>
-        <span>Glow {d.incandescenceMaxM !== null ? `${d.incandescenceMaxM.toLocaleString('en-GB')} m` : none}</span>
-        <span>Drainages {d.drainages.length > 0 ? list(d.drainages) : none}</span>
-        <span>Towns {d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : none}</span>
+        <span>{l10n.dayDrift(d.driftDirections.length > 0 ? abbr(d.driftDirections).join(' · ') : null)}</span>
+        <span>{l10n.dayGlow(d.incandescenceMaxM !== null ? formatNumber(locale, d.incandescenceMaxM) : null)}</span>
+        <span>{l10n.dayDrainages(d.drainages.length > 0 ? list(d.drainages) : null)}</span>
+        <span>{l10n.dayTowns(d.ashfallCommunities.length > 0 ? list(d.ashfallCommunities) : null)}</span>
       </figcaption>
 
       <p className="tempo-key">
-        <span><span className="tempo-key-swatch" aria-hidden="true" />Field not stated that day</span>
+        <span><span className="tempo-key-swatch" aria-hidden="true" />{l10n.key}</span>
       </p>
 
       <dl className="lanes-summary">
         <div>
-          <dt>Most common drift</dt>
+          <dt>{l10n.commonDrift}</dt>
           <dd>{drift}</dd>
-          <dd className="figures-note">of {summary.driftReported} days that stated one</dd>
+          <dd className="figures-note">{l10n.commonDriftNote(summary.driftReported)}</dd>
         </div>
         <div>
-          <dt>Drainages named</dt>
+          <dt>{l10n.drainagesNamed}</dt>
           <dd>
-            {summary.drainages.length === 0 ? none : (
+            {summary.drainages.length === 0 ? l10n.notReported : (
               <ul>{summary.drainages.map((c) => <li key={c.name}>{c.name} <span>{c.days}</span></li>)}</ul>
             )}
           </dd>
-          <dd className="figures-note">days named, of {summary.drainagesReported} days that named any</dd>
+          <dd className="figures-note">{l10n.drainagesNote(summary.drainagesReported)}</dd>
         </div>
       </dl>
     </figure>

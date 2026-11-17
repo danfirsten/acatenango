@@ -1,0 +1,8 @@
+{
+  "routes": ["/es/"],
+  "public": ["/es/"],
+  "notFound": ["/no-such-page/"],
+  "routeFiles": {
+    "/es/": ["src/app/es/", "src/i18n/es.ts"]
+  }
+}

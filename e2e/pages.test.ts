@@ -19,6 +19,9 @@ import { after, before, describe, it } from 'node:test';
 
 import { type Browser, chromium } from 'playwright';
 
+import { en } from '../src/i18n/en';
+import { es } from '../src/i18n/es';
+
 const BASE = '/acatenango';
 const OUT = path.join(process.cwd(), 'out');
 
@@ -169,6 +172,123 @@ describe(`static build served under ${BASE}`, () => {
     await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
     assert.deepEqual(problems, [], 'offline visit should be clean');
 
+    await context.close();
+  });
+
+  it('serves the Spanish page at /es/, in Spanish throughout', async () => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    const page = await context.newPage();
+    const problems: string[] = [];
+    page.on('pageerror', (e) => problems.push(`page error: ${e.message}`));
+    page.on('response', (r) => { if (r.status() >= 400) problems.push(`${r.status()} ${r.url()}`); });
+
+    await page.goto(`${origin}${BASE}/es/`, { waitUntil: 'load' });
+    await page.locator('.brand').waitFor();
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+
+    assert.equal(await page.getAttribute('html', 'lang'), 'es');
+    assert.equal(await page.title(), es.meta.title);
+    const alternates = await page.evaluate(() => Object.fromEntries(
+      [...document.querySelectorAll<HTMLLinkElement>('link[rel="alternate"][hreflang]')]
+        .map((l) => [l.hreflang, new URL(l.href).pathname]),
+    ));
+    assert.equal(alternates.en, `${BASE}/`);
+    assert.equal(alternates.es, `${BASE}/es/`);
+    assert.equal(alternates['x-default'], `${BASE}/`);
+
+    // The notice, word for word.
+    assert.equal((await page.locator('#notice p').innerText()).trim(), `${es.notice.lead} ${es.notice.body}`);
+    assert.equal(await page.locator('#camp-title').innerText(), es.camp.title);
+    assert.equal(await page.getByRole('button', { name: es.massif.fromCamp }).count(), 1);
+
+    // No English left on the page: no English dictionary string that Spanish
+    // words differently appears in the text or the accessible labels.
+    const text = await page.evaluate(() => [
+      document.body.innerText,
+      ...[...document.querySelectorAll('[aria-label]')].map((e) => e.getAttribute('aria-label') ?? ''),
+    ].join('\n'));
+    const spanish = new Set(Object.values(es).flatMap(function all(v: unknown): string[] {
+      return typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(all) : [];
+    }));
+    const english = Object.values(en).flatMap(function all(v: unknown): string[] {
+      return typeof v === 'string' ? [v] : v && typeof v === 'object' ? Object.values(v).flatMap(all) : [];
+    }).filter((s) => s.length > 6 && !spanish.has(s) && !s.includes('{'));
+    for (const s of english) {
+      // The switch back to English is meant to be in English.
+      if (s === en.languageName || s === en.switchLabel) continue;
+      assert.ok(!text.includes(s), `English on the Spanish page: ${s}`);
+    }
+    assert.deepEqual(problems, []);
+    await context.close();
+  });
+
+  it('switches language in place and remembers the choice', async () => {
+    const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width: 1440, height: 900 } });
+    const page = await context.newPage();
+    await page.goto(`${origin}${BASE}/`, { waitUntil: 'load' });
+    await page.locator('.brand').waitFor();
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+
+    // Replay an earlier day, then switch from the top bar: the day comes along.
+    await page.locator('.lanes-plot').focus();
+    for (let k = 0; k < 3; k++) await page.keyboard.press('ArrowLeft');
+    const day = await page.locator('[data-selected-day]').getAttribute('data-selected-day');
+    assert.ok(day, 'a day is selected');
+    const topSwitch = page.locator('.topbar .lang-switch');
+    assert.equal(await topSwitch.textContent(), es.languageName);
+    assert.equal(new URL(await topSwitch.evaluate((a: HTMLAnchorElement) => a.href)).pathname, `${BASE}/es/`);
+    await topSwitch.click();
+    await page.waitForURL(`${origin}${BASE}/es/`);
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+    await page.waitForFunction((d) => document.querySelector('[data-selected-day]')?.getAttribute('data-selected-day') === d, day);
+    assert.match(await page.locator('.observed-date').innerText(), new RegExp(es.topbar.replaying, 'i'));
+    assert.equal(await page.evaluate(() => localStorage.getItem('fuego-lang')), 'es');
+
+    // Switch back from the foot of the page: the reader stays at the foot.
+    const footSwitch = page.locator('.colophon .lang-switch');
+    await footSwitch.scrollIntoViewIfNeeded();
+    assert.equal(await footSwitch.textContent(), en.languageName);
+    await footSwitch.click();
+    await page.waitForURL(`${origin}${BASE}/`);
+    await page.waitForFunction(() => {
+      const r = document.getElementById('colophon')?.getBoundingClientRect();
+      return r !== undefined && r.top >= 0 && r.top < window.innerHeight;
+    }, undefined, { timeout: 5_000 });
+    assert.equal(await page.getAttribute('html', 'lang'), 'en');
+    assert.equal(await page.evaluate(() => localStorage.getItem('fuego-lang')), 'en');
+
+    // Having chosen English, a shared Spanish link still opens in Spanish.
+    await page.goto(`${origin}${BASE}/es/`, { waitUntil: 'load' });
+    await page.locator('#camp-title').waitFor();
+    await page.waitForTimeout(500);
+    assert.equal(new URL(page.url()).pathname, `${BASE}/es/`);
+
+    // A remembered Spanish choice opens the Spanish page from the English address.
+    await page.evaluate(() => localStorage.setItem('fuego-lang', 'es'));
+    await page.goto(`${origin}${BASE}/`, { waitUntil: 'load' });
+    await page.waitForURL(`${origin}${BASE}/es/`);
+    assert.equal(await page.getAttribute('html', 'lang'), 'es');
+    await context.close();
+  });
+
+  it('works when storage is blocked', async () => {
+    const context = await browser.newContext({ reducedMotion: 'reduce' });
+    // As in a private window that refuses storage: every read and write throws.
+    await context.addInitScript(() => {
+      for (const m of ['getItem', 'setItem', 'removeItem'] as const) {
+        Storage.prototype[m] = () => { throw new DOMException('blocked', 'SecurityError'); };
+      }
+    });
+    const page = await context.newPage();
+    const errors: string[] = [];
+    page.on('pageerror', (e) => errors.push(e.message));
+    await page.goto(`${origin}${BASE}/`, { waitUntil: 'load' });
+    await page.waitForFunction(() => !document.querySelector('.massif-state'), undefined, { timeout: 30_000 });
+    await page.locator('.topbar .lang-switch').click();
+    await page.waitForURL(`${origin}${BASE}/es/`);
+    await page.locator('#camp-title').waitFor();
+    assert.equal(await page.getAttribute('html', 'lang'), 'es');
+    assert.deepEqual(errors, []);
     await context.close();
   });
 });

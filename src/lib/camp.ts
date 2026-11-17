@@ -1,6 +1,9 @@
 import type { IndexEntry } from '../../scripts/build-index';
 import { SUMMIT_M } from './readout';
 import { SUMMITS } from './terrain';
+import { en } from '../i18n/en';
+import { formatDate, formatNumber } from '../i18n/format';
+import type { Dict, DriftGroup, DriftRelation, Locale } from '../i18n/types';
 
 /**
  * The latest bulletin, described as it reads from camp on Acatenango.
@@ -49,15 +52,10 @@ const COMPASS_DEG: Record<string, number> = {
   N: 0, NE: 45, E: 90, SE: 135, S: 180, SW: 225, W: 270, NW: 315,
 };
 
-const COMPASS_WORD: Record<string, string> = {
-  N: 'north', NE: 'north-east', E: 'east', SE: 'south-east',
-  S: 'south', SW: 'south-west', W: 'west', NW: 'north-west',
-};
-
 /** Half of a quarter of the compass: a drift within this of camp's bearing is towards it. */
 const TOLERANCE_DEG = 45;
 
-export type DriftRelation = 'towards' | 'away' | 'side';
+export type { DriftRelation };
 
 /**
  * How a drift direction sits relative to camp: towards it (within a quarter of
@@ -75,46 +73,21 @@ export function driftRelation(direction: string, campBearing: number = CAMP_BEAR
   return 'side';
 }
 
-/** "a", "a and b", "a, b and c". */
-function list(items: string[]): string {
-  if (items.length <= 1) return items.join('');
-  return `${items.slice(0, -1).join(', ')} and ${items.at(-1)}`;
-}
-
-const metres = (n: number) => n.toLocaleString('en-GB');
-
-/** Joins a figure to its unit so a line never breaks between them. */
-const NBSP = '\u00a0';
-
-const RELATION_FIRST: Record<DriftRelation, string> = {
-  towards: 'towards Acatenango',
-  away: 'away from Acatenango',
-  side: 'to one side of Acatenango',
-};
-const RELATION_AGAIN: Record<DriftRelation, string> = {
-  towards: 'towards it',
-  away: 'away from it',
-  side: 'to one side of it',
-};
-
 /**
- * "north-east and north, towards Acatenango, and east, to one side of it":
- * directions grouped by how they sit from camp, in the order the bulletin gave
- * them. Null when no direction is known.
+ * Directions grouped by how they sit from camp, in the order the bulletin gave
+ * them; the dictionary words them ("north-east and north, towards Acatenango,
+ * and east, to one side of it"). Null when no direction is known.
  */
-function driftPhrase(directions: string[]): string | null {
-  const groups: { relation: DriftRelation; words: string[] }[] = [];
+function driftPhrase(directions: string[], t: Dict): string | null {
+  const groups: DriftGroup[] = [];
   for (const d of directions) {
     const relation = driftRelation(d);
     if (relation === null) continue;
     const group = groups.find((g) => g.relation === relation);
-    if (group) group.words.push(COMPASS_WORD[d]);
-    else groups.push({ relation, words: [COMPASS_WORD[d]] });
+    if (group) group.directions.push(d);
+    else groups.push({ relation, directions: [d] });
   }
-  if (groups.length === 0) return null;
-  return groups
-    .map((g, i) => `${list(g.words)}, ${(i === 0 ? RELATION_FIRST : RELATION_AGAIN)[g.relation]}`)
-    .join(', and ');
+  return groups.length === 0 ? null : t.camp.driftPhrase(groups);
 }
 
 export type CampLineKey = 'rate' | 'column' | 'drift' | 'ashfall';
@@ -139,7 +112,13 @@ export interface CampDescription {
 
 const capitalise = (s: string) => s.charAt(0).toUpperCase() + s.slice(1);
 
-export function describeCamp(entry: IndexEntry): CampDescription {
+/**
+ * The camp panel's words for a bulletin, in the dictionary's language. Each
+ * sentence is a template in the dictionary; this decides which one applies.
+ */
+export function describeCamp(entry: IndexEntry, t: Dict = en): CampDescription {
+  const c = t.camp;
+  const num = (n: number) => formatNumber(t.locale, n);
   const continuous = entry.explosionsMax === null && entry.phenomena.includes('continuousPhase');
 
   // Rate.
@@ -147,71 +126,56 @@ export function describeCamp(entry: IndexEntry): CampDescription {
   let rateLine: CampLine;
   if (entry.explosionsMax !== null) {
     const { explosionsMin: min, explosionsMax: max } = entry;
-    const figure = min === null || min === max ? String(max) : `${min} to ${max}`;
-    rate = `${figure} explosion${max === 1 && (min === null || min === max) ? '' : 's'} an hour`;
-    rateLine = { key: 'rate', label: 'Explosions', text: `${rate}.`, missing: false };
+    const single = min === null || min === max;
+    rate = c.rate(single ? num(max) : c.range(num(min), num(max)), max === 1 && single);
+    rateLine = { key: 'rate', label: c.labels.rate, text: c.rateLine(rate), missing: false };
   } else if (continuous) {
-    rate = 'continuous emission';
-    rateLine = { key: 'rate', label: 'Explosions', text: 'Continuous emission, so the bulletin gives no hourly count.', missing: false };
+    rate = c.continuous;
+    rateLine = { key: 'rate', label: c.labels.rate, text: c.continuousLine, missing: false };
   } else {
-    rateLine = { key: 'rate', label: 'Explosions', text: 'The bulletin gave no explosion rate.', missing: true };
+    rateLine = { key: 'rate', label: c.labels.rate, text: c.rateMissing, missing: true };
   }
 
   // Column.
   let columnLine: CampLine;
   const top = entry.ashMaxMasl;
   if (top !== null) {
-    const above = metres(top - SUMMIT_M);
+    const above = num(top - SUMMIT_M);
     const min = entry.ashMinMasl;
     columnLine = {
       key: 'column',
-      label: 'Ash column',
-      text: min !== null && min !== top
-        ? `Ash columns of ${metres(min)} to ${metres(top)}${NBSP}m above sea level, up to ${above}${NBSP}m above Fuego’s summit.`
-        : `Ash to ${metres(top)}${NBSP}m above sea level, ${above}${NBSP}m above Fuego’s summit.`,
+      label: c.labels.column,
+      text: min !== null && min !== top ? c.columnRange(num(min), num(top), above) : c.columnSingle(num(top), above),
       missing: false,
     };
   } else {
-    columnLine = { key: 'column', label: 'Ash column', text: 'The bulletin gave no ash column height.', missing: true };
+    columnLine = { key: 'column', label: c.labels.column, text: c.columnMissing, missing: true };
   }
 
   // Drift.
-  const where = driftPhrase(entry.driftDirections);
-  const km = entry.driftKm;
-  let driftLine: CampLine;
-  if (where !== null && km !== null) {
-    driftLine = { key: 'drift', label: 'Drift relative to camp', text: `Ash drifting ${km}${NBSP}km ${where}.`, missing: false };
-  } else if (where !== null) {
-    driftLine = {
-      key: 'drift', label: 'Drift relative to camp',
-      text: `Ash drifting ${where}. The bulletin gave no drift distance.`, missing: true,
-    };
-  } else if (km !== null) {
-    driftLine = {
-      key: 'drift', label: 'Drift relative to camp',
-      text: `Ash drifting ${km}${NBSP}km. The bulletin gave no direction, so where it went relative to Acatenango is unknown.`,
-      missing: true,
-    };
-  } else {
-    driftLine = { key: 'drift', label: 'Drift relative to camp', text: 'The bulletin gave no drift distance or direction.', missing: true };
-  }
+  const where = driftPhrase(entry.driftDirections, t);
+  const km = entry.driftKm === null ? null : num(entry.driftKm);
+  const driftLabel = c.labels.drift;
+  const driftLine: CampLine =
+    where !== null && km !== null ? { key: 'drift', label: driftLabel, text: c.driftFull(km, where), missing: false }
+    : where !== null ? { key: 'drift', label: driftLabel, text: c.driftNoKm(where), missing: true }
+    : km !== null ? { key: 'drift', label: driftLabel, text: c.driftNoDirection(km), missing: true }
+    : { key: 'drift', label: driftLabel, text: c.driftMissing, missing: true };
 
   // Ash fall.
   const places = entry.ashfallCommunities;
   const ashfallLine: CampLine = places.length > 0
-    ? { key: 'ashfall', label: 'Ash fall', text: `Ash fall reported in ${list(places)}.`, missing: false, places }
+    ? { key: 'ashfall', label: c.labels.ashfall, text: c.ashfall(t.list(places)), missing: false, places }
     : entry.phenomena.includes('ashfall')
-      ? { key: 'ashfall', label: 'Ash fall', text: 'Ash fall reported; the bulletin named no towns.', missing: true }
-      : { key: 'ashfall', label: 'Ash fall', text: 'The bulletin did not mention ash fall.', missing: true };
+      ? { key: 'ashfall', label: c.labels.ashfall, text: c.ashfallUnnamed, missing: true }
+      : { key: 'ashfall', label: c.labels.ashfall, text: c.ashfallMissing, missing: true };
 
   // Summary: only what was reported.
   let ash: string | null = null;
-  if (top !== null) ash = `ash to ${metres(top)}${NBSP}m${where ? ` drifting ${where}` : ''}`;
-  else if (where) ash = `ash drifting ${where}`;
+  if (top !== null) ash = c.summaryAsh(num(top), where);
+  else if (where) ash = c.summaryDrift(where);
   const parts = [rate, ash].filter((p): p is string => p !== null);
-  const summary = parts.length > 0
-    ? `${capitalise(parts.join(', '))}.`
-    : 'The bulletin gave no explosion rate, ash column or drift.';
+  const summary = parts.length > 0 ? `${capitalise(parts.join(', '))}.` : c.summaryNone;
 
   return { entry, summary, lines: [rateLine, columnLine, driftLine, ashfallLine] };
 }
@@ -221,13 +185,9 @@ export function latestEntry(series: IndexEntry[]): IndexEntry | null {
   return series.at(-1) ?? null;
 }
 
-const DATE = new Intl.DateTimeFormat('en-GB', {
-  day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC',
-});
-
-/** "16 Nov 2026", the same form the top bar uses. */
-export function formatBulletinDate(iso: string): string {
-  return DATE.format(new Date(`${iso}T00:00:00Z`));
+/** "16 Nov 2026" / "16 nov 2026", the same form the top bar uses. */
+export function formatBulletinDate(iso: string, locale: Locale = 'en'): string {
+  return formatDate(locale, iso);
 }
 
 /** "N" for 10°: the nearest of the bulletin's eight compass points. */
@@ -236,4 +196,3 @@ export function compassPoint(bearing: number): string {
   return points[Math.round((((bearing % 360) + 360) % 360) / 45) % 8];
 }
 
-export { COMPASS_WORD };

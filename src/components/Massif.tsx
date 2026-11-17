@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 
+import { formatNumber, getDict, type Locale } from '@/i18n';
 import type { IndexEntry } from '../../scripts/build-index';
 import {
   type LabelPosition,
@@ -15,6 +16,7 @@ import { MASSIF_JSON_URL, MASSIF_PNG_URL } from '@/lib/terrain';
 interface MassifProps {
   /** The archived day the scene should draw. */
   day: IndexEntry;
+  locale: Locale;
 }
 
 type Status = 'loading' | 'ready' | 'unsupported' | 'failed';
@@ -32,7 +34,8 @@ function webglAvailable(): boolean {
   }
 }
 
-export default function Massif({ day }: MassifProps) {
+export default function Massif({ day, locale }: MassifProps) {
+  const t = getDict(locale).massif;
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const handleRef = useRef<MassifHandle | null>(null);
   const [labels, setLabels] = useState<LabelPosition[]>([]);
@@ -94,7 +97,7 @@ export default function Massif({ day }: MassifProps) {
 
   return (
     <div className="massif">
-      <canvas ref={canvasRef} className="massif-canvas" aria-label="Three-dimensional view of the Acatenango and Fuego massif, built from elevation data" />
+      <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 
       {labels.map((l) => (
         <div
@@ -109,24 +112,22 @@ export default function Massif({ day }: MassifProps) {
           <span className="summit-dot" />
           <span className="summit-text">
             <b>{l.name}</b>
-            <i>{l.elevation.toLocaleString()} m{l.key === 'fuego' ? ' · erupting' : ' · your camp'}</i>
+            <i>{formatNumber(locale, l.elevation)} m · {l.key === 'fuego' ? t.erupting : t.yourCamp}</i>
           </span>
         </div>
       ))}
 
-      <div className="massif-views" role="group" aria-label="Camera view">
-        <button type="button" onClick={() => setView('orbit')} aria-pressed={view === 'orbit'}>Orbit</button>
-        <button type="button" onClick={() => setView('camp')} aria-pressed={view === 'camp'}>From camp</button>
+      <div className="massif-views" role="group" aria-label={t.viewsLabel}>
+        <button type="button" onClick={() => setView('orbit')} aria-pressed={view === 'orbit'}>{t.orbit}</button>
+        <button type="button" onClick={() => setView('camp')} aria-pressed={view === 'camp'}>{t.fromCamp}</button>
       </div>
 
-      {status === 'loading' && <div className="massif-state">Loading elevation data…</div>}
+      {status === 'loading' && <div className="massif-state">{t.loading}</div>}
       {status === 'unsupported' && (
-        <div className="massif-state">
-          This view needs WebGL. The readings below work without it.
-        </div>
+        <div className="massif-state">{t.unsupported}</div>
       )}
       {status === 'failed' && (
-        <div className="massif-state">Terrain unavailable. The readings below are unaffected.</div>
+        <div className="massif-state">{t.failed}</div>
       )}
     </div>
   );
