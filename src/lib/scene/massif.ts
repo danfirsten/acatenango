@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+import { FramePacer } from './pacer';
+
 /**
  * The Acatenango–Fuego massif, rendered from real elevation data.
  *
@@ -608,40 +610,30 @@ export function createMassifScene(
     return false;
   }
   let frame = 0;
-  let timer = 0;
   let last = performance.now();
   let disposed = false;
 
   /*
-   * The loop draws only while something moves, at most FRAME_CAP times a
-   * second, and after each frame it rests for twice as long as that frame
-   * took to draw. On a fast machine that is simply a 30 fps cap. On a slow or
-   * busy one, where software WebGL can take a quarter of a second per frame,
-   * it leaves two browser frames in three with no WebGL work in them, so
-   * scrolling and clicks are never starved (the base went red when a QA click timed out).
-   * It also stops while the scene is off screen or the tab is hidden, and
-   * starts again when either comes back.
+   * The loop draws only while something moves, paced by FramePacer: at most
+   * 30 draws a second, and after each draw a rest twice as long as the draw
+   * held the frame up, so a slow or busy machine keeps most frames free of
+   * WebGL work and clicks are never starved (the base went red when a QA
+   * click timed out). It stops while the scene is off screen or the tab is
+   * hidden, and starts again when either comes back.
    */
-  const FRAME_CAP = 30;
-  const MIN_FRAME_MS = 1000 / FRAME_CAP;
+  const pacer = new FramePacer(30);
   let onScreen = true;
   let pageVisible = typeof document === 'undefined' || !document.hidden;
 
-  /** Asks for the next frame after a rest; a no-op while one is pending or the scene can't be seen. */
-  function schedule(restMs = 0) {
-    if (disposed || frame || timer || !onScreen || !pageVisible) return;
-    if (restMs <= 0) {
-      frame = requestAnimationFrame(step);
-    } else {
-      timer = window.setTimeout(() => {
-        timer = 0;
-        schedule();
-      }, restMs);
-    }
+  /** Asks for the next frame; a no-op while one is pending or the scene can't be seen. */
+  function schedule() {
+    if (disposed || frame || !onScreen || !pageVisible) return;
+    frame = requestAnimationFrame(step);
   }
-  /** Something changed: draw again soon, even if the loop had gone idle. */
+  /** Something changed: draw again soon, even if the loop had stopped. */
   function wake() {
     redraw = Math.max(redraw, 3);
+    if (!frame) pacer.reset();
     schedule();
   }
 
@@ -712,8 +704,12 @@ export function createMassifScene(
 
   function step(now: number) {
     frame = 0;
-    if (disposed) return;
-    const started = performance.now();
+    if (disposed || !onScreen || !pageVisible) return;
+    // A frame the pacer keeps free: ask for the next one and draw nothing.
+    if (!pacer.frame(now)) {
+      schedule();
+      return;
+    }
     const dt = Math.min((now - last) / 1000, 0.05);
     last = now;
 
@@ -782,12 +778,7 @@ export function createMassifScene(
       }));
     }
 
-    // The draw is only queued above; the next browser frame shows what it cost.
-    frame = requestAnimationFrame(() => {
-      frame = 0;
-      const cost = performance.now() - started;
-      schedule(Math.min(1000, Math.max(MIN_FRAME_MS - cost, 2 * cost)));
-    });
+    schedule();
   }
 
   const visibility = new IntersectionObserver((entries) => {
@@ -808,7 +799,6 @@ export function createMassifScene(
     dispose() {
       disposed = true;
       cancelAnimationFrame(frame);
-      clearTimeout(timer);
       observer.disconnect();
       visibility.disconnect();
       document.removeEventListener('visibilitychange', onVisibility);
