@@ -124,29 +124,29 @@ try {
     new Date(`${iso}T00:00:00Z`).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
 
   const gridLines = Array.from({ length: Math.floor(maxY / 10) }, (_, i) => (i + 1) * 10)
-    .map((v) => `<line x1="0" x2="${W}" y1="${yOf(v)}" y2="${yOf(v)}" stroke="#1E2A34"/>` +
+    .map((v) => `<line x1="0" x2="${W}" y1="${yOf(v)}" y2="${yOf(v)}" class="tempo-grid"/>` +
                 `<text x="4" y="${yOf(v) - 5}" class="tick">${v}</text>`)
     .join('');
 
   const dateLabels = axisLabelIndices(series.length)
-    .map((i) => `<text x="${Math.min(xOf(i), W - 46)}" y="${H - 6}" class="tick">${fmt(series[i].date).toUpperCase()}</text>`)
+    .map((i) => `<text x="${Math.min(xOf(i), W - 46)}" y="${H - 6}" class="tick">${fmt(series[i].date)}</text>`)
     .join('');
 
   $('.tempo').innerHTML = `
     <svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Explosions per hour over ninety days">
       <defs><linearGradient id="f" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#E8622C" stop-opacity=".36"/>
-        <stop offset="100%" stop-color="#E8622C" stop-opacity="0"/>
+        <stop offset="0%" class="tempo-stop"/>
+        <stop offset="100%" class="tempo-stop" stop-opacity="0"/>
       </linearGradient></defs>
       ${gridLines}
       <path d="${line}L${W},${H - PAD_B}L0,${H - PAD_B}Z" fill="url(#f)"/>
-      <path d="${line}" fill="none" stroke="#E8622C" stroke-width="2" stroke-linejoin="round"/>
+      <path d="${line}" class="tempo-line"/>
       ${dateLabels}
       <g class="sel">
-        <line y1="${PAD_T}" y2="${H - PAD_B}" stroke="#E8622C" stroke-width="1.5" opacity=".85"/>
-        <circle r="5" fill="#E8622C" stroke="#0B1016" stroke-width="2"/>
+        <line y1="${PAD_T}" y2="${H - PAD_B}" class="tempo-cross" stroke-width="1.5" opacity=".85"/>
+        <circle r="5" class="tempo-point"/>
       </g>
-      <line class="cross" y1="${PAD_T}" y2="${H - PAD_B}" stroke="#E8622C" stroke-width="1"
+      <line class="cross tempo-cross" y1="${PAD_T}" y2="${H - PAD_B}" stroke-width="1"
             stroke-dasharray="2 3" opacity="0"/>
     </svg>
     <div class="tip"></div>`;
