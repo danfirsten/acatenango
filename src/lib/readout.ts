@@ -154,8 +154,9 @@ export function readoutRows(day: IndexEntry, t: Dict = en): ReadoutRow[] {
         }
       : day.drainages.length > 0
         ? { key: r.drainages, value: String(day.drainages.length), unit: day.drainages.join(', ') }
-        // An empty list means the bulletin named none, not that there were 0.
-        : { key: r.drainages, value: r.noneNamed, unit: '', missing: true },
+        // An empty list means the bulletin named none, not that there were 0:
+        // said the way the record's drainage lane says it.
+        : { key: r.drainages, value: r.notReported, unit: '', missing: true },
   );
 
   return rows;

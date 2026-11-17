@@ -87,7 +87,6 @@ export const es: Dict = {
     km: (dirs) => `km ${dirs}`,
     ashfallIn: 'Caída de ceniza en',
     drainages: 'Barrancas',
-    noneNamed: 'Ninguna nombrada',
   },
   notes: {
     bothHeld: (d) => `Este boletín no da tasa ni columna de ceniza; la pluma mantiene la tasa y la columna del ${d}.`,

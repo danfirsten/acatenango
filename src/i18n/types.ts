@@ -73,7 +73,6 @@ export interface Dict {
     km: (dirs: string) => string;
     ashfallIn: string;
     drainages: string;
-    noneNamed: string;
   };
   notes: {
     bothHeld: (date: string) => string;

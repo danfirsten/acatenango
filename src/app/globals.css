@@ -189,6 +189,12 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   font-weight: 400;
 }
 
+/* A replayed day is not live data, so its badge stays out of the ember. */
+.badge[data-replaying="true"] {
+  color: var(--ash);
+  border-color: var(--line);
+  background: transparent;
+}
 .badge[data-warn="true"] {
   color: #C9A227;
   border-color: #4A4020;
