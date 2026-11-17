@@ -63,6 +63,7 @@ export const TERRAIN_FRAG = /* glsl */ `
   uniform float uContourWidth;
   uniform float uLineStrength;
   uniform float uPixelRatio;
+  uniform float uPxAngle;        // ground covered by one device pixel, per unit of distance
   uniform float uMinElev;
   uniform float uMaxElev;
   uniform float uExaggeration;
@@ -132,7 +133,7 @@ export const TERRAIN_FRAG = /* glsl */ `
       darkest = smoothstep(0.48, 0.0, lambert);
     } else {
       tone = max(0.08, smoothstep(0.45, 0.98, lambert));
-      darkest = smoothstep(0.72, 1.05, lambert);
+      darkest = smoothstep(0.85, 1.05, lambert);
     }
 
     // Two crossing families, both in world space. A little height in each
@@ -142,7 +143,11 @@ export const TERRAIN_FRAG = /* glsl */ `
 
     // One scale for both families: the smallest power of two above the
     // target gap, and how far its in-between lines have faded.
-    float target = max(HATCH_MIN, HATCH_PX * uPixelRatio * 0.5 * (perA + perB));
+    // The scale comes from distance, not from these derivatives: they are
+    // constant per triangle and jump at every edge of the faceted mesh, which
+    // would pick a different octave on each facet and break the lines up.
+    // Distance is smooth, so one flank keeps one even set of lines.
+    float target = max(HATCH_MIN, HATCH_PX * uPixelRatio * depth * uPxAngle);
     // The power of two is read straight from the float's exponent bits:
     // exact, so the spacing is identical across a level and nothing shimmers,
     // and far cheaper than log2 and exp2 on software renderers. The fade runs

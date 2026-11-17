@@ -137,23 +137,14 @@
   flex-direction: column;
   line-height: 1.25;
   white-space: nowrap;
-  /* The system's label style. The engraving and the plume run behind the
-     labels, so each glyph is knocked out of the drawing with a tight outline
-     in the page's own --bg, over a light blurred plate that lets the plume
-     read through rather than cutting it off. */
+  /* The system's label style. */
   font-family: var(--mono);
   letter-spacing: 0.06em;
 }
-.summit-text, .observed-text, .scrollcue {
-  /* The scene runs behind these: the topbar's date and the scroll cue get
-     the same plate as the summit labels. */
-  padding: 3px 7px 4px;
-  border-radius: var(--r-chip);
-  background: color-mix(in srgb, var(--bg) 60%, transparent);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-}
 .summit-text b, .summit-text i, .observed-text, .scrollcue {
+  /* The scene runs behind these: a tight outline in the page's own --bg
+     knocks each glyph out of the lines and the plume, with no plate, so the
+     plume carries on behind the text. */
   text-shadow:
     1px 0 0 var(--bg), -1px 0 0 var(--bg), 0 1px 0 var(--bg), 0 -1px 0 var(--bg),
     1px 1px 0 var(--bg), -1px -1px 0 var(--bg), 1px -1px 0 var(--bg), -1px 1px 0 var(--bg),
@@ -167,11 +158,9 @@
 .summit-text i {
   font-style: normal;
   font-size: var(--text-label);
-  /* --soft rather than --muted: the line sits on a light plate over lines. */
+  /* --soft rather than --muted: the line sits on the drawing. */
   color: var(--soft);
 }
-/* Nothing needs to show through the topbar's date: a denser plate. */
-.observed-text { background: color-mix(in srgb, var(--bg) 85%, transparent); }
 /* Near the right edge the label hangs to the left of its dot: the element is
    shifted back by its own width, so the dot stays on the summit. */
 .summit[data-flip="true"] { flex-direction: row-reverse; margin-left: 3px; }

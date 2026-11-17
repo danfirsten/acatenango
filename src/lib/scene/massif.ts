@@ -322,6 +322,7 @@ export function createMassifScene(
       uContourWidth: { value: 0.6 },
       uLineStrength: { value: 0.85 },
       uPixelRatio: { value: 1 },
+      uPxAngle: { value: 0.001 },
       uMinElev: { value: meta.minElevation },
       uMaxElev: { value: meta.maxElevation },
       uExaggeration: { value: EXAGGERATION },
@@ -547,6 +548,9 @@ export function createMassifScene(
     const next = view === 'camp' ? fit.campFov : BASE_FOV;
     if (camera.fov !== next) camera.fov = next;
     camera.updateProjectionMatrix();
+    // Ground one device pixel covers at unit distance, for the hatch scale.
+    const devicePx = (canvas.clientHeight || 1) * terrainMaterial.uniforms.uPixelRatio.value;
+    terrainMaterial.uniforms.uPxAngle.value = (2 * Math.tan((camera.fov * Math.PI) / 360)) / devicePx;
   }
   resize();
   const observer = new ResizeObserver(resize);
