@@ -114,7 +114,7 @@ export const en: Dict = {
     yourCamp: 'your camp',
     viewsLabel: 'Camera view',
     fromCamp: 'From camp',
-    tag: (view, date) => `${view === 'camp' ? 'Camp' : 'Orbit'} · ${date}`,
+    tag: (view, date) => `${view === 'camp' ? 'From camp' : 'Orbit'} · ${date}`,
     loading: 'Loading elevation data…',
     unsupported: 'This view needs WebGL. The bulletin’s figures and the record work without it.',
     failed: 'Terrain unavailable. The bulletin’s figures and the record are unaffected.',

@@ -257,7 +257,8 @@
   letter-spacing: 0.04em;
   color: var(--soft);
 }
-.readout-v small { font-size: var(--text-label); letter-spacing: 0.04em; white-space: nowrap; }
+/* One rule at every width: the unit takes its own line under the value, in line with it past the mark. */
+.readout-v small { flex-basis: 100%; margin-left: calc(12px + 6px); font-size: var(--text-label); letter-spacing: 0.04em; }
 /* The mark sits centred on the value's first line, however the unit wraps. */
 .readout-v .mark { align-self: flex-start; margin-top: calc((1.15em - 12px) / 2); }
 .readout-note {
@@ -708,13 +709,13 @@
   .readout-row {
     grid-row: auto;
     grid-template-rows: none;
-    grid-template-columns: auto minmax(0, 1fr);
+    /* Values start in one column, so the marks line up. */
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
     column-gap: var(--space-4);
     align-items: baseline;
     padding: 10px 0;
     border-bottom: 1px solid var(--rule);
   }
-  .readout-v { justify-content: flex-end; text-align: right; }
 }
 @media (min-width: 1100px) {
   .first { grid-template-columns: minmax(0, 2fr) minmax(0, 1fr); column-gap: var(--space-7); }

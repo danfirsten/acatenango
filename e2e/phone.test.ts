@@ -140,14 +140,20 @@ describe('phone layout', () => {
       await page.getByRole('button', { name: 'From camp' }).click();
       const fuego = (await summitBoxes(page, ['Fuego'])).find((b) => b.name === 'Fuego')!;
       assert.ok(fuego.shown, 'Fuego is shown');
+      // You stand on Acatenango in this view, so it carries no label.
+      assert.ok(!(await summitBoxes(page, ['Fuego'])).some((b) => b.name === 'Acatenango' && b.shown), 'camp is not labelled from camp');
       assert.ok(fuego.left >= fuego.scene.left && fuego.right <= fuego.scene.right, `Fuego label inside the scene (${JSON.stringify(fuego)})`);
       // Its words stay clear of the image tag and the switch along the bottom.
       const controls = await page.evaluate(() => [...document.querySelectorAll('.first-scene .chip-tag, .massif-views button')]
         .map((el) => { const r = el.getBoundingClientRect(); return { left: r.left, right: r.right, top: r.top, bottom: r.bottom }; }));
-      const words = fuego.words;
-      for (const c of controls) {
-        const hit = words.left < c.right && c.left < words.right && words.top < c.bottom && c.top < words.bottom;
-        assert.ok(!hit, `Fuego's words are clear of the scene's controls (${JSON.stringify(words)} vs ${JSON.stringify(c)})`);
+      // Every label shown, Fuego's or another, sits inside the clip and clear of the scene's controls.
+      for (const b of (await summitBoxes(page, ['Fuego'])).filter((x) => x.shown)) {
+        const words = b.words;
+        assert.ok(words.top >= b.scene.top && words.bottom <= b.scene.bottom, `${b.name}'s words inside the clip (${JSON.stringify(b)})`);
+        for (const c of controls) {
+          const hit = words.left < c.right && c.left < words.right && words.top < c.bottom && c.top < words.bottom;
+          assert.ok(!hit, `${b.name}'s words are clear of the scene's controls (${JSON.stringify(words)} vs ${JSON.stringify(c)})`);
+        }
       }
       await page.context().close();
     });

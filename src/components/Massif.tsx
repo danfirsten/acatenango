@@ -28,7 +28,7 @@ const LABEL_HALF = 16;
 /** Room the summit dot needs clear of other words, in CSS pixels. */
 const DOT_CLEAR = 4;
 /** The band along the bottom of the scene that the image tag and the switch sit in. */
-const CONTROLS_BAND = 56;
+const CONTROLS_BAND = 52;
 
 /** Whether a label hangs to the left of its dot, near the right edge. */
 const hangsLeft = (l: LabelPosition) => l.roomRight < LABEL_ROOM;
@@ -43,13 +43,15 @@ export type PlacedLabel = LabelPosition & { shift: number };
  * controls or on each other. A label whose words would reach the controls along
  * the bottom hangs them above its dot. When two summits land side by side, the
  * higher one's words go above its dot and the lower one's go below the higher
- * dot. The dots stay on their summits.
+ * dot. The dots stay on their summits. A summit so low that even words above
+ * its dot would reach the controls (or the clip's edge) is not labelled.
  */
-export function placeLabels(labels: LabelPosition[], height: number): PlacedLabel[] {
+export function placeLabels(input: LabelPosition[], height: number): PlacedLabel[] {
   const above = -(LABEL_HALF + DOT_CLEAR);
+  const labels = input.map((l) => (l.visible && l.y + LABEL_HALF - DOT_CLEAR > height - CONTROLS_BAND ? { ...l, visible: false } : l));
   const shift: Record<string, number> = {};
   for (const l of labels) {
-    if (l.visible && l.y + LABEL_HALF > height - CONTROLS_BAND) shift[l.key] = above;
+    if (l.visible && l.y + 2 * LABEL_HALF > height - CONTROLS_BAND) shift[l.key] = above;
   }
   const shown = labels.filter((l) => l.visible).sort((a, b) => a.y - b.y);
   for (let i = 0; i < shown.length; i++) {
@@ -88,6 +90,7 @@ export default function Massif({ day, locale }: MassifProps) {
   const [labels, setLabels] = useState<PlacedLabel[]>([]);
   const [status, setStatus] = useState<Status>('loading');
   const [view, setView] = useState<'orbit' | 'camp'>('orbit');
+  const viewRef = useRef(view);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -113,7 +116,11 @@ export default function Massif({ day, locale }: MassifProps) {
           activity: day.explosionsMax ?? 10,
           reducedMotion: prefersReducedMotion(),
           // Labels are DOM, not WebGL, so they stay selectable and legible.
-          onLabels: (ls) => setLabels(placeLabels(ls, canvas.clientHeight)),
+          // From camp you stand on Acatenango, so only Fuego is labelled there.
+          onLabels: (ls) => setLabels(placeLabels(
+            ls.map((l) => (viewRef.current === 'camp' && l.key === 'acatenango' ? { ...l, visible: false } : l)),
+            canvas.clientHeight,
+          )),
         });
         handleRef.current = handle;
         setStatus('ready');
@@ -140,7 +147,10 @@ export default function Massif({ day, locale }: MassifProps) {
       driftDirections: day.driftDirections,
     });
   }, [day]);
-  useEffect(() => { handleRef.current?.setView(view); }, [view]);
+  useEffect(() => {
+    viewRef.current = view;
+    handleRef.current?.setView(view);
+  }, [view]);
 
   return (
     <div className="massif">
