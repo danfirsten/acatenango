@@ -106,13 +106,27 @@ export default function Massif({ day, locale }: MassifProps) {
   const [status, setStatus] = useState<Status>('loading');
   const [view, setView] = useState<'orbit' | 'camp'>('orbit');
   const viewRef = useRef(view);
-  // 'play' runs the clip's CSS animation once; the page is server-rendered open.
-  const [clip, setClip] = useState<'idle' | 'play'>('idle');
+  // The clip, once per visit. The page is server-rendered open ('idle'). When the
+  // clip is due the stage holds closed ('wait') until the scene has drawn its
+  // first frame, then 'play' runs the CSS animation, so the clip opens on the
+  // mountain rather than on an empty box while the terrain loads.
+  const [clip, setClip] = useState<'idle' | 'wait' | 'play'>('idle');
   useEffect(() => {
     // Next frame, so the effect never sets state synchronously.
-    const id = requestAnimationFrame(() => { if (clipDue()) setClip('play'); });
+    const id = requestAnimationFrame(() => { if (clipDue()) setClip('wait'); });
     return () => cancelAnimationFrame(id);
   }, []);
+  useEffect(() => {
+    if (clip !== 'wait' || status === 'loading') return;
+    // No scene to open on: show the stage, and its message, as it is.
+    if (status !== 'ready') {
+      const id = requestAnimationFrame(() => setClip('idle'));
+      return () => cancelAnimationFrame(id);
+    }
+    // Ready: the scene draws on its next frame; open the clip on the one after.
+    let id = requestAnimationFrame(() => { id = requestAnimationFrame(() => setClip('play')); });
+    return () => cancelAnimationFrame(id);
+  }, [clip, status]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -175,7 +189,7 @@ export default function Massif({ day, locale }: MassifProps) {
   }, [view]);
 
   return (
-    <div className="massif" data-clip={clip === 'play' ? 'play' : undefined}>
+    <div className="massif" data-clip={clip === 'idle' ? undefined : clip}>
       <div className="massif-stage">
       <canvas ref={canvasRef} className="massif-canvas" aria-label={t.canvasLabel} />
 

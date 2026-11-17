@@ -44,9 +44,9 @@ export const es: Dict = {
   locale: 'es',
   htmlLang: 'es',
   meta: {
-    title: 'Fuego: en vivo desde el macizo del Acatenango',
+    title: 'Fuego: el registro diario del Volcán de Fuego',
     description: 'Un archivo no oficial del Volcán de Fuego, Guatemala, representado con datos reales de elevación.',
-    ogAlt: 'El Fuego en erupción junto al Acatenango',
+    ogAlt: 'El macizo del Fuego y el Acatenango dibujado como un grabado en tinta, junto al título: el registro diario del Volcán de Fuego',
     ogLocale: 'es_GT',
   },
   languageName: 'Español',

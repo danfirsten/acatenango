@@ -90,6 +90,47 @@ describe('motion: the moment, the scrub and the sleeping Hoop', () => {
     await ctx.close();
   });
 
+  it('opens the clip on the drawn mountain, not on an empty box, and the camera starts in place', async () => {
+    const ctx = await browser.newContext({ reducedMotion: 'no-preference', viewport: { width: 1440, height: 900 } });
+    const page = await ctx.newPage();
+    // A slow signal: the terrain arrives 1.5 s late.
+    await page.route('**/terrain/massif.png', async (route) => {
+      await new Promise((r) => setTimeout(r, 1500));
+      await route.continue();
+    });
+    // Note what the page shows the moment the clip starts to open.
+    await page.addInitScript(() => {
+      const w = window as unknown as { clipAt?: { loading: boolean } };
+      new MutationObserver(() => {
+        const m = document.querySelector('.massif');
+        if (w.clipAt || m?.getAttribute('data-clip') !== 'play') return;
+        w.clipAt = { loading: !!document.querySelector('.massif-state') };
+      }).observe(document, { subtree: true, attributes: true, attributeFilter: ['data-clip'], childList: true });
+    });
+    await page.goto(`${origin}/`, { waitUntil: 'load' });
+    // While the terrain loads, the stage waits closed at the clip's first frame.
+    await page.locator('.massif[data-clip="wait"]').waitFor();
+    assert.match(await page.locator('.massif-stage').evaluate((el) => getComputedStyle(el).clipPath), /^inset\(15%/);
+    await page.locator('.massif[data-clip="play"]').waitFor({ timeout: 30_000 });
+    const at = await page.evaluate(() => (window as unknown as { clipAt?: { loading: boolean } }).clipAt);
+    assert.equal(at?.loading, false, 'the scene had loaded before the clip began to open');
+
+    // The camera starts where it orbits: Fuego's projected place barely moves while
+    // the clip opens (a fly-in would sweep it across the scene). The label's own
+    // translate is the camera's projection, before the stage's CSS settle scales it.
+    const fuego = page.locator('.summit[data-active="true"]');
+    const where = () => fuego.evaluate((el) => {
+      const [x, y] = ((el as HTMLElement).style.transform.match(/-?[\d.]+/g) ?? []).map(Number);
+      return { x, y };
+    });
+    const first = await where();
+    await page.waitForTimeout(1500);
+    const later = await where();
+    const moved = Math.hypot(later.x - first.x, later.y - first.y);
+    assert.ok(moved < 60, `Fuego's label moved ${Math.round(moved)} px while the clip opened`);
+    await ctx.close();
+  });
+
   it('with reduced motion shows final states: no clip, no settle, no glide, no drawer', async () => {
     const ctx = await browser.newContext({ reducedMotion: 'reduce' });
     const page = await ctx.newPage();

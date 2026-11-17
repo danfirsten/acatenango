@@ -310,6 +310,25 @@ describe('phone layout', () => {
     });
   }
 
+  for (const [w, h] of [[390, 844], [768, 1024], [1440, 900]] as const) {
+    it(`lines the record and the colophon up with the first screen at ${w}x${h}`, async () => {
+      const page = await open(w, h, true);
+      // The content box of each block. No named helpers in here: the test runner's transform would rename them.
+      const edges = Object.fromEntries(await page.evaluate(() => [['first', '.first'], ['record', '#record'], ['foot', '.record-foot']]
+        .map(([k, sel]) => {
+          const el = document.querySelector(sel)!;
+          const r = el.getBoundingClientRect();
+          const cs = getComputedStyle(el);
+          return [k, { left: r.left + parseFloat(cs.paddingLeft), right: r.right - parseFloat(cs.paddingRight) }];
+        }))) as Record<'first' | 'record' | 'foot', { left: number; right: number }>;
+      for (const k of ['record', 'foot'] as const) {
+        assert.ok(Math.abs(edges[k].left - edges.first.left) < 1, `${k} starts on the first screen's edge (${edges[k].left} vs ${edges.first.left})`);
+        assert.ok(Math.abs(edges[k].right - edges.first.right) < 1, `${k} ends on the first screen's edge (${edges[k].right} vs ${edges.first.right})`);
+      }
+      await page.context().close();
+    });
+  }
+
   it('says the age as a pill: today, yesterday, then N days old with a dashed edge', async () => {
     const latest = index.entries.at(-1)!.date;
     // Noon in Guatemala, N days after the latest bulletin.

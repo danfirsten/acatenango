@@ -480,6 +480,8 @@ export function createMassifScene(
   const desired = new THREE.Vector3();
   const lookAt = new THREE.Vector3();
   const currentLook = massifCentre.clone();
+  /** False until the first frame: the camera starts in its place, so loading is not a fly-in. */
+  let placed = false;
 
   function updateCamera(dt: number) {
     if (view === 'orbit') {
@@ -501,12 +503,13 @@ export function createMassifScene(
       desired.copy(campPos).add(new THREE.Vector3(sway - 0.16, 0.30, -0.62 * fit.campBack));
       lookAt.copy(craterPos).add(new THREE.Vector3(0, 0.62, 0));
     }
-    // Critically-damped follow so view changes glide rather than snap. With
-    // reduced motion there is no glide: the camera goes straight to its final
-    // place, so the scene settles in a frame and then stops drawing.
-    if (reduced) {
+    // Critically-damped follow so view changes glide rather than snap. On the
+    // first frame, and with reduced motion, there is no glide: the camera goes
+    // straight to its place, so the clip opens on the mountain, not on a fly-in.
+    if (reduced || !placed) {
       camera.position.copy(desired);
       currentLook.copy(lookAt);
+      placed = true;
     } else {
       camera.position.lerp(desired, 1 - Math.exp(-dt * 1.9));
       currentLook.lerp(lookAt, 1 - Math.exp(-dt * 2.4));

@@ -138,11 +138,14 @@
   from { transform: scale(1.15); }
   to { transform: none; }
 }
+/* Due but not yet drawn: the stage waits at the clip's first frame. */
+.massif[data-clip="wait"] .massif-stage { clip-path: inset(15% round 32px); }
+.massif[data-clip="wait"] .massif-stage > * { transform: scale(1.15); }
 .massif[data-clip="play"] .massif-stage { animation: clip-open var(--dur-clip) var(--ease-inout) both; }
 .massif[data-clip="play"] .massif-stage > * { animation: scene-settle var(--dur-settle) var(--ease-expo) both; }
 /* Reduced motion: the final state, no clip and no settle. */
 @media (prefers-reduced-motion: reduce) {
-  .massif[data-clip] .massif-stage, .massif[data-clip] .massif-stage > * { animation: none; }
+  .massif[data-clip] .massif-stage, .massif[data-clip] .massif-stage > * { animation: none; clip-path: none; transform: none; }
 }
 
 /* Scrubbing: figures swap in place with a short fade. No counting, no sliding. */
@@ -291,8 +294,10 @@
   color: var(--soft);
 }
 
-.record-foot { padding-top: 0; }
-.colophon p + p { margin-top: 12px; }
+/* The foot follows the record: one --space-7 from the last note to the colophon's rule. */
+.record.record-foot { padding-top: 0; }
+.record-foot .colophon { margin-top: 0; }
+.colophon p + p { margin-top: var(--space-3); }
 
 /* The selected day persists; the crosshair is only where the pointer is. */
 .tempo svg { cursor: crosshair; }
@@ -342,19 +347,20 @@
 /* ── record ───────────────────────────────────────────────────────────── */
 
 .record {
-  max-width: 1100px;
+  /* The first screen's edges: the record lines up with it as you scroll. */
+  max-width: var(--max);
   margin: 0 auto;
-  padding: 78px 26px 96px;
+  padding: var(--space-8) var(--gutter) var(--space-7);
 }
 .record-head {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  gap: 44px;
+  gap: var(--space-7);
   align-items: end;
-  margin-bottom: 30px;
+  margin-bottom: var(--space-5);
 }
 .record-head h2, .camp-head h2 {
-  margin: 0 0 10px;
+  margin: 0 0 var(--space-3);
   font-size: clamp(26px, 3.6vw, 38px);
   font-weight: 500;
   letter-spacing: -0.035em;
@@ -382,10 +388,10 @@
   grid-template-rows: subgrid;
   align-content: start;
   background: var(--bg);
-  padding: 12px 18px;
+  padding: var(--space-3) var(--space-4);
 }
 .figures dd {
-  margin: 4px 0 0;
+  margin: var(--space-1) 0 0;
   font-family: var(--mono);
   font-size: 20px;
   letter-spacing: -0.02em;
@@ -394,8 +400,8 @@
 }
 .figures dd.figures-note { white-space: normal; margin-top: 2px; letter-spacing: 0.04em; }
 
-/* Headroom for the hover tooltip, which sits above the plotted point. */
-.tempo { position: relative; margin: 74px 0 0; }
+/* The hover tooltip floats above the plotted point, with its shadow, over whatever is there. */
+.tempo { position: relative; margin: var(--space-5) 0 0; }
 .tempo svg { display: block; width: 100%; height: auto; /* a vertical swipe still scrolls the page; a horizontal one scrubs */ touch-action: pan-y; }
 .tempo-tick {
   font-family: var(--mono);
@@ -447,16 +453,16 @@
 .tempo-key {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px 22px;
-  margin: 10px 0 0;
+  gap: var(--space-1) var(--space-5);
+  margin: var(--space-3) 0 0;
 }
 .tempo-key > span { display: inline-flex; align-items: center; gap: var(--space-2); }
 
-.colophon { margin-top: 40px; padding-top: 22px; border-top: 1px solid var(--rule); }
+.colophon { margin-top: var(--space-7); padding-top: var(--space-5); border-top: 1px solid var(--rule); }
 .colophon p { margin: 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
 
 @media (max-width: 860px) {
-  .record-head { grid-template-columns: 1fr; gap: 22px; }
+  .record-head { grid-template-columns: 1fr; gap: var(--space-5); }
 }
 
 /* On a phone the three figures stack as rows (label left, value right, the day
@@ -474,8 +480,8 @@
     grid-template-rows: none;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: baseline;
-    column-gap: 16px;
-    padding: 12px 16px;
+    column-gap: var(--space-4);
+    padding: var(--space-3) var(--space-4);
   }
   .figures dd { margin: 0; text-align: right; }
   .figures dd.figures-note { grid-column: 1 / -1; text-align: left; margin-top: 2px; }
@@ -542,10 +548,8 @@
 
 /* ── field lanes (under the tempo chart, same axis) ───────────────────── */
 
-.lanes { margin: 22px 0 0; }
 .lanes-plot { cursor: crosshair; touch-action: pan-y; }
 .lanes-plot:focus-visible { outline-offset: 4px; }
-.lane { margin: 0 0 10px; }
 .lane svg { display: block; width: 100%; height: auto; border-bottom: 1px solid var(--rule); }
 .lane-head {
   display: flex;
@@ -574,14 +578,14 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 1px;
-  margin: 18px 0 0;
+  margin: var(--space-4) 0 0;
   background: var(--rule);
   border-top: 1px solid var(--fg);
   border-bottom: 1px solid var(--rule);
 }
-.lanes-summary > div { background: var(--bg); padding: 12px 18px; }
-.lanes-summary dd { margin: 4px 0 0; font-size: 18px; font-variant-numeric: tabular-nums; }
-.lanes-summary ul { display: flex; flex-wrap: wrap; gap: 2px 14px; margin: 0; padding: 0; list-style: none; font-size: 15px; }
+.lanes-summary > div { background: var(--bg); padding: var(--space-3) var(--space-4); }
+.lanes-summary dd { margin: var(--space-1) 0 0; font-size: 18px; font-variant-numeric: tabular-nums; }
+.lanes-summary ul { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-3); margin: 0; padding: 0; list-style: none; font-size: 15px; }
 .lanes-summary li span { font-family: var(--mono); font-weight: 500; }
 .lanes-summary .figures-note { font-size: 13px; color: var(--muted); }
 @media (max-width: 560px) {
@@ -597,15 +601,15 @@
 
 /* ── Smithsonian weekly report lane (beside the field lanes) ──────────── */
 
-.gvp { margin: 14px 0 0; }
+.gvp { margin: var(--space-4) 0 0; }
 .gvp-span { fill: var(--muted); }
 .gvp-differ { fill: none; stroke: var(--fg); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .gvp .lane-head { flex-wrap: wrap; }
 .gvp .lane svg { min-height: 18px; }
 .gvp-list a { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; min-width: 44px; padding: 0 4px; }
-.gvp-note { margin: 10px 0 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
+.gvp-note { margin: var(--space-3) 0 0; color: var(--soft); font-size: 14px; max-width: 76ch; }
 .gvp-list {
-  margin: 10px 0 0;
+  margin: var(--space-3) 0 0;
   padding: 0;
   list-style: none;
   display: grid;
@@ -615,11 +619,11 @@
   border-radius: var(--r-chip);
   overflow: hidden;
 }
-.gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: 10px 14px; background: var(--bg); font-size: 14px; font-variant-numeric: tabular-nums; }
+.gvp-list li { display: flex; flex-direction: column; gap: 2px; padding: var(--space-3) var(--space-4); background: var(--bg); font-size: 14px; font-variant-numeric: tabular-nums; }
 .gvp-list li b { font-weight: 500; }
 .gvp-list li span { color: var(--soft); }
-.gvp-list .gvp-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 8px; margin-top: 2px; }
-.gvp-credit { margin: 12px 0 0; color: var(--muted); font-size: 13px; max-width: 76ch; }
+.gvp-list .gvp-links { display: flex; flex-wrap: wrap; align-items: center; gap: 0 var(--space-2); margin-top: var(--space-1); }
+.gvp-credit { margin: var(--space-3) 0 0; color: var(--muted); font-size: 13px; max-width: 76ch; }
 
 /* ── from camp (#9) ───────────────────────────────────────────────────── */
 

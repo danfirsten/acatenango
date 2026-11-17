@@ -62,7 +62,7 @@ scripts/backfill.ts       Archives past days by date
 scripts/ocr.ts            Rasterises the scanned PDF and reads it with tesseract
 scripts/build-index.ts    Rolls the archive into data/index.json
 scripts/gvp.ts            Fetches and archives the Smithsonian GVP weekly reports
-scripts/og.ts             Renders the social card from the static build
+scripts/og.ts             Renders the social cards (EN, ES) from the static build
 src/lib/parse-bulletin.ts The parser: pure, tested, versioned
 src/lib/scene/massif.ts   Three.js terrain, ash plume and camera rig
 data/bulletins/*.json     One record per day, raw text kept
@@ -92,7 +92,7 @@ npm run typecheck    # next typegen, then tsc
 npm run dev
 npm run build        # static export to out/
 npm run build:index  # rebuild data/index.json; warns if records are behind
-npm run og           # re-render public/og.png from out/ (build first)
+npm run og           # re-render public/og.png and og-es.png from out/ (build first)
 ```
 
 `npm run collect` needs `poppler-utils` and `tesseract-ocr` with the Spanish

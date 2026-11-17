@@ -1,7 +1,7 @@
 {
-  "name": "Fuego: live from the Acatenango massif",
+  "name": "Fuego: the daily record of Volcán de Fuego",
   "short_name": "Fuego",
-  "description": "A live monitor for Volcán de Fuego, Guatemala, rendered from real elevation data.",
+  "description": "An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

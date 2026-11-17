@@ -32,9 +32,9 @@ export const en: Dict = {
   locale: 'en',
   htmlLang: 'en',
   meta: {
-    title: 'Fuego: live from the Acatenango massif',
+    title: 'Fuego: the daily record of Volcán de Fuego',
     description: 'An unofficial archive of Volcán de Fuego, Guatemala, rendered from real elevation data.',
-    ogAlt: 'Fuego erupting beside Acatenango',
+    ogAlt: 'The Fuego and Acatenango massif drawn as an ink engraving, beside the title: the daily record of Volcán de Fuego',
     ogLocale: 'en_GB',
   },
   languageName: 'English',
@@ -169,7 +169,7 @@ export const en: Dict = {
     commonDriftValue: (dirs, days) => `${dirs.map((d) => ABBR[d] ?? d).join(', ')} (${days} ${plural(days, 'day', 'days')})`,
     commonDriftNote: (n) => `of ${n} days that stated one`,
     drainagesNamed: 'Drainages named',
-    drainagesNote: (n) => `days named, of ${n} days that named any`,
+    drainagesNote: (n) => `days each was named, of the ${n} days that named one`,
   },
   gvp: {
     sectionLabel: 'Smithsonian weekly report cross-check',

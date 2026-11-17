@@ -48,19 +48,22 @@ the Pages address above. A custom domain is out of scope.
 
 ## Go-public checklist
 
-Checked on 17 November 2026 for the hardening pass (#13). Each line is either
-done in the repository or is a click only the owner can make.
+Re-checked on 17 November 2026, after the ink and paper restyle (#39). First
+checked for the hardening pass (#13). Each line is either done in the
+repository or is a click only the owner can make.
 
 | Check | Status |
 |---|---|
-| History secret scan | Clean. A full mirror clone (every branch and pull request ref, 244 commits) was scanned with gitleaks 8.24.3 and for secret-looking file names, token shapes (AWS, GitHub, Anthropic, OpenAI, Slack, Google, JWT, private keys) and key, secret, token or password assignments. Nothing found. |
+| History secret scan | Clean. A fresh `git clone --mirror` (every branch and pull request ref: 54 refs, 298 commits) was scanned with gitleaks 8.24.3 over all of history, and every commit's tree was searched for secret-looking file names (`.env`, keys, certificates, `.npmrc`), token shapes (AWS, GitHub, Anthropic, OpenAI, Slack, Google, JWT, private keys) and key, secret, token or password assignments. Nothing found. |
 | Licence | Done. The code is MIT (`LICENSE`); the README says the bulletin text belongs to INSIVUMEH and is not covered by it. |
 | README | Done. It names the live address, says plainly that this is an unofficial archive and not a warning service, and points to INSIVUMEH and CONRED. |
+| Look | Done. The ink and paper restyle has landed, and a design review on `/`, `/es/` and the 404 at 390, 768 and 1440 wide, on paper and in ink, found nothing left blocking (#39). |
+| Social cards | Done. `public/og.png` and `public/og-es.png` are taken from the new first screen in each language (`npm run og`). The title no longer says "live". |
 | Pages workflow | Done. `pages.yml` builds under `/acatenango` and deploys; until Pages is on it skips with a notice. |
 | Collector | Done. `collect.yml` runs on its schedule twice a day and commits each bulletin. |
 | Stored records | Done. Every record in `data/bulletins` is at the current parser version, and a unit test keeps it so. |
-| Page tests | Done. `npm run test:e2e` covers the subfolder build online and offline, both languages, the phone layout, accessibility (axe), the keyboard, and missing days never shown as zero. |
-| Security review | Done, nothing blocking. Fixed: the collector's write token is used only to push, downloads time out and have a size limit, `BULLETIN_URL` must be an https address on insivumeh.gob.gt, CI's token is read-only, the offline cache ignores query strings. Filed as #32: pin actions by SHA, remove the unused pdfjs path. `npm audit --omit=dev` finds nothing; the high findings in the full audit are lint tooling only and are not in the site. |
+| Page tests | Done. `npm run test:e2e` covers the subfolder build online and offline, both languages, the phone layout, the first screen, replaying a day, motion and reduced motion, accessibility (axe, on paper and in ink), the keyboard, and missing days never shown as zero. |
+| Security review | Done, nothing blocking. Fixed: the collector's write token is used only to push, downloads time out and have a size limit, `BULLETIN_URL` must be an https address on insivumeh.gob.gt, CI's token is read-only, the offline cache ignores query strings. Filed as #32: pin actions by SHA, remove the unused pdfjs path. `npm audit --omit=dev` finds nothing (re-run for #39); the high findings in the full audit are lint tooling only and are not in the site. |
 | Repository public | Not yet: the owner's click, below. |
 | Pages on | Not yet: the owner's click, below. |
 

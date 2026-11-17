@@ -109,8 +109,8 @@ describe('launch checks', () => {
     await new Promise((resolve) => server?.close(resolve));
   });
 
-  async function open(route: string, width = 1440, height = 900): Promise<Page> {
-    const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width, height } });
+  async function open(route: string, width = 1440, height = 900, colorScheme: 'light' | 'dark' = 'light'): Promise<Page> {
+    const context = await browser.newContext({ reducedMotion: 'reduce', viewport: { width, height }, colorScheme });
     const page = await context.newPage();
     await page.goto(`${origin}${BASE}${route}`, { waitUntil: 'load' });
     await page.locator('.brand').first().waitFor();
@@ -220,12 +220,18 @@ describe('launch checks', () => {
       }
     });
 
-    it(`has no serious accessibility issue at ${width} wide`, async () => {
-      for (const route of ['/', '/es/', '/no-such-page']) {
-        const page = await open(route, width, width === 390 ? 844 : 900);
-        if (route !== '/no-such-page') await ready(page);
-        assert.deepEqual(await seriousViolations(page, axeSource), [], `axe on ${route}`);
-        await page.context().close();
+    it(`has no serious accessibility issue at ${width} wide, on paper and in ink`, async () => {
+      for (const scheme of ['light', 'dark'] as const) {
+        for (const route of ['/', '/es/', '/no-such-page']) {
+          const page = await open(route, width, width === 390 ? 844 : 900, scheme);
+          if (route !== '/no-such-page') await ready(page);
+          // Paper in a light system, ink in a dark one: axe checks the theme the reader gets.
+          const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundColor);
+          const [r, g, b] = (bg.match(/\d+/g) ?? []).map(Number);
+          assert.equal(r + g + b < 384, scheme === 'dark', `${route} is drawn on ${scheme === 'dark' ? 'ink' : 'paper'} (${bg})`);
+          assert.deepEqual(await seriousViolations(page, axeSource), [], `axe on ${route} (${scheme})`);
+          await page.context().close();
+        }
       }
     });
   }
