@@ -39,7 +39,7 @@ Sasori runs in claude.ai/code cloud sessions: the conductor, every track, and ev
 
 ## Environment
 
-- Ubuntu 24.04, 4 vCPU, 16 GB RAM, 30 GB disk. Node 22, Python 3, Go, Rust, Java, Docker, Postgres 16, Redis 7 and gh preinstalled. Playwright's Chromium is at `/opt/pw-browsers` (never `playwright install`).
+- Ubuntu 24.04, 4 vCPU, 16 GB RAM, 30 GB disk. Node 22, Python 3, Go, Rust, Java, Docker, Postgres 16, Redis 7 and gh preinstalled. Playwright and the Chromium built for it are preinstalled (`require('playwright')` works from any folder; the browser is at `/opt/pw-browsers`, with a stable link at `/opt/pw-browsers/chromium`). The image moves to new builds without notice, so never pin a Playwright version against it and never `playwright install`; the QA shooter picks whichever pair launches.
 - The npm registry is reachable (checked: HTTP 200).
 - Environment variables are visible to anyone using the environment. Don't keep live secrets there unless the environment is Dan's alone.
 - Connectors on Dan's account that Sasori can use: Supabase, Stripe, PostHog, Notion, Google Drive, Google Calendar (the GitHub MCP is separate). Use them through their MCP tools; they act as Dan.

@@ -11,8 +11,9 @@
 // notFound routes are shot like the others but must answer 404 (the product's not-found page).
 // .sasori/qa.d/*.json (beside the config) are merged onto it in name order, so each issue adds its own file instead of
 // editing qa.json, a merge-conflict hot spot: arrays are joined (duplicates dropped), objects merged, other values replaced.
-// Needs `playwright` (or `playwright-core`) and `axe-core` resolvable from the project. Uses the Chromium at
-// PLAYWRIGHT_BROWSERS_PATH (preinstalled in Claude Code cloud sessions) or Playwright's own.
+// Needs `axe-core`, and a Playwright with a Chromium it can drive. Nothing is installed and no version is pinned: the
+// shooter takes the first pair that launches (see findBrowser), so a cloud image that moves to a new Chromium, or a
+// product that pins its own Playwright, can't stop the screenshots. `--browser-check` only finds and launches it.
 // Writes <out>/<route>-<width>-<theme>.png, a frame strip per listed interaction (<route>--<label>-motion.png and
 // -reduced.png), <out>/report.json and <out>/report.md. Exit 1 when a check fails; warnings are reported but don't fail.
 // Pages are shot in parallel (one isolated browser context each, `concurrency` at a time, default the core count up to 8, or the
@@ -22,6 +23,7 @@ import fs from "node:fs";
 import path from "node:path";
 import os from "node:os";
 import { createRequire } from "node:module";
+import { execFileSync } from "node:child_process";
 import { motionConfig, scanPage, filmStrip } from "./motion.mjs";
 
 const require = createRequire(path.join(process.cwd(), "package.json"));
@@ -73,9 +75,46 @@ const desktop = widths[widths.length - 1];
 
 // bypassCSP on every context: QA injects axe-core as an inline script, which an app's own CSP rightly refuses. The
 // app's CSP is the app's to test; QA's tooling stays outside it.
-let chromium;
-for (const m of ["playwright", "playwright-core", "@playwright/test"]) { try { ({ chromium } = require(m)); break; } catch {} }
-if (!chromium) { console.error("QA: install playwright (npm i -D playwright) to run this."); process.exit(2); }
+// A Playwright and a Chromium that work together, first that launches wins. Playwright looks for the exact Chromium
+// build it was released with, so a pinned or project Playwright and a preinstalled browser drift apart and launch
+// fails ("Executable doesn't exist"). The fix is to use a pair that shipped together: each Playwright found with its
+// own browser first (the project's, then the machine's own: NODE_PATH and the global npm folder, which in a cloud
+// session is the one built for /opt/pw-browsers), and only then a Playwright driving a browser binary it wasn't built
+// for (SASORI_CHROMIUM, or the cloud's stable /opt/pw-browsers/chromium link), which works because screenshots use
+// only the steady core of the protocol. Never `playwright install`: a session can't, and doesn't need to.
+async function findBrowser() {
+  const roots = [process.cwd(), ...(process.env.NODE_PATH || "").split(path.delimiter).filter(Boolean)];
+  try { roots.push(execFileSync("npm", ["root", "-g"], { encoding: "utf8", stdio: ["ignore", "pipe", "ignore"], timeout: 15000 }).trim()); } catch {}
+  const found = new Map();   // resolved file -> { chromium, version, from }
+  for (const root of roots.filter(Boolean)) {
+    const req = createRequire(path.join(root, "noop.js"));
+    for (const m of ["playwright", "playwright-core", "@playwright/test"]) {
+      try {
+        const file = req.resolve(m);
+        if (found.has(file)) continue;
+        const { chromium } = req(m);
+        let version = "?"; try { version = req(`${m}/package.json`).version; } catch {}
+        if (chromium) found.set(file, { chromium, version, from: `${m}@${version}` });
+      } catch {}
+    }
+  }
+  const bins = [process.env.SASORI_CHROMIUM, path.join(process.env.PLAYWRIGHT_BROWSERS_PATH || "/opt/pw-browsers", "chromium"), "/opt/pw-browsers/chromium"]
+    .filter((b, i, a) => b && a.indexOf(b) === i && fs.existsSync(b));
+  const tries = [...found.values()].map(p => ({ ...p })).concat(bins.flatMap(b => [...found.values()].map(p => ({ ...p, executablePath: b }))));
+  const why = [];
+  for (const t of tries) {
+    try {
+      const b = await t.chromium.launch(t.executablePath ? { executablePath: t.executablePath } : {});
+      return { browser: b, how: { playwright: t.from, chromium: t.executablePath || "its own", version: b.version() } };
+    } catch (e) { why.push(`${t.from} + ${t.executablePath || "its own Chromium"}: ${String(e.message).split("\n")[0]}`); }
+  }
+  console.error(found.size ? `QA: no Playwright here could launch a Chromium:\n  ${why.join("\n  ")}\nSet SASORI_CHROMIUM to a Chrome or Chromium binary.`
+    : "QA: no Playwright found (the project's, NODE_PATH or the global npm folder). Add one: npm i -D playwright");
+  process.exit(2);
+}
+const { browser, how: browserHow } = await findBrowser();
+console.log(`QA: Chromium ${browserHow.version} (${browserHow.chromium}) driven by ${browserHow.playwright}`);
+if (process.argv.includes("--browser-check")) { await browser.close(); process.exit(0); }
 let axeSource = null;
 // The project's own axe-core first, then the tools directory session CI passes on NODE_PATH
 for (const base of [process.cwd(), ...(process.env.NODE_PATH || "").split(path.delimiter).filter(Boolean)]) {
@@ -93,7 +132,6 @@ for (const f of fs.readdirSync(out))   // an earlier run's pictures never count;
 const slug = r => (r === "/" ? "home" : r.replace(/^\/|\/$/g, "").replace(/[^a-z0-9]+/gi, "-")).toLowerCase();
 const buckets = [];   // one per job, so the report is in job order whatever order jobs finish in
 
-const browser = await chromium.launch();
 const taken = new Map();   // two interactions with the same route and label get their own files
 const strips = (mc ? mc.interactions : []).filter(it => routes.includes(it.route || "/")).map(it => {
   const base = `${slug(it.route || "/")}--${slug("/" + it.label)}`, n = (taken.get(base) || 0) + 1; taken.set(base, n);
@@ -203,11 +241,20 @@ async function shootIn(ctx, { route, theme, width }, fail, warn) {
           }
         }
 
-        await page.screenshot({ path: path.join(out, `${slug(route)}-${width}-${theme}.png`), fullPage: true });
+        await screenshotRetrying(page, { path: path.join(out, `${slug(route)}-${width}-${theme}.png`), fullPage: true });
         if (mc && theme === "light" && width === desktop) {   // this context already has reduced motion on
           const v = await scanPage(page, mc, { reduced: true, momentHere: momentOn(route) });
           for (const [c, d] of v.fails) fail(route, width, theme, c, d, `${width} reduced motion`);
         }
+}
+// The browser, not the page, sometimes fails a capture under load ("Unable to capture screenshot", a protocol
+// error). That says nothing about the product, so it gets two more tries before it counts as a failure.
+const CAPTURE_FLAKE = /Unable to capture screenshot|Protocol error \(Page\.captureScreenshot\)/;
+async function screenshotRetrying(page, opts, tries = 3) {
+  for (let i = 1; ; i++) {
+    try { return await page.screenshot(opts); }
+    catch (e) { if (i >= tries || !CAPTURE_FLAKE.test(String(e.message || e))) throw e; await page.waitForTimeout(500 * i); }
+  }
 }
 try {
   let next = 0;
@@ -232,7 +279,7 @@ filmed.sort((a, b) => stripOrder(a) - stripOrder(b));
 const shots = fs.readdirSync(out).filter(f => /-\d+-(light|dark)\.png$/.test(f)).sort();
 if (routes.length && !shots.length)   // never report "All checks passed" over nothing
   results.push({ route: routes[0], width: desktop, theme: "light", check: "load", detail: `no screenshots were taken of ${routes.length} route${routes.length > 1 ? "s" : ""}` });
-fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ baseUrl, routes, widths, failures: results, warnings, screenshots: shots, strips: filmed }, null, 2));
+fs.writeFileSync(path.join(out, "report.json"), JSON.stringify({ baseUrl, routes, widths, browser: browserHow, failures: results, warnings, screenshots: shots, strips: filmed }, null, 2));
 const lines = [`**QA** · ${routes.length} route${routes.length > 1 ? "s" : ""} × ${widths.join("/")} px × light and dark · ${shots.length} screenshots${filmed.length ? ` · ${filmed.length} motion strips` : ""}${subset && subset.length ? ` · only the routes this change can affect (routeFiles)` : ""}`, ""];
 if (!results.length) lines.push(`All checks passed: no overflow, no serious accessibility issues, no console errors, no broken assets, no clipped text, focus visible, metadata present${mc ? ", motion within the bar, reduced motion respected" : ""}.`);
 else {
