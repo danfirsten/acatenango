@@ -138,11 +138,14 @@
   from { transform: scale(1.15); }
   to { transform: none; }
 }
+/* Due but not yet drawn: the stage waits at the clip's first frame. */
+.massif[data-clip="wait"] .massif-stage { clip-path: inset(15% round 32px); }
+.massif[data-clip="wait"] .massif-stage > * { transform: scale(1.15); }
 .massif[data-clip="play"] .massif-stage { animation: clip-open var(--dur-clip) var(--ease-inout) both; }
 .massif[data-clip="play"] .massif-stage > * { animation: scene-settle var(--dur-settle) var(--ease-expo) both; }
 /* Reduced motion: the final state, no clip and no settle. */
 @media (prefers-reduced-motion: reduce) {
-  .massif[data-clip] .massif-stage, .massif[data-clip] .massif-stage > * { animation: none; }
+  .massif[data-clip] .massif-stage, .massif[data-clip] .massif-stage > * { animation: none; clip-path: none; transform: none; }
 }
 
 /* Scrubbing: figures swap in place with a short fade. No counting, no sliding. */
