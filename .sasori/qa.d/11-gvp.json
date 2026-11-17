@@ -1,1 +1,1 @@
-{ "routes": [], "interactions": [], "routeFiles": { "src/components/GvpWeeks.tsx": ["/"], "src/lib/gvp.ts": ["/"] } }
+{ "routes": [], "interactions": [], "routeFiles": { "/": ["src/components/GvpWeeks.tsx", "src/lib/gvp.ts"] } }
