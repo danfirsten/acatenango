@@ -622,3 +622,125 @@
 @media (max-width: 560px) {
   .camp-line { grid-template-columns: 1fr; gap: 2px; }
 }
+
+/* ── the record in ink (#37): Hoop as the cursor, the five marks, replay ── */
+
+/* The chart: a 1px line, a 1px baseline, a faint mid rule, hatched gaps. */
+.tempo-plot {
+  position: relative;
+  cursor: crosshair;
+  /* a vertical swipe still scrolls the page; a horizontal one scrubs */
+  touch-action: pan-y;
+  border-radius: var(--r-chip);
+}
+.tempo-plot:focus-visible { outline: 2px solid var(--fg); outline-offset: 6px; }
+.tempo .tempo-plot svg { display: block; width: 100%; height: auto; overflow: visible; }
+.tempo-line { fill: none; stroke: var(--fg); stroke-width: 1; stroke-linejoin: round; }
+.tempo-line-bold { stroke-width: 2.6; }
+.tempo-base { stroke: var(--fg); stroke-width: 1; }
+.tempo-mid { stroke: var(--rule); stroke-width: 1; }
+.tempo-hover { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 2 3; opacity: 0.6; }
+.tempo-gap-hatch { stroke: var(--fg); stroke-width: 1; opacity: 0.45; }
+.tempo-gap { stroke: none; }
+/* Hoop is a lens over the day: a ring of the page's own ground, then ink. */
+.tempo-hoop-lens { fill: none; }
+.tempo-hoop-body { fill: none; stroke: var(--fg); stroke-width: 1.4; vector-effect: non-scaling-stroke; }
+.tempo-hoop-eyes { fill: var(--fg); }
+.tempo-selected { pointer-events: none; }
+/* Hoop jumps to the day for now; its glide is #38's. The system's reduced-motion
+   rule gives everything a 0.01ms transition, which would still lag a frame here. */
+.tempo-selected, .tempo-selected * { transition-property: none; }
+
+/* The key to the five marks, used the same across the record. */
+.mark-key {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
+  gap: 0 var(--space-5);
+  margin: var(--space-4) 0 0;
+}
+.mark-key > div { padding: var(--space-2) 0; border-top: 1px solid var(--rule); }
+.mark-key dt { display: flex; align-items: center; gap: var(--space-2); font-size: 14px; font-weight: 500; }
+.mark-key dd { margin: 2px 0 0 20px; font-size: 13px; line-height: 1.45; color: var(--muted); }
+.mark-key-count { display: block; margin-top: var(--space-1); font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--soft); white-space: nowrap; }
+.tempo-tick-day { stroke: var(--fg); stroke-width: 1; }
+.state-mark { display: inline-flex; flex: none; }
+
+/* Lanes are drawn in pixels: they keep their height on a phone. */
+.lanes { margin: var(--space-6) 0 0; }
+.lane { margin: 0 0 var(--space-3); }
+.lane svg { display: block; width: 100%; height: auto; overflow: visible; border-bottom: 0; }
+.lane-defs { position: absolute; width: 0; height: 0; }
+.lane-head { flex-wrap: wrap; column-gap: var(--space-3); row-gap: 2px; margin: 0 0 var(--space-1); }
+.lane-tick { font-family: var(--mono); font-size: 11px; fill: var(--muted); }
+.lane-tick[data-camp] { fill: var(--fg); }
+.lane-camp { stroke: var(--fg); stroke-width: 1; stroke-dasharray: 3 3; opacity: 0.55; }
+.lane-base { stroke: var(--rule); stroke-width: 1; }
+.lane-mark { opacity: 1; }
+.lane-none { fill: none; stroke: var(--fg); stroke-width: 1.2; }
+.lane-sel { stroke-width: 1; }
+.lanes-day { gap: var(--space-1) var(--space-4); margin-top: var(--space-2); }
+.lanes-day .marked { color: var(--soft); }
+
+/* The Smithsonian lane folds to one line until a week has been collected. */
+.gvp[data-folded="true"] { margin: var(--space-3) 0 0; }
+.gvp-fold { margin: 0; font-size: 14px; color: var(--soft); }
+.gvp-fold + .gvp-credit { margin-top: var(--space-1); }
+
+/* The readout and the camp panel carry the same marks beside their words. */
+.readout-v[data-state] .mark { align-self: center; }
+.camp-line dd { display: flex; align-items: baseline; gap: var(--space-2); }
+.camp-line dd .state-mark { transform: translateY(1px); }
+
+/* Replaying: the dotted ring, the "held" mark. #36 restyles the age pill from this class. */
+.replay-ring {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 var(--space-3);
+  border: 1.5px dotted var(--fg);
+  border-radius: var(--r-pill);
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--fg);
+}
+
+/* The replay bar, pinned to the bottom while an earlier bulletin is shown. */
+.replay-bar {
+  position: fixed;
+  z-index: 40;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));
+  background: var(--surface);
+  color: var(--fg);
+  border-top: 1px solid var(--rule);
+}
+.replay-step { width: 48px; padding: 0; font-size: 20px; flex: none; }
+.replay-date { flex: 1; text-align: center; font-size: 14px; white-space: nowrap; }
+.replay-bar .pill-solid { flex: none; padding: 0 20px; }
+/* Room at the foot of the page so the bar never covers the last words. */
+body:has(.replay-bar) { padding-bottom: 80px; }
+@media (min-width: 768px) {
+  .replay-bar {
+    left: 50%;
+    right: auto;
+    bottom: var(--space-5);
+    transform: translateX(-50%);
+    width: min(400px, calc(100% - 2 * var(--space-5)));
+    padding: var(--space-2);
+    border: 1px solid var(--rule);
+    border-radius: var(--r-pill);
+    box-shadow: var(--shadow);
+  }
+}
+/* On a phone every lane's note takes its own line, so the repeated heads line up. */
+@media (max-width: 599px) {
+  .lane-head { flex-direction: column; align-items: flex-start; }
+}
+/* The key: three and two at tablet width, all five in a row on a wide screen. */
+@media (min-width: 600px) { .mark-key { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .mark-key { grid-template-columns: repeat(5, minmax(0, 1fr)); } }

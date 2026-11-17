@@ -1,4 +1,5 @@
 import type { IndexEntry } from '../../scripts/build-index';
+import type { MarkKind } from '../components/ink/Mark';
 import { en } from '../i18n/en';
 import { formatNumber } from '../i18n/format';
 import type { Dict } from '../i18n/types';
@@ -15,14 +16,73 @@ import type { Dict } from '../i18n/types';
 /** Fuego's summit — the datum an ash column height is quoted against. */
 export const SUMMIT_M = 3763;
 
+/**
+ * The state of one value, shown everywhere with the same mark and words
+ * (docs/design.md, "Marks: missing is never zero"):
+ * - reported: the figure as the bulletin wrote it;
+ * - saidNone: the bulletin speaks to it but names none (ash fall with no towns);
+ * - notReported: the bulletin left it out, never drawn or counted as 0;
+ * - held: left out, and the scene shows an earlier day's figure, named;
+ * - continuous: emission with no hourly count.
+ */
+export type ValueState = 'reported' | 'saidNone' | 'notReported' | 'held' | 'continuous';
+
+/** The five states in the order the key lists them. */
+export const VALUE_STATES: ValueState[] = ['reported', 'saidNone', 'notReported', 'held', 'continuous'];
+
+/** The ink and paper mark for each state. */
+export const STATE_MARK: Record<ValueState, MarkKind> = {
+  reported: 'solid',
+  saidNone: 'ring',
+  notReported: 'hatched',
+  held: 'dotted',
+  continuous: 'half',
+};
+
+/** The day fields the record shows. */
+export type DayField = 'rate' | 'column' | 'drift' | 'glow' | 'drainages' | 'towns';
+
+/**
+ * What a bulletin said about one field, decided in one place so the readout,
+ * the chart, the lanes and the camp panel never disagree. An empty list is the
+ * parser's "nothing named", so it is not reported; the one "said none" the
+ * parser can see is ash fall described with no town named.
+ */
+export function fieldState(e: IndexEntry, field: DayField): ValueState {
+  switch (field) {
+    case 'rate':
+      return e.explosionsMax !== null ? 'reported'
+        : e.phenomena.includes('continuousPhase') ? 'continuous' : 'notReported';
+    case 'column':
+      return e.ashMaxMasl !== null ? 'reported' : 'notReported';
+    case 'drift':
+      return e.driftDirections.length > 0 || e.driftKm !== null ? 'reported' : 'notReported';
+    case 'glow':
+      return e.incandescenceMaxM !== null ? 'reported' : 'notReported';
+    case 'drainages':
+      return e.drainages.length > 0 ? 'reported' : 'notReported';
+    case 'towns':
+      return e.ashfallCommunities.length > 0 ? 'reported'
+        : e.phenomena.includes('ashfall') ? 'saidNone' : 'notReported';
+  }
+}
+
 export interface ReadoutRow {
   key: string;
   value: string;
   unit: string;
   /** The headline figure, given visual weight. */
   lead?: boolean;
-  /** The bulletin did not state this value. */
+  /** The bulletin did not state this value (not reported, or held from an earlier day). */
   missing?: boolean;
+  /** Which of the five marks the value carries. */
+  state: ValueState;
+}
+
+/** Earlier days the scene holds a left-out value from, as display dates. */
+export interface Held {
+  rate?: string | null;
+  column?: string | null;
 }
 
 /** "6–11", or just "11" when the bulletin gave only an upper figure. */
@@ -117,46 +177,52 @@ export function lastReportedIndex(
   return -1;
 }
 
-/** The readout beside the mountain, in the dictionary's language (English by default). */
-export function readoutRows(day: IndexEntry, t: Dict = en): ReadoutRow[] {
+/**
+ * The readout beside the mountain, in the dictionary's language (English by
+ * default). `held` names the earlier day the scene holds a left-out rate or
+ * column from, so the row itself says the plume is not this day's.
+ */
+export function readoutRows(day: IndexEntry, t: Dict = en, held: Held = {}): ReadoutRow[] {
   const r = t.readout;
   const num = (n: number) => formatNumber(t.locale, n);
   const dirs = day.driftDirections.map((d) => t.compassAbbr[d] ?? d).join('·');
-  const continuous = day.phenomena.includes('continuousPhase');
   const aboveSummit = day.ashMaxMasl === null ? null : day.ashMaxMasl - SUMMIT_M;
+  const missing = (key: string, from?: string | null, lead?: boolean): ReadoutRow => (from
+    // Left out, and the scene holds an earlier day: said with the key's word for the dotted ring.
+    ? { key, value: t.marks.word.held, unit: r.plumeShows(from), missing: true, state: 'held', ...(lead && { lead }) }
+    : { key, value: r.notReported, unit: '', missing: true, state: 'notReported', ...(lead && { lead }) });
 
+  const rate = fieldState(day, 'rate');
   const rows: ReadoutRow[] = [
-    day.explosionsMax === null
-      ? continuous
-        ? { key: r.explosions, value: r.continuous, unit: r.emission, lead: true }
-        : { key: r.explosions, value: r.notReported, unit: '', lead: true, missing: true }
-      : { key: r.explosions, value: rateText(day.explosionsMin, day.explosionsMax), unit: r.perHour, lead: true },
+    rate === 'reported'
+      ? { key: r.explosions, value: rateText(day.explosionsMin, day.explosionsMax as number), unit: r.perHour, lead: true, state: rate }
+      : rate === 'continuous'
+        ? { key: r.explosions, value: r.continuous, unit: r.emission, lead: true, state: rate }
+        : missing(r.explosions, held.rate, true),
     day.ashMaxMasl === null
-      ? { key: r.ashColumn, value: r.notReported, unit: '', missing: true }
-      : { key: r.ashColumn, value: num(day.ashMaxMasl), unit: r.mAsl },
+      ? missing(r.ashColumn, held.column)
+      : { key: r.ashColumn, value: num(day.ashMaxMasl), unit: r.mAsl, state: 'reported' },
     aboveSummit === null
-      ? { key: r.aboveSummit, value: r.notReported, unit: '', missing: true }
-      : { key: r.aboveSummit, value: num(aboveSummit), unit: r.metres },
+      ? missing(r.aboveSummit, held.column)
+      : { key: r.aboveSummit, value: num(aboveSummit), unit: r.metres, state: 'reported' },
     day.driftKm === null
-      ? day.driftDirections.length > 0
-        ? { key: r.drift, value: r.notReported, unit: r.heading(dirs), missing: true }
-        : { key: r.drift, value: r.notReported, unit: '', missing: true }
-      : { key: r.drift, value: num(day.driftKm), unit: r.km(dirs) },
+      ? { key: r.drift, value: r.notReported, unit: day.driftDirections.length > 0 ? r.heading(dirs) : '', missing: true, state: 'notReported' }
+      : { key: r.drift, value: num(day.driftKm), unit: r.km(dirs), state: 'reported' },
   ];
 
   // Named communities beat drainage counts when the observer gave us names.
+  const towns = fieldState(day, 'towns');
   rows.push(
-    day.ashfallCommunities.length > 0
-      ? {
-          key: r.ashfallIn,
-          value: String(day.ashfallCommunities.length),
-          unit: day.ashfallCommunities.join(', '),
-        }
+    towns === 'reported'
+      ? { key: r.ashfallIn, value: String(day.ashfallCommunities.length), unit: day.ashfallCommunities.join(', '), state: towns }
       : day.drainages.length > 0
-        ? { key: r.drainages, value: String(day.drainages.length), unit: day.drainages.join(', ') }
-        // An empty list means the bulletin named none, not that there were 0:
-        // said the way the record's drainage lane says it.
-        : { key: r.drainages, value: r.notReported, unit: '', missing: true },
+        ? { key: r.drainages, value: String(day.drainages.length), unit: day.drainages.join(', '), state: 'reported' }
+        : towns === 'saidNone'
+          // Ash fall described, no town named: a statement, not a gap.
+          ? { key: r.ashfall, value: r.noneNamed, unit: '', state: towns }
+          // An empty list means the bulletin named none, not that there were 0:
+          // said the way the record's drainage lane says it.
+          : { key: r.drainages, value: r.notReported, unit: '', missing: true, state: 'notReported' },
   );
 
   return rows;
@@ -167,4 +233,20 @@ export function axisLabelIndices(count: number): number[] {
   if (count <= 0) return [];
   const last = count - 1;
   return [...new Set([0, Math.floor(last / 3), Math.floor((last * 2) / 3), last])];
+}
+
+/** Space at the left of the record's plots for their scale labels, in CSS pixels. */
+export const PLOT_GUTTER = 28;
+
+/** Where day `i` of `count` sits on a plot `width` pixels wide, past the gutter. */
+export function plotX(i: number, count: number, width: number): number {
+  const w = width - PLOT_GUTTER;
+  return PLOT_GUTTER + (count > 1 ? (i * w) / (count - 1) : w / 2);
+}
+
+/** The day nearest to an x on a plot `width` pixels wide. */
+export function plotDayAt(x: number, count: number, width: number): number {
+  if (count <= 1) return 0;
+  const f = (x - PLOT_GUTTER) / (width - PLOT_GUTTER);
+  return Math.max(0, Math.min(count - 1, Math.round(f * (count - 1))));
 }

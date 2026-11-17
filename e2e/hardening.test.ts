@@ -23,6 +23,7 @@ import { type Browser, type Page, chromium } from 'playwright';
 import type { FuegoIndex } from '../scripts/build-index';
 import { en } from '../src/i18n/en';
 import { es } from '../src/i18n/es';
+import { PLOT_GUTTER } from '../src/lib/readout';
 
 const BASE = '/acatenango';
 const OUT = path.join(process.cwd(), 'out');
@@ -136,19 +137,19 @@ describe('launch checks', () => {
     const chart = await page.evaluate((days) => {
       const svg = document.querySelector<SVGSVGElement>('.tempo svg')!;
       const n = days.total;
-      const w = svg.viewBox.baseVal.width;
+      const w = svg.viewBox.baseVal.width - days.gutter;
       const bands = [...svg.querySelectorAll<SVGRectElement>('.tempo-gap')].map((r) => r.getBBox());
       const lines = [...svg.querySelectorAll<SVGPathElement>('.tempo-line')].map((p) => p.getBBox());
       // No named helpers in here: the test runner's transform would rename them.
       return days.missing.map((i) => {
-        const x = n > 1 ? (i * w) / (n - 1) : w / 2;
+        const x = days.gutter + (n > 1 ? (i * w) / (n - 1) : w / 2);
         return {
           i,
           inGap: bands.some((b) => b.x <= x && x <= b.x + b.width),
           underLine: lines.some((b) => b.x < x && x < b.x + b.width),
         };
       });
-    }, { total: entries.length, missing: missing.map((m) => m.i) });
+    }, { total: entries.length, missing: missing.map((m) => m.i), gutter: PLOT_GUTTER });
     for (const c of chart) {
       assert.ok(c.inGap, `${entries[c.i].date} is drawn as a gap`);
       assert.ok(!c.underLine, `no line is drawn across ${entries[c.i].date}`);
@@ -156,20 +157,45 @@ describe('launch checks', () => {
 
     // Scrub to the latest rate-less day from the keyboard: nothing says 0.
     const target = missing.at(-1)!;
-    await page.locator('.lanes-plot').focus();
+    await page.locator('.tempo-plot').focus();
     await page.keyboard.press('End');
     for (let k = entries.length - 1; k > target.i; k--) await page.keyboard.press('ArrowLeft');
     assert.equal(await selectedDay(page), target.e.date);
-    assert.equal(await page.locator('.tempo-selected circle').count(), 0, 'no point on the scale for a missing day');
+    // Hoop rests on the band, and the lens holds no bold line: there is none to draw.
+    assert.equal(await page.locator('.tempo-selected').getAttribute('data-state'), 'notReported');
+    assert.ok(await page.evaluate(() => {
+      const hoop = document.querySelector('.tempo-hoop')!.getBoundingClientRect();
+      const x = hoop.left + hoop.width / 2;
+      return [...document.querySelectorAll('.tempo-gap')].some((g) => {
+        const b = g.getBoundingClientRect();
+        return b.left <= x && x <= b.right;
+      });
+    }), 'Hoop sits over the hatched band');
     const lead = page.locator('.readout-row[data-lead="true"]');
     assert.equal(await lead.getAttribute('data-missing'), 'true');
-    assert.equal((await lead.locator('.readout-v').textContent())?.trim(), en.readout.notReported);
+    // Not reported, and when the scene holds an earlier day's rate, the row names that day.
+    const v = lead.locator('.readout-v');
+    const state = await v.getAttribute('data-state');
+    assert.match(state ?? '', /^(notReported|held)$/);
+    assert.equal((await v.evaluate((el) => el.firstChild?.nextSibling?.textContent ?? ''))?.trim(),
+      state === 'held' ? en.marks.word.held : en.readout.notReported);
+    if (state === 'held') assert.match(await v.locator('small').innerText(), /^plume shows /);
     const rate = page.locator('.camp-line', { hasText: en.camp.labels.rate });
     assert.equal(await rate.getAttribute('data-missing'), 'true');
     assert.equal((await rate.locator('dd').textContent())?.trim(), en.camp.rateMissing);
     for (const v of await page.locator('.readout-v').allInnerTexts()) {
       assert.doesNotMatch(v.trim(), /^0(\D|$)/, `the readout shows "${v}"`);
     }
+
+    // The same day is marked the same way in the readout, the lanes, the camp panel and the chart.
+    assert.equal(await page.locator('.tempo-selected').getAttribute('data-state'), await rate.getAttribute('data-state'));
+    const marks = await page.evaluate(() => [...document.querySelectorAll('[data-state] .mark')].map((m) => [
+      m.closest('[data-state]')!.getAttribute('data-state'), m.getAttribute('data-mark')]));
+    const want: Record<string, string> = { reported: 'solid', saidNone: 'ring', notReported: 'hatched', held: 'dotted', continuous: 'half' };
+    assert.ok(marks.length > 8);
+    for (const [state, mark] of marks) assert.equal(mark, want[state!], `${state} is drawn as ${want[state!]}`);
+    assert.deepEqual(await page.locator('.mark-key dt').allInnerTexts(),
+      ['Reported', 'Said none', 'Not reported', 'Held', 'Continuous']);
     await page.context().close();
   });
 
@@ -217,7 +243,7 @@ describe('launch checks', () => {
         if (!el) return '';
         if (el.closest('.topbar .lang-switch')) return 'switch';
         if (el.closest('.massif-views')) return `view:${el.textContent}`;
-        if (el.classList.contains('lanes-plot')) return 'scrub';
+        if (el.classList.contains('tempo-plot')) return 'scrub';
         return el.closest('#notice') ? 'notice' : el.tagName.toLowerCase();
       }));
     }
@@ -240,7 +266,7 @@ describe('launch checks', () => {
 
     // The record scrub: arrows step a day, Home and End jump to the ends.
     const dates = index.entries.map((e) => e.date);
-    const scrub = page.locator('.lanes-plot');
+    const scrub = page.locator('.tempo-plot');
     await scrub.focus();
     assert.equal(await selectedDay(page), dates.at(-1));
     await page.keyboard.press('ArrowLeft');
@@ -265,7 +291,7 @@ describe('launch checks', () => {
     assert.equal(await campDay(), dates.at(-1));
     assert.equal(await replaying.count(), 0, 'the latest bulletin is not marked as a replay');
 
-    await page.locator('.lanes-plot').focus();
+    await page.locator('.tempo-plot').focus();
     for (let k = 0; k < 5; k++) await page.keyboard.press('ArrowLeft');
     assert.equal(await campDay(), dates.at(-6));
     assert.equal(await campDay(), await selectedDay(page));
@@ -274,6 +300,54 @@ describe('launch checks', () => {
     await page.keyboard.press('End');
     assert.equal(await campDay(), dates.at(-1));
     assert.equal(await replaying.count(), 0);
+    await page.context().close();
+  });
+
+  it('replays an earlier day with the dotted ring and the replay bar, and returns to the latest', async () => {
+    const page = await open('/', 390, 844);
+    await ready(page);
+    const dates = index.entries.map((e) => e.date);
+    const bar = page.locator('.replay-bar');
+    const ring = page.locator('.observed-date');
+    const short = (iso: string) => new Intl.DateTimeFormat('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })
+      .format(new Date(`${iso}T00:00:00Z`));
+
+    assert.equal(await bar.count(), 0, 'no replay bar on the latest day');
+    assert.equal(await ring.getAttribute('data-replaying'), null);
+
+    // Leaving the latest day: the ring and the bar, both naming the day.
+    const scrub = page.locator('.tempo-plot');
+    await scrub.focus();
+    await page.keyboard.press('ArrowLeft');
+    await page.keyboard.press('ArrowLeft');
+    assert.equal(await ring.getAttribute('data-replaying'), 'true');
+    assert.equal((await ring.innerText()).trim(), en.topbar.replayingOn(short(dates.at(-3)!)));
+    assert.equal(await ring.evaluate((el) => getComputedStyle(el).borderTopStyle), 'dotted');
+    assert.ok(await bar.isVisible());
+    assert.match(await scrub.getAttribute('aria-valuetext') ?? '', new RegExp(`^${short(dates.at(-3)!)}: `));
+    const back = bar.getByRole('button', { name: en.replay.back(short(dates.at(-1)!)) });
+    assert.ok(await back.isVisible());
+    for (const b of await bar.locator('button').all()) {
+      const box = (await b.boundingBox())!;
+      assert.ok(box.height >= 44 && box.width >= 44, `a 44 px target (${box.width}x${box.height})`);
+    }
+    // The bar is pinned to the bottom of the screen.
+    const box = (await bar.boundingBox())!;
+    assert.ok(Math.abs(box.y + box.height - 844) <= 1, `pinned to the bottom (${box.y + box.height})`);
+
+    // Previous and next step a day.
+    await bar.getByRole('button', { name: en.replay.previous }).click();
+    assert.equal(await selectedDay(page), dates.at(-4));
+    assert.equal(await page.locator('.camp-date time').getAttribute('datetime'), dates.at(-4));
+    await bar.getByRole('button', { name: en.replay.next }).click();
+    assert.equal(await selectedDay(page), dates.at(-3));
+
+    // Back to the latest removes both, and hands focus back to the scrub.
+    await bar.getByRole('button', { name: en.replay.back(short(dates.at(-1)!)) }).click();
+    assert.equal(await selectedDay(page), dates.at(-1));
+    assert.equal(await bar.count(), 0);
+    assert.equal(await ring.getAttribute('data-replaying'), null);
+    await page.waitForFunction(() => document.activeElement?.id === 'record-scrub');
     await page.context().close();
   });
 
