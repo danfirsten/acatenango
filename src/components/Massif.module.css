@@ -1,0 +1,56 @@
+/* The summit labels over the engraved scene, in the system's label style and
+   the page's theme roles. The scene says which theme it drew in
+   (data-scene), so before the page defines its roles the labels still match
+   the drawing under them. Global class names stay for the end-to-end tests. */
+
+.labels {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  --label-fg: #0b0b0b;
+  --label-muted: #5e5e5a;
+  --label-halo: #f7f7f4;
+}
+.labels[data-scene="ink"] {
+  --label-fg: #f2f2ee;
+  --label-muted: #8f8f8a;
+  --label-halo: #0b0b0b;
+}
+
+.labels :global(.summit) {
+  gap: 8px;
+}
+
+.labels :global(.summit-dot) {
+  width: 7px;
+  height: 7px;
+  background: var(--fg, var(--label-fg));
+  box-shadow: 0 0 0 2px var(--bg, var(--label-halo));
+}
+.labels :global(.summit[data-active="true"] .summit-dot) {
+  background: var(--fg, var(--label-fg));
+  box-shadow: 0 0 0 2px var(--bg, var(--label-halo));
+}
+
+.labels :global(.summit-text) b,
+.labels :global(.summit-text) i {
+  font-family: var(--mono, 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace);
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0.06em;
+  /* A halo in the page's own background keeps the label clear of the lines. */
+  text-shadow:
+    0 0 2px var(--bg, var(--label-halo)),
+    0 0 4px var(--bg, var(--label-halo)),
+    0 0 8px var(--bg, var(--label-halo));
+}
+.labels :global(.summit-text) b {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--fg, var(--label-fg));
+}
+.labels :global(.summit-text) i,
+.labels :global(.summit[data-active="true"] .summit-text) i {
+  font-size: 11px;
+  color: var(--muted, var(--label-muted));
+}
