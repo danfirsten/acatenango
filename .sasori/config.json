@@ -1,5 +1,5 @@
 {
-  "base": "claude/guatemala-volcano-portfolio-vyahmq",
+  "base": "main",
   "checks": [
     "npm run lint",
     "npm run typecheck",
