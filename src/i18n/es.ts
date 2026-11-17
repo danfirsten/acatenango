@@ -56,12 +56,12 @@ export const es: Dict = {
     lead: 'Archivo no oficial.',
     body: 'Este sitio, Fuego, no es un servicio de alertas. Copia el boletín diario del INSIVUMEH una o dos veces al día, así que siempre va con retraso respecto al observatorio.',
     linksLabel: 'Fuentes oficiales',
-    insivumeh: 'Vulcanología del INSIVUMEH',
+    insivumeh: 'Página de vulcanología del INSIVUMEH',
     conred: 'Alertas de la CONRED',
   },
   topbar: {
     representative: 'Datos representativos',
-    unread: (n) => `${n} ${plural(n, 'campo no se pudo leer', 'campos no se pudieron leer')}`,
+    unread: (n) => `${n} ${plural(n, 'campo ilegible', 'campos ilegibles')}`,
     latest: 'Último boletín',
     replaying: 'Día seleccionado',
   },
@@ -111,7 +111,7 @@ export const es: Dict = {
   record: {
     title: 'Ritmo de las explosiones',
     intro:
-      'Recorra el registro y la montaña lo sigue: la pluma sube hasta la columna de ceniza que reportó el boletín de ese día y se inclina hacia donde lo anotó el observador. La gráfica y el volcán son el mismo dato, dibujado dos veces.',
+      'Recorra el registro y la montaña le sigue: la pluma sube hasta la columna de ceniza que reportó el boletín de ese día y se inclina hacia donde lo anotó el observador. La gráfica y el volcán son el mismo dato, dibujado dos veces.',
     days: 'Días',
     tallest: 'Columna más alta',
     peakRate: 'Tasa máxima',
@@ -135,12 +135,12 @@ export const es: Dict = {
   lanes: {
     figureLabel: 'Datos diarios del boletín, en los mismos días que la gráfica de arriba',
     sliderLabel: 'Día seleccionado',
-    driftTitle: 'Ceniza desplazada hacia',
+    driftTitle: 'Desplazamiento',
     glowTitle: 'Altura de la incandescencia',
     drainagesTitle: 'Barrancas nombradas',
     townsTitle: 'Comunidades con caída de ceniza',
     daysOf: (n, total) => `${n} de ${total} días`,
-    firstNamed: 'primera dirección nombrada',
+    firstNamed: '1.ª dirección nombrada',
     glowNote: (m) => (m === null ? 'sin reporte' : `hasta ${m} m sobre el cráter`),
     notReported: 'sin reporte',
     dayDrift: (dirs) => `Desplazamiento ${dirs === null ? 'sin reporte' : `hacia ${dirs}`}`,
@@ -152,7 +152,7 @@ export const es: Dict = {
     commonDriftValue: (dirs, days) => `${capital(list(dirs.map((d) => COMPASS[d] ?? d)))} (${days} ${plural(days, 'día', 'días')})`,
     commonDriftNote: (n) => `de los ${n} días que indicaron uno`,
     drainagesNamed: 'Barrancas nombradas',
-    drainagesNote: (n) => `días en que se nombró, de los ${n} en que se nombró alguna`,
+    drainagesNote: (n) => `días nombrada, de los ${n} días con alguna barranca nombrada`,
   },
   gvp: {
     sectionLabel: 'Cotejo con el reporte semanal del Smithsonian',

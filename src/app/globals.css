@@ -464,7 +464,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 
 /* The 404, in both languages. */
 .lost { max-width: 60ch; margin: 0 auto; padding: 18vh 24px; }
-.lost h1, .lost .lost-h {
+.lost h1, .lost h2 {
   margin: 0 0 6px;
   font-family: var(--label);
   font-size: 14px;
@@ -475,7 +475,6 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
 }
 .lost p { margin: 0 0 8px; color: var(--ash); }
 .lost p:has(a) { margin-bottom: 40px; }
-.lost .lost-h { margin: 0 0 6px; }
 .lost a { display: inline-flex; align-items: center; min-height: 44px; color: var(--ink); text-decoration-color: var(--ash); }
 
 @media (max-width: 860px) {
@@ -486,6 +485,7 @@ a { color: var(--ember); text-decoration-thickness: 1px; text-underline-offset: 
   .topbar .lang-switch { order: 1; margin-left: auto; margin-block: -11px; }
   .topbar .observed { order: 2; flex-basis: 100%; margin-left: 0; }
   .topbar .observed-text { text-align: left; }
+  .lane-head { flex-wrap: wrap; column-gap: 12px; row-gap: 2px; }
 }
 
 /* ── field lanes (under the tempo chart, same axis) ───────────────────── */
