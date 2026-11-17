@@ -56,12 +56,12 @@ export const es: Dict = {
     lead: 'Archivo no oficial.',
     body: 'Este sitio, Fuego, no es un servicio de alertas. Copia el boletín diario del INSIVUMEH una o dos veces al día, así que siempre va con retraso respecto al observatorio.',
     linksLabel: 'Fuentes oficiales',
-    insivumeh: 'Página de vulcanología del INSIVUMEH',
+    insivumeh: 'Vulcanología del INSIVUMEH',
     conred: 'Alertas de la CONRED',
   },
   topbar: {
     representative: 'Datos representativos',
-    unread: (n) => `${n} ${plural(n, 'campo ilegible', 'campos ilegibles')}`,
+    unread: (n) => `${n} ${plural(n, 'campo sin leer', 'campos sin leer')}`,
     latest: 'Último boletín',
     replaying: 'Día seleccionado',
   },
@@ -111,7 +111,7 @@ export const es: Dict = {
   record: {
     title: 'Ritmo de las explosiones',
     intro:
-      'Recorra el registro y la montaña le sigue: la pluma sube hasta la columna de ceniza que reportó el boletín de ese día y se inclina hacia donde lo anotó el observador. La gráfica y el volcán son el mismo dato, dibujado dos veces.',
+      'Recorra el registro y la montaña lo sigue: la pluma sube hasta la columna de ceniza que reportó el boletín de ese día y se inclina hacia donde lo anotó el observador. La gráfica y el volcán son el mismo dato, dibujado dos veces.',
     days: 'Días',
     tallest: 'Columna más alta',
     peakRate: 'Tasa máxima',
@@ -152,7 +152,7 @@ export const es: Dict = {
     commonDriftValue: (dirs, days) => `${capital(list(dirs.map((d) => COMPASS[d] ?? d)))} (${days} ${plural(days, 'día', 'días')})`,
     commonDriftNote: (n) => `de los ${n} días que indicaron uno`,
     drainagesNamed: 'Barrancas nombradas',
-    drainagesNote: (n) => `días nombrada, de los ${n} días con alguna barranca nombrada`,
+    drainagesNote: (n) => `días en que se nombró cada una, de los ${n} días con alguna barranca nombrada`,
   },
   gvp: {
     sectionLabel: 'Cotejo con el reporte semanal del Smithsonian',
