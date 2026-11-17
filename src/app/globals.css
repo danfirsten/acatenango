@@ -13,7 +13,7 @@
 
 /* Fuego's labels: the system's label, sentence case inside the page. */
 .readout-k, .tempo-key, .lane-head, .figures dt, .figures dd.figures-note, .readout-v small,
-.lanes-summary dt, .camp-date, .camp-line dt, .massif-state, .scrollcue, .badge, .summit-text i {
+.lanes-summary dt, .camp-date, .camp-line dt, .massif-state, .scrollcue, .badge {
   font-family: var(--mono);
   font-size: var(--text-label);
   font-weight: 400;
@@ -121,7 +121,7 @@
   align-items: center;
   /* transform positions the dot; the text hangs off it. */
   margin-left: -3px;
-  gap: 9px;
+  gap: 6px;
   transition: opacity var(--dur-base) var(--ease-out);
   pointer-events: none;
   will-change: transform;
@@ -134,14 +134,17 @@
 .summit[data-active="true"] .summit-dot { background: var(--fg); }
 .summit-text { display: flex; flex-direction: column; line-height: 1.25; white-space: nowrap; }
 .summit-text b {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
   color: var(--fg);
   text-shadow: 0 1px 8px var(--bg);
 }
 .summit-text i {
+  /* Geist, not the mono: the labels must fit beside each summit on a phone. */
   font-style: normal;
+  font-size: var(--text-label);
+  letter-spacing: -0.015em;
   color: var(--soft);
   text-shadow: 0 0 3px var(--bg), 0 1px 8px var(--bg);
 }
