@@ -1,0 +1,184 @@
+/* Ink and paper: components. */
+
+/* Pills: at least 48px tall, 24px side padding. Solid is primary, line is secondary. */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: 48px;
+  padding: 0 24px;
+  border-radius: var(--r-pill);
+  font-size: 15px;
+  font-weight: 500;
+  transition:
+    transform 160ms var(--ease-out),
+    background-color 200ms var(--ease-out),
+    color 200ms var(--ease-out);
+}
+.pill:active {
+  transform: scale(0.97);
+}
+.pill[disabled] {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+.pill-solid {
+  background: var(--fg);
+  color: var(--bg);
+}
+.pill-line {
+  border: 1px solid var(--fg);
+}
+.pill-small {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 13px;
+}
+
+/* Text links: underlined with a 4px offset; add ↗ for links that leave the page. */
+.textlink {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 1px;
+  transition: opacity 200ms var(--ease-out);
+}
+.textlink:hover {
+  opacity: 0.6;
+}
+
+/* Image tag: a dark pill over media, bottom left. */
+.chip-tag {
+  position: absolute;
+  left: 14px;
+  bottom: 14px;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  background: rgb(11 11 11 / 0.78);
+  color: var(--ink-text);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+/* Chips: selectable options in tools. */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: var(--r-chip);
+  border: 1px solid var(--rule);
+  background: var(--bg);
+  font-size: var(--text-small);
+  transition: border-color var(--dur-quick) var(--ease-out);
+}
+.chip:hover {
+  border-color: var(--muted);
+}
+.chip[aria-pressed='true'] {
+  border-color: var(--fg);
+}
+
+/* Cards and panes: radius by role, one border, no shadow at rest. */
+.card {
+  border-radius: var(--r-card);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+}
+.tile {
+  border-radius: var(--r-tile);
+  background: var(--surface);
+}
+.float {
+  border-radius: var(--r-card);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+/* Fields */
+.field {
+  min-height: 44px;
+  padding: 0 14px;
+  border-radius: var(--r-chip);
+  border: 1px solid var(--rule);
+  background: var(--surface);
+  transition: border-color var(--dur-quick) var(--ease-out);
+}
+.field:focus {
+  outline: none;
+  border-color: var(--fg);
+  box-shadow: 0 0 0 3px var(--fill);
+}
+.field[aria-invalid='true'] {
+  border-color: var(--fg);
+  border-style: dashed;
+}
+
+/* Marks: tell things apart without colour (speakers, members, series). */
+.mark {
+  display: inline-block;
+  flex: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+.mark-1 {
+  background: var(--fg);
+}
+.mark-2 {
+  border: 1.5px solid var(--fg);
+}
+.mark-3 {
+  border: 1.5px solid var(--fg);
+  background: linear-gradient(90deg, var(--fg) 50%, transparent 50%);
+}
+.mark-4 {
+  border: 1.5px solid var(--fg);
+  background: repeating-linear-gradient(45deg, var(--fg) 0 1.5px, transparent 1.5px 4px);
+}
+.mark-5 {
+  border: 1.5px dotted var(--fg);
+}
+
+/* Status: a disc that breathes in opacity while something is live. */
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  border: 1px solid var(--rule);
+  font-size: var(--text-small);
+}
+.disc {
+  display: inline-block;
+  flex: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--fg);
+}
+.status.is-live .disc {
+  animation: ip-breathe 1.6s var(--ease-out) infinite;
+}
+@keyframes ip-breathe {
+  50% {
+    opacity: 0.35;
+  }
+}
+
+/* Banner: errors and warnings are an outline and plain words, never red. */
+.banner {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px 14px;
+  border: 1px solid var(--fg);
+  border-radius: var(--r-chip);
+}

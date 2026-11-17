@@ -2,7 +2,7 @@
 
 # Fuego
 
-A static monitor for Volcán de Fuego, Guatemala (Next.js `output: 'export'`, Three.js, no server). Read `README.md` and, for UI work, `docs/design.md` first.
+A static monitor for Volcán de Fuego, Guatemala (Next.js `output: 'export'`, Three.js, no server). Read `README.md` and, for UI work, `docs/design.md` and `vendor/ink-and-paper/DESIGN.md` first.
 
 - **The repository is the database.** `.github/workflows/collect.yml` runs on a schedule, OCRs INSIVUMEH's daily bulletin and commits `data/bulletins/<date>.json`. It must stay a live scheduled workflow (it is in `actionsKeep`); never make it dispatch-only.
 - **Raw text is sacred.** Every record keeps the bulletin's raw text verbatim and the `parserVersion` that read it. The parser (`src/lib/parse-bulletin.ts`) is pure; a change bumps `PARSER_VERSION` and `npm run build:index` re-derives everything.

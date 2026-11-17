@@ -12,6 +12,8 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Vendored ink-and-paper: copied as is (vendor/ink-and-paper/SYNC.md), never edited here.
+    "vendor/**",
   ]),
 ]);
 
