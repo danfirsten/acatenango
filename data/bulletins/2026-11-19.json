@@ -1,0 +1,40 @@
+{
+  "date": "2026-11-19",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/11/BVD-2026-11-19.pdf",
+  "fetchedAt": "2026-11-19T22:24:44.977Z",
+  "raw": "YONUM >\nBOLETIN VULCANOLOGICO DIARIO (62%\n=\nGUATEMALA\n19 de noviembre de 2026 VO LC de N DE\n; LOCALIZACIÓN EAN\ne 2d GEOGRÁFICA:\nAS AA 14? 28' 54 Latitud N;\nes 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n| eS Condiciones atmosféricas:\n: sir Despejado\nViento:\n25\n: 7 E 2 cs ARAS\nA O O 0% Precipitación pluvial:\nO 30.0 mm\nSS AA\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto as Ae\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 2 a 4 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 4800 msnm (14,764 a 15,748 pies). Estas\nse desplazan hacia el suroeste y sur debido a la acción del viento a distancias de 10 a 40 km. Algunas\nde estas explosiones expulsan material incandescente a distancias de 100 metros sobre el nivel del\ncráter. Otras pueden ocasionar sonidos de desgasificación similares a una máquina locomotora. Se\nespera caída débil de ceniza fina sobre Panimaché | y Il, El Porvenir y sus alrededores.\nsE, | Ministerio de\nEF y Comunicaciones, . Ñ . y ' y . '\n3 S ter Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 2,
+      "max": 4
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "SW",
+      "S"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 100,
+      "max": 100
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": [
+      "El Porvenir"
+    ]
+  },
+  "parserVersion": 8,
+  "warnings": []
+}
