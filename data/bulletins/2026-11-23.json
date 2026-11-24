@@ -1,0 +1,43 @@
+{
+  "date": "2026-11-23",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/11/BVD-2026-11-23.pdf",
+  "fetchedAt": "2026-11-24T01:51:25.851Z",
+  "raw": "YSN UM,\nBOLETIN VULCANOLÓGICO DIARIO (6357\nGUATEMALA\n23 de noviembre de 2026 VO LC Á N D E\n. LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nYe > AA 14? 28' 54 Latitud N;\nas bel 90252'54 Longitud W\npays Altura: 3763 msnm\na ——Á— ———____—— | 1 E E\nke) ¡On Condiciones atmosféricas:\nAA Y\nVr Despejado\ndy Viento:\ndh E 5% Y Del Noreste\nhs 23 AA ES UNÍA SS O % Precipitación pluvial:\nRan lo ai\nMorfología: accdaall : di\nEstrato volcán compuesto cceda a las camaras de vigilancia\nvolcánica en el siguiente enlace:\nA SS 1% https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: vane\nVulcaniana\nActividad\nEl Observatorio del Volcán de Fuego reporta condiciones favorables para observar el cráter. Se observa una fumarola de desgasificación y\nexplosiones débiles a moderadas. Algunas generan retumbos débiles a moderados que provocan vibraciones en techos de viviendas\ncercanas al volcán. Se reporta caída leve de partículas finas de ceniza en el observatorio, y en áreas cercanas como Finca La Asunción,\nRochela e Ingenio Pantaleón. No se descarta la caída de ceniza en otras comunidades y fincas en esa misma dirección.\nDe acuerdo con la red de monitoreo del INSIVUMEH, durante la noche y la madrugada se registró desgasificación débil a moderada, de\ncolor blanco a gris claro, y un promedio de 6 explosiones débiles a moderadas por hora, que elevan columnas de gas y ceniza a alturas de\n4300 a 4800 msnm. La ceniza se dispersa de 15 a 40 km hacia el suroeste. Debido a los cambios en la dirección del viento, la dispersión\npodría variar durante el día.\nTambién se observaron pulsos incandescentes de 100 a 200 metros sobre el cráter, acompañados de caida de material volcánico\nincandescente a su alrededor, el cual se encauza principalmente hacia las barrancas Seca, Ceniza, El Jute y Las Lajas, y en ocasiones llega\nhasta el límite de la vegetación.\nEN y ' Comunicaciones, Ñ Ñ . ' ' ' . y\n3 S terio Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nrear” ¡vien\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 6,
+      "max": 6
+    },
+    "ashColumnMasl": {
+      "min": 4300,
+      "max": 4800
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "SW"
+    ],
+    "drainages": [
+      "Seca",
+      "Ceniza",
+      "Las Lajas",
+      "El Jute"
+    ],
+    "incandescenceM": {
+      "min": 100,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "ashfall",
+      "degassing",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 8,
+  "warnings": []
+}
