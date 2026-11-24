@@ -1,0 +1,32 @@
+{
+  "date": "2026-11-24",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/11/BVD-2026-11-24.pdf",
+  "fetchedAt": "2026-11-24T23:37:08.818Z",
+  "raw": "YSNUMA\nBOLETIN VULCANOLOGICO DIARIO (637\nGUATEMALA\n24 de noviembre de 2026 VO LC Á N D E\n; LOCALIZACIÓN\ne 2d GEOGRÁFICA:\nPAS o AA 14? 28' 54 Latitud N;\nAn 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\ne] ES Condiciones atmosféricas:\n: : z un Vi Despejado\nE '\nAS Viento:\n== Y Del Sureste\nAS Precipitación pluvial:\nE NM O% p Pp\nMorfología: , ON\nEstrato volcán compuesto Acceda a las cámaras de vigilancia\nvolcánica en el siguiente enlace:\ná 5 A https://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: á ea a\n> volcanica/\nVulcaniana\nActividad\nDurante la noche y la madrugada se registraron explosiones de características débiles a moderadas,\nacompañadas de columnas de ceniza con alturas entre 4,200 y 4,500 msnm, las cuales se dispersaron hacia el\noeste y noroeste del complejo volcánico hasta una distancia aproximada de 25 kilómetros. Asimismo, se\nobservan avalanchas por los flancos oeste, suroeste y sur, en las que algunos bloques alcanzan la vegetación.\nAlgunas explosiones generan retumbos, ondas de choque y sonidos similares al de una locomotora de tren.\nDebido a la actividad descrita, es peligroso permanecer en la meseta, por el riesgo de caída de material balístico.\nse 2 e, | Ministerio de\n$ y Comunicaciones, Ñ . . y ' y . '\n3 : e Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nsr | Vivien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": null,
+    "ashColumnMasl": {
+      "min": 4200,
+      "max": 4500
+    },
+    "driftKm": 25,
+    "driftDirections": [
+      "NW",
+      "W"
+    ],
+    "drainages": [],
+    "incandescenceM": null,
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "avalanches"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 8,
+  "warnings": []
+}
