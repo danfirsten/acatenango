@@ -1,0 +1,39 @@
+{
+  "date": "2026-11-27",
+  "source": "insivumeh",
+  "url": "https://insivumeh.gob.gt/wp-content/uploads/2026/11/BVD-2026-11-27.pdf",
+  "fetchedAt": "2026-11-27T22:53:49.522Z",
+  "raw": "YONUM >\nBOLETÍN VULCANOLÓGICO DIARIO (6%)\nA\n=\nGUATEMALA\n27 de noviembre de 2026 VO LC 4 N DE\n; LOCALIZACIÓN EAN\nMEMES  —ceocrárica:\nAS AA 14? 28' 54 Latitud N;\nes 4% 90252'54 Longitud W\nmE Altura: 3763 msnm\n(ez) ES Condiciones atmosféricas:\nsir Despejado\nViento:\n25\na 0% Precipitación pluvial:\nA 5.00 mm\nA\nMorfología: Acceda a las cámaras de vigilancia\nEstrato volcán compuesto as Ae\nvolcánica en el siguiente enlace:\nhttps://insivumeh.gob.gt/camaras-de-vigilancia-\nTipo de actividad: volcanica/\nVulcaniana\nActividad\nEl observatorio del Volcán de Fuego reporta condiciones favorables para la visualización del cráter. Se\nregistran de 4 a 7 explosiones de características débiles y moderadas por hora, las cuales elevan\ncolumnas de gases con una tonalidad grisácea de 4500 a 5000 msnm (14,764 a 16,404 pies). Estas\nse desplazan hacia el norte y noroeste debido a la acción del viento a distancias de 10 a 40 km.\nAlgunas de estas explosiones expulsan material incandescente a distancias de 200 metros sobre el\nnivel del cráter. Otras pueden ocasionar retumbos y ondas de choque débiles. Se espera caída débil\nde ceniza fina sobre El Rosarios, Los Pajales y sus alrededores.\nsE, | Ministerio de\nEF y Comunicaciones, . Ñ . y ' ' . '\n- 7 S ter Instituto Nacional de Sismología, Vulcanología, Meteorología e Hidrología\nA vien\nATEMP\n",
+  "parsed": {
+    "explosionsPerHour": {
+      "min": 4,
+      "max": 7
+    },
+    "ashColumnMasl": {
+      "min": 4500,
+      "max": 5000
+    },
+    "driftKm": 40,
+    "driftDirections": [
+      "NW",
+      "N"
+    ],
+    "drainages": [],
+    "incandescenceM": {
+      "min": 200,
+      "max": 200
+    },
+    "lavaFlowM": null,
+    "phenomena": [
+      "explosions",
+      "rumbling",
+      "shockwaves",
+      "ashfall",
+      "incandescence"
+    ],
+    "sky": "clear",
+    "ashfallCommunities": []
+  },
+  "parserVersion": 8,
+  "warnings": []
+}
